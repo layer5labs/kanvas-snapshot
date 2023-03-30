@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
+          ls .
           echo 'OUTPUT<<EOF' >> $GITHUB_ENV
           cat ./__tests__/output.json >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
