@@ -1,19 +1,20 @@
 import * as core from '@actions/core'
-import { CypressResult, Result } from './cypressTest'
-import { TableSummary } from './tableSummary'
+import {CypressResult, Result} from './cypress-test-definition'
+import {TableSummary} from './table-summary-definition'
 
 async function run(): Promise<void> {
   try {
     const jsonInput: string = core.getInput('jsonInput')
     core.debug(`Waiting ${jsonInput} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
 
-    core.info(`Json Input ${jsonInput}`);
-    const finalJsonResponse = getTableOutputAsJson(JSON.stringify(jsonInput));
-    finalJsonResponse.map(console.log);
+    core.info(`Json Input ${jsonInput}`)
+    const finalJsonResponse = getTableOutputAsJson(JSON.stringify(jsonInput))
+    core.info(`Final Array Response:  ${finalJsonResponse}`)
+    // finalJsonResponse.map(console.log)
 
-    const mardownresult = convertJsonToMardownTable(finalJsonResponse);
-    console.log(mardownresult);
-    core.info(mardownresult);
+    const mardownresult = convertJsonToMardownTable(finalJsonResponse)
+    // console.log(mardownresult)
+    core.info(mardownresult)
 
     core.setOutput('mardownResult', mardownresult)
   } catch (error) {
@@ -22,8 +23,8 @@ async function run(): Promise<void> {
 }
 
 function getTableOutputAsJson(jsonInput: string): TableSummary[] {
-  const cypressJsonResult: CypressResult = JSON.parse(jsonInput);
-  const testResult: Result[] = cypressJsonResult.results;
+  const cypressJsonResult: CypressResult = JSON.parse(jsonInput)
+  const testResult: Result[] = cypressJsonResult.results
 
   return testResult.map((result: Result): TableSummary => {
     return {
@@ -50,17 +51,21 @@ function getTableOutputAsJson(jsonInput: string): TableSummary[] {
   })
 }
 
-function convertJsonToMardownTable(cypressJson: TableSummary[]) {
-  const tableHeaderMd = convertRowToMd(tableHeader);
+function convertJsonToMardownTable(cypressJson: TableSummary[]): string {
+  const tableHeaderMd = convertRowToMd(tableHeader)
 
-  const tableDataRows = cypressJson.map((sum) => convertRowToMd(Object.values(sum)));
+  const tableDataRows = cypressJson
+    .map(sum => convertRowToMd(Object.values(sum)))
+    .join('\n')
 
-  return tableHeaderMd + tableHeader.map(mp => "--| ") + "\n" + tableDataRows;
+  return `${tableHeaderMd}\n${tableHeader
+    .map(() => '--| ')
+    .join('')}\n${tableDataRows}`
 }
 
-const convertRowToMd = (columns: (string | Number)[]) => `|${columns.map((col: (string | Number)) => col + "|")}\n`
+const convertRowToMd = (columns: (string | Number)[]): string =>
+  `|${columns.map((col: string | Number) => col).join('|')}`
 
-
-const tableHeader = ["Title", "Skipped", "Pending", "Failures", "", "Total"]
+const tableHeader = ['Title', 'Skipped', 'Pending', 'Failures', '', 'Total']
 
 run()

@@ -36,16 +36,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
-const wait_1 = __nccwpck_require__(817);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const ms = core.getInput('milliseconds');
-            core.debug(`Waiting ${ms} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
-            core.debug(new Date().toTimeString());
-            yield (0, wait_1.wait)(parseInt(ms, 10));
-            core.debug(new Date().toTimeString());
-            core.setOutput('time', new Date().toTimeString());
+            const jsonInput = core.getInput('jsonInput');
+            core.debug(`Waiting ${jsonInput} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+            core.info(`Json Input ${jsonInput}`);
+            const finalJsonResponse = getTableOutputAsJson(JSON.stringify(jsonInput));
+            core.info(`Final Array Response:  ${finalJsonResponse}`);
+            // finalJsonResponse.map(console.log)
+            const mardownresult = convertJsonToMardownTable(finalJsonResponse);
+            // console.log(mardownresult)
+            core.info(mardownresult);
+            core.setOutput('mardownResult', mardownresult);
         }
         catch (error) {
             if (error instanceof Error)
@@ -53,38 +56,45 @@ function run() {
         }
     });
 }
-run();
-
-
-/***/ }),
-
-/***/ 817:
-/***/ (function(__unused_webpack_module, exports) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.wait = void 0;
-function wait(milliseconds) {
-    return __awaiter(this, void 0, void 0, function* () {
-        return new Promise(resolve => {
-            if (isNaN(milliseconds)) {
-                throw new Error('milliseconds not a number');
-            }
-            setTimeout(() => resolve('done!'), milliseconds);
-        });
+function getTableOutputAsJson(jsonInput) {
+    const cypressJsonResult = JSON.parse(jsonInput);
+    const testResult = cypressJsonResult.results;
+    return testResult.map((result) => {
+        return {
+            title: result.title,
+            total: result.suites.reduce((prev, curr) => {
+                return prev + curr.tests.length;
+            }, 0),
+            skipped: result.suites.reduce((prev, curr) => {
+                return prev + curr.skipped.length;
+            }, 0),
+            duration: result.suites.reduce((prev, curr) => {
+                return prev + curr.duration;
+            }, 0),
+            failures: result.suites.reduce((prev, curr) => {
+                return prev + curr.failures.length;
+            }, 0),
+            pending: result.suites.reduce((prev, curr) => {
+                return prev + curr.pending.length;
+            }, 0),
+            success: result.suites.reduce((prev, curr) => {
+                return prev + curr.passes.length;
+            }, 0)
+        };
     });
 }
-exports.wait = wait;
+function convertJsonToMardownTable(cypressJson) {
+    const tableHeaderMd = convertRowToMd(tableHeader);
+    const tableDataRows = cypressJson
+        .map(sum => convertRowToMd(Object.values(sum)))
+        .join('\n');
+    return `${tableHeaderMd}\n${tableHeader
+        .map(() => '--| ')
+        .join('')}\n${tableDataRows}`;
+}
+const convertRowToMd = (columns) => `|${columns.map((col) => col).join('|')}`;
+const tableHeader = ['Title', 'Skipped', 'Pending', 'Failures', '', 'Total'];
+run();
 
 
 /***/ }),
