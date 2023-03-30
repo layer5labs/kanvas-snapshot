@@ -5,11 +5,10 @@ import {TableSummary} from './table-summary-definition'
 async function run(): Promise<void> {
   try {
     const jsonInput: string = core.getInput('jsonInput')
-    core.debug(`Waiting ${jsonInput} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+    core.debug(`Waiting ${jsonInput} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
 
-    core.info(`Json Input ${jsonInput}`)
-    const finalJsonResponse = getTableOutputAsJson(JSON.stringify(jsonInput))
-    core.info(`Final Array Response:  ${finalJsonResponse}`)
+    const finalJsonResponse = getTableOutputAsJson(jsonInput)
+    core.debug(`Final Array Response:  ${finalJsonResponse}`)
     // finalJsonResponse.map(console.log)
 
     const mardownresult = convertJsonToMardownTable(finalJsonResponse)
@@ -23,37 +22,37 @@ async function run(): Promise<void> {
 }
 
 function getTableOutputAsJson(jsonInput: string): TableSummary[] {
-  core.info(`getTableOutputAsJson ${jsonInput}`)
+  core.debug(`getTableOutputAsJson ${jsonInput}`)
   const cypressJsonResult: CypressResult = JSON.parse(jsonInput)
   const testResult: Result[] = cypressJsonResult.results
 
   return testResult.map((result: Result): TableSummary => {
     return {
       title: result.title,
-      total: result.suites.reduce((prev, curr) => {
-        return prev + curr.tests.length
+      duration: result.suites.reduce((prev, curr) => {
+        return prev + curr.duration
       }, 0),
       skipped: result.suites.reduce((prev, curr) => {
         return prev + curr.skipped.length
       }, 0),
-      duration: result.suites.reduce((prev, curr) => {
-        return prev + curr.duration
+      pending: result.suites.reduce((prev, curr) => {
+        return prev + curr.pending.length
       }, 0),
       failures: result.suites.reduce((prev, curr) => {
         return prev + curr.failures.length
       }, 0),
-      pending: result.suites.reduce((prev, curr) => {
-        return prev + curr.pending.length
-      }, 0),
       success: result.suites.reduce((prev, curr) => {
         return prev + curr.passes.length
+      }, 0),
+      total: result.suites.reduce((prev, curr) => {
+        return prev + curr.tests.length
       }, 0)
     }
   })
 }
 
 function convertJsonToMardownTable(cypressJson: TableSummary[]): string {
-  core.info(`getTableOutputAsJson ${cypressJson}`)
+  core.debug(`getTableOutputAsJson ${cypressJson}`)
   const tableHeaderMd = convertRowToMd(tableHeader)
 
   const tableDataRows = cypressJson
@@ -66,10 +65,18 @@ function convertJsonToMardownTable(cypressJson: TableSummary[]): string {
 }
 
 const convertRowToMd = (columns: (string | Number)[]): string => {
-  core.info(`${columns}`)
-  return  `|${columns.map((col: string | Number) => col).join('|')}`
-} 
+  core.debug(`${columns}`)
+  return `|${columns.map((col: string | Number) => col).join('|')}`
+}
 
-const tableHeader = ['Title', 'Skipped', 'Pending', 'Failures', '', 'Total']
+const tableHeader = [
+  'Title',
+  'Duration',
+  'Skipped',
+  'Pending',
+  'Failures :x:',
+  'Passes :white_check_mark:',
+  'Total'
+]
 
 run()

@@ -41,9 +41,8 @@ function run() {
         try {
             const jsonInput = core.getInput('jsonInput');
             core.debug(`Waiting ${jsonInput} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
-            // core.info(`Json - Input ${jsonInput}`);
             const finalJsonResponse = getTableOutputAsJson(jsonInput);
-            core.info(`Final Array Response:  ${JSON.stringify(finalJsonResponse)}`);
+            core.debug(`Final Array Response:  ${finalJsonResponse}`);
             // finalJsonResponse.map(console.log)
             const mardownresult = convertJsonToMardownTable(finalJsonResponse);
             // console.log(mardownresult)
@@ -57,35 +56,35 @@ function run() {
     });
 }
 function getTableOutputAsJson(jsonInput) {
-    // core.info(`getTableOutputAsJson ${jsonInput}`)
+    core.debug(`getTableOutputAsJson ${jsonInput}`);
     const cypressJsonResult = JSON.parse(jsonInput);
     const testResult = cypressJsonResult.results;
     return testResult.map((result) => {
-    core.info(`result, ${JSON.stringify(result)}`)
         return {
-            title: result.file,
-            total: result.suites.reduce((prev, curr) => {
-                return prev + curr.tests.length;
+            title: result.title,
+            duration: result.suites.reduce((prev, curr) => {
+                return prev + curr.duration;
             }, 0),
             skipped: result.suites.reduce((prev, curr) => {
                 return prev + curr.skipped.length;
             }, 0),
-            duration: result.suites.reduce((prev, curr) => {
-                return prev + curr.duration;
+            pending: result.suites.reduce((prev, curr) => {
+                return prev + curr.pending.length;
             }, 0),
             failures: result.suites.reduce((prev, curr) => {
                 return prev + curr.failures.length;
             }, 0),
-            pending: result.suites.reduce((prev, curr) => {
-                return prev + curr.pending.length;
-            }, 0),
             success: result.suites.reduce((prev, curr) => {
                 return prev + curr.passes.length;
-            }, 0)
+            }, 0),
+            total: result.suites.reduce((prev, curr) => {
+                return prev + curr.tests.length;
+            }, 0),
         };
     });
 }
 function convertJsonToMardownTable(cypressJson) {
+    core.debug(`getTableOutputAsJson ${cypressJson}`);
     const tableHeaderMd = convertRowToMd(tableHeader);
     const tableDataRows = cypressJson
         .map(sum => convertRowToMd(Object.values(sum)))
@@ -95,11 +94,10 @@ function convertJsonToMardownTable(cypressJson) {
         .join('')}\n${tableDataRows}`;
 }
 const convertRowToMd = (columns) => {
-  core.info(`columns... ${columns}`)
-
-    return `|${columns.map((col) => col).join('|')}`
+    core.debug(`${columns}`);
+    return `|${columns.map((col) => col).join('|')}`;
 };
-const tableHeader = ['Title', 'Skipped', 'Pending', 'Failures', 'Duration', 'Total'];
+const tableHeader = ['Title', 'Duration', 'Skipped', 'Pending', 'Failures :x:', "Passes :white_check_mark:", 'Total'];
 run();
 
 
