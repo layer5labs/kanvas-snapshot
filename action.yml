@@ -5,7 +5,7 @@ inputs:
   jsonInput:  # id of input
     description: 'Test output in json'
     required: true
-    default: '{}'
+    default: {}
 outputs:
   mardownResult: # id of output
     description: 'The markdown result'

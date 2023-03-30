@@ -23,6 +23,7 @@ async function run(): Promise<void> {
 }
 
 function getTableOutputAsJson(jsonInput: string): TableSummary[] {
+  core.info(`getTableOutputAsJson ${jsonInput}`)
   const cypressJsonResult: CypressResult = JSON.parse(jsonInput)
   const testResult: Result[] = cypressJsonResult.results
 
@@ -52,6 +53,7 @@ function getTableOutputAsJson(jsonInput: string): TableSummary[] {
 }
 
 function convertJsonToMardownTable(cypressJson: TableSummary[]): string {
+  core.info(`getTableOutputAsJson ${cypressJson}`)
   const tableHeaderMd = convertRowToMd(tableHeader)
 
   const tableDataRows = cypressJson
@@ -63,8 +65,10 @@ function convertJsonToMardownTable(cypressJson: TableSummary[]): string {
     .join('')}\n${tableDataRows}`
 }
 
-const convertRowToMd = (columns: (string | Number)[]): string =>
-  `|${columns.map((col: string | Number) => col).join('|')}`
+const convertRowToMd = (columns: (string | Number)[]): string => {
+  core.info(`${columns}`)
+  return  `|${columns.map((col: string | Number) => col).join('|')}`
+} 
 
 const tableHeader = ['Title', 'Skipped', 'Pending', 'Failures', '', 'Total']
 
