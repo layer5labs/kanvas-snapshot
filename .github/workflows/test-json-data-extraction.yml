@@ -22,7 +22,7 @@ jobs:
           cat ./__tests__/output.json >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
       - name:  show output
-        run: echo ${{fromJson(env.OUTPUT)}}
+        run: echo ${{fromJson(env.OUTPUT2)}}
       - id: test_result
         if: always()
         name: "Run Test on the output.json"
