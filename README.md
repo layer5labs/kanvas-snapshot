@@ -1,6 +1,8 @@
-<p align="center">
+# cypress-test-summary
+
+<!-- <p align="center">
   <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
-</p>
+</p> -->
 
 # Create a JavaScript Action using TypeScript
 
@@ -8,11 +10,7 @@ Use this template to bootstrap the creation of a TypeScript action.:rocket:
 
 This template includes compilation support, tests, a validation workflow, publishing, and versioning guidance.  
 
-If you are new, there's also a simpler introduction.  See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
-
-## Create an action from this template
-
-Click the `Use this Template` and provide the new repo details for your action
+If you are new, there's also a simpler introduction.  See the [Cypress test Sumary](https://github.com/layer5labs/cypress-test-summary)
 
 ## Code in Main
 
@@ -98,7 +96,7 @@ with:
   milliseconds: 1000
 ```
 
-See the [actions tab](https://github.com/actions/typescript-action/actions) for runs of this action! :rocket:
+See the [actions tab](https://github.com/layer5labs/cypress-test-summary/actions) for runs of this action! :rocket:
 
 ## Usage:
 

@@ -1,8 +1,8 @@
 {
-  "name": "typescript-action",
+  "name": "cypress-test-summary",
   "version": "0.0.0",
   "private": true,
-  "description": "TypeScript template action",
+  "description": "cypress-test-summary action",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -15,14 +15,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/layer5labs/cypress-test-summary.git"
   },
   "keywords": [
-    "actions",
-    "node",
-    "setup"
+    "cypress-test",
+    "test-summary",
+    "summary"
   ],
-  "author": "",
+  "author": "Layer5",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.10.0"
