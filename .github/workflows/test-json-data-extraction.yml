@@ -12,8 +12,8 @@ jobs:
     steps:
       - run: |
           ls .
-          echo 'OUTPUT<<EOF' >> $GITHUB_ENV
-          cat ./__tests__/output.json >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
+          # echo 'OUTPUT<<EOF' >> $GITHUB_ENV
+          # cat ./__tests__/output.json >> $GITHUB_ENV
+          # echo 'EOF' >> $GITHUB_ENV
       - name:  show output
         run: echo ${{fromJson(env.OUTPUT)}}
