@@ -61,7 +61,7 @@ function getTableOutputAsJson(jsonInput) {
     const cypressJsonResult = JSON.parse(jsonInput);
     const testResult = cypressJsonResult.results;
     return testResult.map((result) => {
-    core.info("result", result)
+    core.info("result", JSON.stringify(result))
         return {
             title: result.title,
             total: result.suites.reduce((prev, curr) => {
@@ -99,7 +99,7 @@ const convertRowToMd = (columns) => {
 
     return `|${columns.map((col) => col).join('|')}`
 };
-const tableHeader = ['Title', 'Skipped', 'Pending', 'Failures', '', 'Total'];
+const tableHeader = ['Title', 'Skipped', 'Pending', 'Failures', 'Duration', 'Total'];
 run();
 
 
