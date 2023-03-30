@@ -23,5 +23,5 @@ jobs:
         if: always()
         name: "Run Test on the output.json"
         uses: ./
-        with: ${{fromJson(env.OUTPUT)}}
+        with: "${{fromJson(env.OUTPUT)}}"
       
