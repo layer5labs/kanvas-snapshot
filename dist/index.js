@@ -61,7 +61,7 @@ function getTableOutputAsJson(jsonInput) {
     const testResult = cypressJsonResult.results;
     return testResult.map((result) => {
         return {
-            title: result.title,
+            title: result.file,
             duration: result.suites.reduce((prev, curr) => {
                 return prev + curr.duration;
             }, 0),
@@ -79,7 +79,7 @@ function getTableOutputAsJson(jsonInput) {
             }, 0),
             total: result.suites.reduce((prev, curr) => {
                 return prev + curr.tests.length;
-            }, 0),
+            }, 0)
         };
     });
 }
@@ -97,7 +97,15 @@ const convertRowToMd = (columns) => {
     core.debug(`${columns}`);
     return `|${columns.map((col) => col).join('|')}`;
 };
-const tableHeader = ['Title', 'Duration', 'Skipped', 'Pending', 'Failures :x:', "Passes :white_check_mark:", 'Total'];
+const tableHeader = [
+    'Title',
+    'Duration',
+    'Skipped',
+    'Pending',
+    'Failures :x:',
+    'Passes :white_check_mark:',
+    'Total'
+];
 run();
 
 

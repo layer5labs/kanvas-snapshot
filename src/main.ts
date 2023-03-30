@@ -28,7 +28,7 @@ function getTableOutputAsJson(jsonInput: string): TableSummary[] {
 
   return testResult.map((result: Result): TableSummary => {
     return {
-      title: result.title,
+      title: result.file,
       duration: result.suites.reduce((prev, curr) => {
         return prev + curr.duration
       }, 0),
