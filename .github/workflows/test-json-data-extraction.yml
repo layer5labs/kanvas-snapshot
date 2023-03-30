@@ -20,6 +20,7 @@ jobs:
       - name:  show output
         run: echo ${{env.OUTPUT}}
       - id: test_result
+        if: always()
         name: "Run Test on the output.json"
         uses: ./
         with: ${{env.OUTPUT}}
