@@ -41,7 +41,7 @@ function run() {
         try {
             const jsonInput = core.getInput('jsonInput');
             core.debug(`Waiting ${jsonInput} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
-            core.info(`Json Input ${jsonInput}`);
+            core.info(`Json - Input ${jsonInput}`);
             const finalJsonResponse = getTableOutputAsJson(JSON.stringify(jsonInput));
             core.info(`Final Array Response:  ${finalJsonResponse}`);
             // finalJsonResponse.map(console.log)
@@ -57,6 +57,7 @@ function run() {
     });
 }
 function getTableOutputAsJson(jsonInput) {
+    core.info(`getTableOutputAsJson ${jsonInput}`)
     const cypressJsonResult = JSON.parse(jsonInput);
     const testResult = cypressJsonResult.results;
     return testResult.map((result) => {
@@ -92,7 +93,11 @@ function convertJsonToMardownTable(cypressJson) {
         .map(() => '--| ')
         .join('')}\n${tableDataRows}`;
 }
-const convertRowToMd = (columns) => `|${columns.map((col) => col).join('|')}`;
+const convertRowToMd = (columns) => {
+  core.info(`columns... ${columns}`)
+
+    return `|${columns.map((col) => col).join('|')}`
+};
 const tableHeader = ['Title', 'Skipped', 'Pending', 'Failures', '', 'Total'];
 run();
 

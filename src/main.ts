@@ -5,7 +5,7 @@ import {TableSummary} from './table-summary-definition'
 async function run(): Promise<void> {
   try {
     const jsonInput: string = core.getInput('jsonInput')
-    core.debug(`Waiting ${jsonInput} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+    core.debug(`Waiting ${jsonInput} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
 
     core.info(`Json Input ${jsonInput}`)
     const finalJsonResponse = getTableOutputAsJson(JSON.stringify(jsonInput))
