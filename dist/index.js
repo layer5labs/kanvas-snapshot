@@ -42,7 +42,7 @@ function run() {
             const jsonInput = core.getInput('jsonInput');
             core.debug(`Waiting ${jsonInput} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
             core.info(`Json - Input ${jsonInput}`);
-            const finalJsonResponse = getTableOutputAsJson(JSON.stringify(jsonInput));
+            const finalJsonResponse = getTableOutputAsJson(jsonInput);
             core.info(`Final Array Response:  ${finalJsonResponse}`);
             // finalJsonResponse.map(console.log)
             const mardownresult = convertJsonToMardownTable(finalJsonResponse);
