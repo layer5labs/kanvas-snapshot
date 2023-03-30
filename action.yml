@@ -1,0 +1,14 @@
+name: 'cypress-test-sumary'
+description: 'Cypress test summary table'
+author: Layer5
+inputs:
+  jsonInput:  # id of input
+    description: 'Test output in json'
+    required: true
+    default: '{}'
+outputs:
+  time: # id of output
+    description: 'The time we greeted you'
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
