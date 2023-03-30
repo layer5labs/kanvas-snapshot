@@ -7,8 +7,8 @@ inputs:
     required: true
     default: '{}'
 outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  mardownResult: # id of output
+    description: 'The markdown result'
 runs:
   using: 'node16'
   main: 'dist/index.js'
