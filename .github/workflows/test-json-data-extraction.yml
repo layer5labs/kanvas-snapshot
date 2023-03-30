@@ -17,11 +17,20 @@ jobs:
           echo 'OUTPUT<<EOF' >> $GITHUB_ENV
           cat ./__tests__/output.json >> $GITHUB_ENV
           echo 'EOF' >> $GITHUB_ENV
+      - run: |
+          echo 'OUTPUT2<<EOF' >> $GITHUB_ENV
+          cat ./__tests__/output.json >> $GITHUB_ENV
+          echo 'EOF' >> $GITHUB_ENV
       - name:  show output
         run: echo ${{fromJson(env.OUTPUT)}}
       - id: test_result
         if: always()
         name: "Run Test on the output.json"
         uses: ./
-        with: "${{fromJson(env.OUTPUT)}}"
+        with: jq @json <<< echo ${{fromJson(env.OUTPUT)}}
+      - id: test_result2
+        if: always()
+        name: "Run Test on the output.json"
+        uses: ./
+        with: ${{env.OUTPUT2}}
       
