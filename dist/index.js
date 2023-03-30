@@ -61,9 +61,9 @@ function getTableOutputAsJson(jsonInput) {
     const cypressJsonResult = JSON.parse(jsonInput);
     const testResult = cypressJsonResult.results;
     return testResult.map((result) => {
-    core.info("result", JSON.stringify(result))
+    core.info(`result, ${JSON.stringify(result)}`)
         return {
-            title: result.title,
+            title: result.file,
             total: result.suites.reduce((prev, curr) => {
                 return prev + curr.tests.length;
             }, 0),
