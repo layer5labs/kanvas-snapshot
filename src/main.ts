@@ -7,11 +7,7 @@ async function run(): Promise<void> {
   try {
     let jsonInput: string
     if (core.getInput('jsonArtifact')) {
-      jsonInput = fs
-        .readFileSync(
-          '/home/runner/work/cypress-test-summary/cypress-test-summary/ouput.json'
-        )
-        .toString()
+      jsonInput = fs.readFileSync(core.getInput('jsonArtifact')).toString()
     } else {
       jsonInput = core.getInput('jsonInput')
       core.debug(`Waiting ${jsonInput} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true

@@ -17,6 +17,11 @@ jobs:
         with: 
           name: output.json
           path: "./__tests__/output.json"
+      - uses: ./
+        name: run test
+        with:
+          jsonArtifact: "./__tests__/ouput.json"
+   
   download:
     runs-on: ubuntu-latest
     needs: test
@@ -31,7 +36,7 @@ jobs:
       - uses: ./
         name: run test
         with:
-          jsonArtifact: "./ouput.json"
+          jsonArtifact: '/home/runner/work/cypress-test-summary/cypress-test-summary/ouput.json'
     
 
 
