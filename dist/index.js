@@ -40,13 +40,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
 const fs_1 = __importDefault(__nccwpck_require__(747));
+const path_1 = __importDefault(__nccwpck_require__(622));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             let jsonInput;
             if (core.getInput('jsonArtifact')) {
                 // jsonInput = fs.readFileSync(core.getInput('jsonArtifact')).toString()
-                jsonInput = fs_1.default.readFileSync("../__tests_/output.json").toString();
+                jsonInput = fs_1.default.readFileSync(path_1.default.join(__dirname, "..", "__tests__", "output.json")).toString();
             }
             else {
                 jsonInput = core.getInput('jsonInput');
