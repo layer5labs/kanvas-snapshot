@@ -45,7 +45,7 @@ function run() {
         try {
             let jsonInput;
             if (core.getInput('jsonArtifact')) {
-                jsonInput = fs_1.default.readFileSync('./ouput.json').toString();
+                jsonInput = fs_1.default.readFileSync('/home/runner/work/cypress-test-summary/cypress-test-summary/ouput.json').toString();
             }
             else {
                 jsonInput = core.getInput('jsonInput');
