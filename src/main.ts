@@ -4,8 +4,13 @@ import {TableSummary} from './table-summary-definition'
 
 async function run(): Promise<void> {
   try {
-    const jsonInput: string = core.getInput('jsonInput')
-    core.debug(`Waiting ${jsonInput} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+    let jsonInput: string;
+    if(core.getInput("jsonArtifact")) {
+      jsonInput = await fetch("./ouput.json").then(res => res.text());
+    } else {
+      jsonInput = core.getInput('jsonInput')
+      core.debug(`Waiting ${jsonInput} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+    }
 
     const finalJsonResponse = getTableOutputAsJson(jsonInput)
     core.debug(`Final Array Response:  ${finalJsonResponse}`)

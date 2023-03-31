@@ -4,8 +4,11 @@ author: Layer5
 inputs:
   jsonInput:  # id of input
     description: 'Test output in json'
-    required: true
+    required: false
     default: '{}'
+  jsonArtifact:
+    description: "JSON artifact that can be optionally used as a json file to pick"
+    required: false
 outputs:
   mardownResult: # id of output
     description: 'The markdown result'
