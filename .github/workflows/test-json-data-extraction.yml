@@ -19,6 +19,7 @@ jobs:
           path: "./__tests__/output.json"
   download:
     runs-on: ubuntu-latest
+    needs: test
     steps:
       - uses: actions/checkout@v2
         with: 
