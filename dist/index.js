@@ -90,7 +90,7 @@ function getTableOutputAsJson(jsonInput) {
             }, 0),
             duration: `${result.suites.reduce((prev, curr) => {
                 return prev + curr.duration;
-            }, 0)}s`
+            }, 0) / 1000}s`
             // total: result.suites.reduce((prev, curr) => {
             //   return prev + curr.tests.length
             // }, 0)

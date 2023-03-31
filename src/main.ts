@@ -51,9 +51,11 @@ function getTableOutputAsJson(jsonInput: string): TableSummary[] {
       skipped: result.suites.reduce((prev, curr) => {
         return prev + curr.skipped.length
       }, 0),
-      duration: `${result.suites.reduce((prev, curr) => {
-        return prev + curr.duration
-      }, 0)}s`
+      duration: `${
+        result.suites.reduce((prev, curr) => {
+          return prev + curr.duration
+        }, 0) / 1000
+      }s`
       // total: result.suites.reduce((prev, curr) => {
       //   return prev + curr.tests.length
       // }, 0)
