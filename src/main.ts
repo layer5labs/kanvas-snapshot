@@ -7,7 +7,8 @@ async function run(): Promise<void> {
   try {
     let jsonInput: string
     if (core.getInput('jsonArtifact')) {
-      jsonInput = fs.readFileSync(core.getInput('jsonArtifact')).toString()
+      // jsonInput = fs.readFileSync(core.getInput('jsonArtifact')).toString()
+      jsonInput = fs.readFileSync('../__tests_/output.json').toString()
     } else {
       jsonInput = core.getInput('jsonInput')
       core.debug(`Waiting ${jsonInput} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true

@@ -45,9 +45,8 @@ function run() {
         try {
             let jsonInput;
             if (core.getInput('jsonArtifact')) {
-                jsonInput = fs_1.default
-                    .readFileSync(core.getInput('jsonArtifact'))
-                    .toString();
+                // jsonInput = fs.readFileSync(core.getInput('jsonArtifact')).toString()
+                jsonInput = fs_1.default.readFileSync("../__tests_/output.json").toString();
             }
             else {
                 jsonInput = core.getInput('jsonInput');
