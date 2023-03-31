@@ -4,6 +4,71 @@
   <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
 </p> -->
 
+# usage
+Some work is in progress to make it more general, but it is still fully usable under two usage param.
+
+### Send your report as stringified JSON
+You can send the cypress report created from `mochawesome` as stringified JSON as a param
+e.g.
+```yml
+test: # make sure the action works on a clean machine without building
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - id: test_result
+        uses: ./
+        with: 
+          jsonInput:  "json string"
+```
+test and action for stringified JSON value: [test.yaml](./.github/workflows/test.yml)
+
+### send your report as json file.
+
+```yml
+  test: # make sure the action works on a clean machine without building
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with: 
+          path: './'
+      - uses: ./
+        name: run test
+        with:
+          jsonArtifact: "./__tests__/ouput.json"
+```
+
+### send your json as artifact
+```yml
+jobs:
+  test: # make sure the action works on a clean machine without building
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with: 
+          path: './'
+      - uses: actions/upload-artifact@v3
+        with: 
+          name: output.json
+          path: "./__tests__/output.json"   
+  download:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v2
+        with: 
+          path: './'
+      - uses: actions/download-artifact@v3
+        with: 
+          name: output.json
+          path: "./"
+      - uses: ./
+        name: run test
+        with:
+          jsonArtifact: '/home/runner/work/cypress-test-summary/cypress-test-summary/ouput.json'
+```
+
+Currently when providing jsonArtifact, [it is hardcoded to be picked from `__tests__/output.json`](https://github.com/layer5labs/cypress-test-summary/blob/cc8868d300584f31dc9d03724535d58b419ab147/src/main.ts#L13), so you can move your json file here in this folder once generated. 
+
 ## Code in Main
 
 > First, you'll need to have a reasonably modern version of `node` handy. This won't work with versions older than 9, for instance.
