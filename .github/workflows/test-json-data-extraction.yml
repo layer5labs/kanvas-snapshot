@@ -19,7 +19,7 @@ jobs:
           echo 'EOF' >> $GITHUB_ENV
       - run: |
           # echo 'OUTPUT2<<EOF' >> $GITHUB_ENV
-          "OUTPUT2=$(echo <EOF$(jq @json <<< cat ./__tests__/output.json))" >> $GITHUB_ENV
+          "OUTPUT2=$(jq @json <<< cat ./__tests__/output.json)" >> $GITHUB_ENV
           # echo 'EOF' >> $GITHUB_ENV
       - name:  show output
         run: echo ${{env.OUTPUT2}}
