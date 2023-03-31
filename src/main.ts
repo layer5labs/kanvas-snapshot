@@ -10,7 +10,7 @@ async function run(): Promise<void> {
     if (core.getInput('jsonArtifact')) {
       // jsonInput = fs.readFileSync(core.getInput('jsonArtifact')).toString()
       jsonInput = fs
-        .readFileSync(path.join(__dirname, '..', '__tests__', 'output.json'))
+        .readFileSync(path.join(__dirname, '..', '__tests__', 'output.json')) // todo: remove this hardcoding, if the the jsonArtifact is present that path should be used
         .toString()
     } else {
       jsonInput = core.getInput('jsonInput')
@@ -38,25 +38,25 @@ function getTableOutputAsJson(jsonInput: string): TableSummary[] {
 
   return testResult.map((result: Result): TableSummary => {
     return {
-      title: result.file,
-      duration: result.suites.reduce((prev, curr) => {
-        return prev + curr.duration
-      }, 0),
-      skipped: result.suites.reduce((prev, curr) => {
-        return prev + curr.skipped.length
-      }, 0),
-      pending: result.suites.reduce((prev, curr) => {
-        return prev + curr.pending.length
+      title: result.file.split('/').slice(-1)[0], // get the name from file
+      success: result.suites.reduce((prev, curr) => {
+        return prev + curr.passes.length
       }, 0),
       failures: result.suites.reduce((prev, curr) => {
         return prev + curr.failures.length
       }, 0),
-      success: result.suites.reduce((prev, curr) => {
-        return prev + curr.passes.length
+      pending: result.suites.reduce((prev, curr) => {
+        return prev + curr.pending.length
       }, 0),
-      total: result.suites.reduce((prev, curr) => {
-        return prev + curr.tests.length
-      }, 0)
+      skipped: result.suites.reduce((prev, curr) => {
+        return prev + curr.skipped.length
+      }, 0),
+      duration: `${result.suites.reduce((prev, curr) => {
+        return prev + curr.duration
+      }, 0)}s`
+      // total: result.suites.reduce((prev, curr) => {
+      //   return prev + curr.tests.length
+      // }, 0)
     }
   })
 }
@@ -81,12 +81,12 @@ const convertRowToMd = (columns: (string | Number)[]): string => {
 
 const tableHeader = [
   'Title',
-  'Duration',
-  'Skipped',
-  'Pending',
-  'Failures :x:',
   'Passes :white_check_mark:',
-  'Total'
+  'Failures :x:',
+  'Pending',
+  'Skipped',
+  'Duration'
+  // "total"
 ]
 
 run()

@@ -47,7 +47,9 @@ function run() {
             let jsonInput;
             if (core.getInput('jsonArtifact')) {
                 // jsonInput = fs.readFileSync(core.getInput('jsonArtifact')).toString()
-                jsonInput = fs_1.default.readFileSync(path_1.default.join(__dirname, "..", "__tests__", "output.json")).toString();
+                jsonInput = fs_1.default
+                    .readFileSync(path_1.default.join(__dirname, '..', '__tests__', 'output.json')) // todo: remove this hardcoding, if the the jsonArtifact is present that path should be used
+                    .toString();
             }
             else {
                 jsonInput = core.getInput('jsonInput');
@@ -73,25 +75,25 @@ function getTableOutputAsJson(jsonInput) {
     const testResult = cypressJsonResult.results;
     return testResult.map((result) => {
         return {
-            title: result.file,
-            duration: result.suites.reduce((prev, curr) => {
-                return prev + curr.duration;
-            }, 0),
-            skipped: result.suites.reduce((prev, curr) => {
-                return prev + curr.skipped.length;
-            }, 0),
-            pending: result.suites.reduce((prev, curr) => {
-                return prev + curr.pending.length;
+            title: result.file.split('/').slice(-1)[0],
+            success: result.suites.reduce((prev, curr) => {
+                return prev + curr.passes.length;
             }, 0),
             failures: result.suites.reduce((prev, curr) => {
                 return prev + curr.failures.length;
             }, 0),
-            success: result.suites.reduce((prev, curr) => {
-                return prev + curr.passes.length;
+            pending: result.suites.reduce((prev, curr) => {
+                return prev + curr.pending.length;
             }, 0),
-            total: result.suites.reduce((prev, curr) => {
-                return prev + curr.tests.length;
-            }, 0)
+            skipped: result.suites.reduce((prev, curr) => {
+                return prev + curr.skipped.length;
+            }, 0),
+            duration: `${result.suites.reduce((prev, curr) => {
+                return prev + curr.duration;
+            }, 0)}s`,
+            // total: result.suites.reduce((prev, curr) => {
+            //   return prev + curr.tests.length
+            // }, 0)
         };
     });
 }
@@ -111,12 +113,12 @@ const convertRowToMd = (columns) => {
 };
 const tableHeader = [
     'Title',
-    'Duration',
-    'Skipped',
-    'Pending',
-    'Failures :x:',
     'Passes :white_check_mark:',
-    'Total'
+    'Failures :x:',
+    'Pending',
+    'Skipped',
+    'Duration',
+    // "total"
 ];
 run();
 

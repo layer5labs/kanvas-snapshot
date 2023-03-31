@@ -1,8 +1,8 @@
 export interface TableSummary {
   title: String
-  total: Number
+  total?: Number
   skipped: Number
-  duration: Number
+  duration: String
   failures: Number
   pending: Number
   success: Number
