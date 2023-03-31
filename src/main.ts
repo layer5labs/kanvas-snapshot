@@ -1,12 +1,13 @@
 import * as core from '@actions/core'
 import {CypressResult, Result} from './cypress-test-definition'
 import {TableSummary} from './table-summary-definition'
+import fs from 'fs'
 
 async function run(): Promise<void> {
   try {
-    let jsonInput: string;
-    if(core.getInput("jsonArtifact")) {
-      jsonInput = await fetch("./ouput.json").then(res => res.text());
+    let jsonInput: string
+    if (core.getInput('jsonArtifact')) {
+      jsonInput = fs.readFileSync('./ouput.json').toString()
     } else {
       jsonInput = core.getInput('jsonInput')
       core.debug(`Waiting ${jsonInput} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
