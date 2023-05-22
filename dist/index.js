@@ -34,34 +34,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(186));
-const fs_1 = __importDefault(__nccwpck_require__(747));
-const path_1 = __importDefault(__nccwpck_require__(622));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            let jsonInput;
-            if (core.getInput('jsonArtifact')) {
-                // jsonInput = fs.readFileSync(core.getInput('jsonArtifact')).toString()
-                jsonInput = fs_1.default
-                    .readFileSync(path_1.default.join(__dirname, '..', '__tests__', 'output.json')) // todo: remove this hardcoding, if the the jsonArtifact is present that path should be used
-                    .toString();
-            }
-            else {
-                jsonInput = core.getInput('jsonInput');
-                core.debug(`Waiting ${jsonInput} milliseconds ...`); // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
-            }
-            const finalJsonResponse = getTableOutputAsJson(jsonInput);
-            core.debug(`Final Array Response:  ${finalJsonResponse}`);
-            // finalJsonResponse.map(console.log)
-            const mardownresult = convertJsonToMardownTable(finalJsonResponse);
-            // console.log(mardownresult)
-            core.info(mardownresult);
-            core.setOutput('mardownResult', mardownresult);
+            core.setOutput('mardownResult', 'node ran successfully');
         }
         catch (error) {
             if (error instanceof Error)
@@ -69,57 +47,6 @@ function run() {
         }
     });
 }
-function getTableOutputAsJson(jsonInput) {
-    core.debug(`getTableOutputAsJson ${jsonInput}`);
-    const cypressJsonResult = JSON.parse(jsonInput);
-    const testResult = cypressJsonResult.results;
-    return testResult.map((result) => {
-        return {
-            title: result.file.split('/').slice(-1)[0],
-            success: result.suites.reduce((prev, curr) => {
-                return prev + curr.passes.length;
-            }, 0),
-            failures: result.suites.reduce((prev, curr) => {
-                return prev + curr.failures.length;
-            }, 0),
-            pending: result.suites.reduce((prev, curr) => {
-                return prev + curr.pending.length;
-            }, 0),
-            skipped: result.suites.reduce((prev, curr) => {
-                return prev + curr.skipped.length;
-            }, 0),
-            duration: `${result.suites.reduce((prev, curr) => {
-                return prev + curr.duration;
-            }, 0) / 1000}s`
-            // total: result.suites.reduce((prev, curr) => {
-            //   return prev + curr.tests.length
-            // }, 0)
-        };
-    });
-}
-function convertJsonToMardownTable(cypressJson) {
-    core.debug(`getTableOutputAsJson ${cypressJson}`);
-    const tableHeaderMd = convertRowToMd(tableHeader);
-    const tableDataRows = cypressJson
-        .map(sum => convertRowToMd(Object.values(sum)))
-        .join('\n');
-    return `${tableHeaderMd}\n${tableHeader
-        .map(() => '--| ')
-        .join('')}\n${tableDataRows}`;
-}
-const convertRowToMd = (columns) => {
-    core.debug(`${columns}`);
-    return `|${columns.map((col) => col).join('|')}`;
-};
-const tableHeader = [
-    'Title',
-    'Passes :white_check_mark:',
-    'Failures :x:',
-    'Pending',
-    'Skipped',
-    'Duration'
-    // "total"
-];
 run();
 
 
