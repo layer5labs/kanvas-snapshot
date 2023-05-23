@@ -35,7 +35,6 @@ runs:
       uses: helm/kind-action@v1.1.0
       with:
         cluster_name: "kind-cluster"
-      shell: bash
     - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
     - run: docker ps
