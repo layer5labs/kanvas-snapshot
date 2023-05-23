@@ -12,9 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: |
-          npm install
-      - run: |
+      - name: install node
+        working-directory: node-action
+        run: npm install
+      - name: install node
+        working-directory: node-action
+        run: |
           NODE_OPTIONS=--openssl-legacy-provider npm run all
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
