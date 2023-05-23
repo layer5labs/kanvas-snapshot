@@ -22,9 +22,12 @@ runs:
       run: |
         echo "IS_PLAYGROUND_RUNNING=$(./playground-ping.sh)" >> "$GITHUB_OUTPUT"
       shell: bash
+    - name: Create k8s Kind Cluster
+      if: ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+      uses: helm/kind-action@v1.1.0
+      with:
+        cluster_name: "kind-cluster"
     - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
     - run: docker ps
-      shell: bash
-    - run: ping localhost -p 9081 -c 8
       shell: bash
