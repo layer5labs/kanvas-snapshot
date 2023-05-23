@@ -23,12 +23,3 @@ runs:
       shell: bash
     - run: ping localhost -p 9081 -c 8
       shell: bash
-    - run: mkdir someXdir
-      shell: bash
-    - run: ls
-      shell: bash
-    - id: random-number-generator
-      run: echo "random-number=$(echo $RANDOM)" >> $GITHUB_OUTPUT
-      shell: bash
-    - run: echo "${{ github.action_path }}" >> $GITHUB_PATH
-      shell: bash
