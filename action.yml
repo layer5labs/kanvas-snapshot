@@ -13,9 +13,13 @@ outputs:
   mardownResult: # id of output
     description: 'The markdown result'
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - run: echo Hello ${{ inputs.who-to-greet }}.
+      shell: bash
+    - run: mkdir someXdir
+      shell: bash
+    - run: ls
       shell: bash
     - id: random-number-generator
       run: echo "random-number=$(echo $RANDOM)" >> $GITHUB_OUTPUT
