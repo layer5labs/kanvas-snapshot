@@ -15,7 +15,9 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - run: 
+    - run: echo ${{ inputs.designId }}
+      shell: bash
+    - run: echo ${{ inputs.applicationId }}
       shell: bash
     - name: ping playground
       id: ping-playground
