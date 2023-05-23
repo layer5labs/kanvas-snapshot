@@ -25,14 +25,17 @@ runs:
     - name: set active cluster URL as playground
       if: ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       run: echo "MESHERY_URL=https://playground.meshery.io" >> $GITHUB_ENV
+      shell: bash
     - name: set active cluster URL as localhost:9081
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       run: echo "MESHERY_URL=http://127.0.0.1:9081" >> $GITHUB_ENV
+      shell: bash
     - name: Create k8s Kind Cluster
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       uses: helm/kind-action@v1.1.0
       with:
         cluster_name: "kind-cluster"
+      shell: bash
     - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
     - run: docker ps
