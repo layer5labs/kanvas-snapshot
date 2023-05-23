@@ -21,6 +21,8 @@ runs:
       shell: bash
     - run: docker ps
       shell: bash
+    - run: ping localhost -p 9081 -c 8
+      shell: bash
     - run: mkdir someXdir
       shell: bash
     - run: ls
