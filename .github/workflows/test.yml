@@ -12,10 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: install node
+      - name: install node pkges
         working-directory: node-action
         run: npm install
-      - name: install node
+      - name: build
         working-directory: node-action
         run: |
           NODE_OPTIONS=--openssl-legacy-provider npm run all
