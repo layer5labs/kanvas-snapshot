@@ -15,7 +15,7 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - run: curl -L https://meshery.io/install | ADAPTERS=istio PLATFORM=kubernetes bash -
+    - run: curl -L https://meshery.io/install | ADAPTERS=istio PLATFORM=docker bash -
       shell: bash
     - run: mkdir someXdir
       shell: bash
