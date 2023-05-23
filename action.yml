@@ -15,10 +15,16 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - run: curl -L https://meshery.io/install | ADAPTERS=istio PLATFORM=docker bash -
+    - run: 
       shell: bash
-    - run: sleep 10
+    - name: ping playground
+      id: ping-playground
+      run: |
+        echo "IS_PLAYGROUND_RUNNING=$(./playground-ping.sh)" >> "$GITHUB_OUTPUT"
       shell: bash
+    - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+      shell: bash
+    - run: 
     - run: docker ps
       shell: bash
     - run: ping localhost -p 9081 -c 8
