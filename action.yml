@@ -23,8 +23,7 @@ runs:
         echo "IS_PLAYGROUND_RUNNING=$(./playground-ping.sh)" >> "$GITHUB_OUTPUT"
       shell: bash
     - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
-      shell: bash
-    - run: 
+      shell: bashxw
     - run: docker ps
       shell: bash
     - run: ping localhost -p 9081 -c 8
