@@ -17,6 +17,10 @@ runs:
   steps:
     - run: curl -L https://meshery.io/install | ADAPTERS=istio PLATFORM=docker bash -
       shell: bash
+    - run: sleep 10
+      shell: bash
+    - run: docker ps
+      shell: bash
     - run: mkdir someXdir
       shell: bash
     - run: ls
