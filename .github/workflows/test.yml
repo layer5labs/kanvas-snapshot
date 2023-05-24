@@ -27,4 +27,7 @@ jobs:
         uses: ./
         with:
           designId: ${{ secrets.TEST_SECRET }} #works
-          applicationId: "something non secret"
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          providerToken: ${{ secrets.PROVIDER_TOKEN }}
+          
+
