@@ -15,6 +15,9 @@ inputs:
   providerToken:
     description: "Meshery Authentication Provider Token"
     required: true
+  cypressRecordKey:
+    description: "cypress record key"
+    required: false
 outputs:
   mardownResult: # id of output
     description: 'The markdown result'
@@ -55,12 +58,12 @@ runs:
         working-directory: cypress-action
         spec: cypress/e2e/e2e/**/*
         browser: chrome 
-        # record: true
+        record: true
       env:
         GITHUB_TOKEN: ${{ inputs.githubToken }}
         CYPRESS_token: ${{ inputs.providerToken }}
         CYPRESS_releasetag: ${{env.tag}}
-        # CYPRESS_RECORD_KEY: ${{ inputs.cypress }}
+        CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
     - run: ls
       shell: bash
     - run: tree . -L 2me
