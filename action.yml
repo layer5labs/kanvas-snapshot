@@ -66,8 +66,14 @@ runs:
         # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
     - run: ls
       shell: bash
-    - run: tree . -L 2me
+    - run: tree cypress-action/cypress/ -L 2me
       shell: bash
+    - name: Upload artifacts
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: cypress-ss
+        path: cypress-action/cypress/videos
     - run: docker ps
       shell: bash
     - run: echo $MESHERY_URL
