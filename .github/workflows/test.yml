@@ -26,5 +26,5 @@ jobs:
       - id: test_result
         uses: ./
         with:
-          designId: ${{ secrets.TEST_SECRET }}
+          designId: ${{ secrets.TEST_SECRET }} #works
           applicationId: "something non secret"

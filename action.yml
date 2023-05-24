@@ -9,6 +9,12 @@ inputs:
   applicationId:
     description: "Give the application Id"
     required: false
+  githubToken:
+    description: "Github token"
+    required: false
+  providerToken:
+    description: "Meshery Authentication Provider Token"
+    required: true
 outputs:
   mardownResult: # id of output
     description: 'The markdown result'
@@ -38,6 +44,25 @@ runs:
       with:
         cluster_name: "kind-cluster"
     - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+      shell: bash
+    - run: 
+      working-directory: cypress-action/
+      if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+    - name: Cypress run
+      uses: cypress-io/github-action@v4
+      with:
+        working-directory: cypress-action
+        spec: cypress/e2e/e2e/**/*
+        browser: chrome 
+        # record: true
+      env:
+        GITHUB_TOKEN: ${{ inputs.githubToken }}
+        CYPRESS_token: ${{ inputs.providerToken }}
+        CYPRESS_releasetag: ${{env.tag}}
+        # CYPRESS_RECORD_KEY: ${{ inputs.cypress }}
+    - run: ls
+      shell: bash
+    - run: tree . -L 2me
       shell: bash
     - run: docker ps
       shell: bash
