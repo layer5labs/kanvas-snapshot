@@ -48,6 +48,7 @@ runs:
     - run: 
       working-directory: cypress-action/
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+      shell: bash
     - name: Cypress run
       uses: cypress-io/github-action@v4
       with:
