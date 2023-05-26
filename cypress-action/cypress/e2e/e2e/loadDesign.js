@@ -5,7 +5,7 @@
 import { TIME } from "../../support/constants";
 import { beforeEachCallbackForCustomUrl } from "../../support/helpers";
 
-describe("Canvas Double Click Test", () => {
+describe("Infra Shot Automated Runner", () => {
   beforeEach(()=> beforeEachCallbackForCustomUrl(`/extension/meshmap?application=${Cypress.env("applicationId")}`))
 
   it("load a design/application with ID", () => {

@@ -63,6 +63,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.githubToken }}
         CYPRESS_token: ${{ inputs.providerToken }}
         CYPRESS_releasetag: ${{env.tag}}
+        CYPRESS_applicationId: ${{ inputs.applicationId }}
         # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
     - run: ls
       shell: bash
