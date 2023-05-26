@@ -9,8 +9,6 @@ describe("Infra Shot Automated Runner", () => {
   beforeEach(()=> beforeEachCallbackForCustomUrl(`/extension/meshmap?application=${Cypress.env("applicationId")}`))
 
   it("load a design/application with ID", () => {
-    cy.intercept({ url: "/api/application/*", method: "GET"}).as("applicationget")
-    cy.wait("@applicationget", {timeout: 10_000})
     cy.wait(TIME.XXXLARGE)
     cy.get("#download").click({force: true});
   })
