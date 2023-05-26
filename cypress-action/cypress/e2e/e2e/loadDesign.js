@@ -4,10 +4,9 @@
 
 import { TIME } from "../../support/constants";
 import { beforeEachCallbackForCustomUrl } from "../../support/helpers";
-import { beforeEachCallback } from "../../support/helpers";
 
 describe("Canvas Double Click Test", () => {
-  beforeEachCallbackForCustomUrl(`/extension/meshmap?application=${Cypress.env("applicationId")}`)
+  beforeEach(()=> beforeEachCallbackForCustomUrl(`/extension/meshmap?application=${Cypress.env("applicationId")}`))
 
   it("load a design/application with ID", () => {
     cy.wait()
