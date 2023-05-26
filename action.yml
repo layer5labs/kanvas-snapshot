@@ -74,7 +74,7 @@ runs:
       with:
         name: cypress-ss
         path: cypress-action/cypress/videos
-     - name: Upload artifacts
+    - name: Upload artifacts
       if: always()
       uses: actions/upload-artifact@v3
       with:
