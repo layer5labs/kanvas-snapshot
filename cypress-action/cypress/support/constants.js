@@ -23,7 +23,8 @@ export const TIME = {
   MEDIUM: 1000,
   LARGE: 1500,
   XLARGE: 2000,
-  XXLARGE: 5000
+  XXLARGE: 5000,
+  XXXLARGE: 10000
 }
 
 export const canvasContainer = {

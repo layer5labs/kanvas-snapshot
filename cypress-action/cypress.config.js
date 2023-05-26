@@ -5,6 +5,7 @@ module.exports = defineConfig({
   env: {
     token: '',
     releasetag: '',
+    applicationId: "",
     codeCoverage: {
       url: '/api/__coverage__',
     },
