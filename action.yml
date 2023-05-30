@@ -103,13 +103,19 @@ runs:
         organization=${repoArray[0]}
         repository=${repoArray[1]}
 
-        echo "Organization: $organization"
-        echo "Repository: $repository"
-        echo $repoArray
+        echo "ORGANIZATION=$organization" >> $GITHUB_ENV
+        echo "REPOSITORY=$repository" >> $GITHUB_ENV
       shell: bash
-    # - run: echo $RESOURCE_URL
-    #   if: always()
-    #   shell: bash
+    - name: Check Pull Request
+      if: ${{GITHUB_EVENT_NAME == "pull_request" }}
+      run: |
+        # Read pull request number from the event payload
+        pull_request_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+        
+        echo "PR_NUM=$pull_request_number" >> $GITHUB_ENV
+      shell: bash
+    - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM
+      
 
 
 
