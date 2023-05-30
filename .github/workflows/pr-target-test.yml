@@ -1,0 +1,24 @@
+# This workflow was added by CodeSee. Learn more at https://codesee.io/
+# This is v2.0 of this workflow file
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+name: MeshMap Screenshot Service
+
+permissions: read-all
+
+jobs:
+  codesee:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    name: Run the MeshMap screenshot service
+    steps:
+      - uses: actions/checkout@v3
+      - id: test_result
+        uses: ./
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          providerToken: ${{ secrets.PROVIDER_TOKEN }}
+          cypressRecordKey: ${{ secrets.CYPRESS_RECORD_KEY }}
+          applicationId: c791ec8f-ec1a-47c1-b606-d39982e42ca6
