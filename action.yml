@@ -105,6 +105,7 @@ runs:
 
         echo "Organization: $organization"
         echo "Repository: $repository"
+        echo $repoArray
       shell: bash
     # - run: echo $RESOURCE_URL
     #   if: always()
