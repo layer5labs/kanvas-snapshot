@@ -113,11 +113,11 @@ runs:
     - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM
       shell: bash
     - name: Comment Success Status
-        uses: hasura/comment-progress@v2.1.0
-        with:
-          github-token: ${{ inputs.githubToken }}
-          repository: 'layer5labs/infra-shot'
-          number: ${{ inputs.prNumber }}
-          id: extension-test
-          message: "Comment done"
-          append: false
+      uses: hasura/comment-progress@v2.1.0
+      with:
+        github-token: ${{ inputs.githubToken }}
+        repository: 'layer5labs/infra-shot'
+        number: ${{ inputs.prNumber }}
+        id: extension-test
+        message: "Comment done"
+        append: false
