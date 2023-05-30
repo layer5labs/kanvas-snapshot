@@ -95,8 +95,33 @@ runs:
       id: cloud-response
       working-directory: cypress-action/cypress/downloads
       shell: bash
-    - run: docker ps
+    - name: Get Organization and Repository
+      if: always()
+      run: |
+        # Extract organization and repository names from GITHUB_REPOSITORY
+        IFS='/' read -r -a repoArray <<< "$GITHUB_REPOSITORY"
+        organization=${repoArray[0]}
+        repository=${repoArray[1]}
+
+        echo "Organization: $organization"
+        echo "Repository: $repository"
       shell: bash
     - run: echo $RESOURCE_URL
       if: always()
       shell: bash
+
+
+
+
+
+
+#  - name: Comment Success Status
+#         if: ${{ success() || steps.runTest.outcome == 'success' || steps.retryTest.outcome == 'success' || steps.retryTest2.outcome == 'success' }}
+#         uses: hasura/comment-progress@v2.1.0
+#         with:
+#           github-token: ${{ secrets.GH_ACCESS_TOKEN }}
+#           repository: 'layer5labs/meshery-extensions'
+#           number: ${{ inputs.pr_number }}
+#           id: extension-test
+#           message: ':white_check_mark: All tests passed!'
+#           append: true
