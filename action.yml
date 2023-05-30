@@ -84,7 +84,7 @@ runs:
     - run:  echo "SCREENSHOT_NAME=$(ls)" >> $GITHUB_ENV # Assumption: There is only one screenshot in the download directory
       working-directory: cypress-action/cypress/downloads
       shell: bash
-    - run: mv $SCREENSHOT_NAME screenshot.png
+    - run: mv "$SCREENSHOT_NAME" screenshot.png
       working-directory: cypress-action/cypress/downloads
       shell: bash
     - run: |
