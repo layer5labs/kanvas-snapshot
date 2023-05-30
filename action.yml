@@ -120,5 +120,5 @@ runs:
         repository: 'layer5labs/infra-shot'
         number: ${{ inputs.prNumber }}
         id: extension-test
-        message: "(![github-ss](${{env.RESOURCE_URL}})"
+        message: "![github-ss](${{env.RESOURCE_URL}})"
         append: false
