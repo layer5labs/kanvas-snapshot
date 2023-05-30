@@ -107,7 +107,7 @@ runs:
         echo "REPOSITORY=$repository" >> $GITHUB_ENV
       shell: bash
     - name: Check Pull Request
-      if: ${{GITHUB_EVENT_NAME == "pull_request" }}
+      if: ${{ env.GITHUB_EVENT_NAME == "pull_request" }}
       run: |
         # Read pull request number from the event payload
         pull_request_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
@@ -115,6 +115,7 @@ runs:
         echo "PR_NUM=$pull_request_number" >> $GITHUB_ENV
       shell: bash
     - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM
+      shell: bash
       
 
 
