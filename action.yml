@@ -113,7 +113,7 @@ runs:
     - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM
       shell: bash
     - name: Comment Success Status
-        if: ${{ success() && inputs.prNumber != '0' }}
+        # if: ${{ success() && inputs.prNumber != '0' }}
         uses: hasura/comment-progress@v2.1.0
         with:
           github-token: ${{ inputs.githubToken }}
