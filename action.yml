@@ -95,6 +95,6 @@ runs:
       shell: bash
     - run: docker ps
       shell: bash
-    - run: echo $SCREENSHOT_NAME && base64 -h # to check base64 is present
+    - run: echo $SCREENSHOT_NAME
       if: always()
       shell: bash
