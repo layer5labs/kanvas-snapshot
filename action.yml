@@ -18,6 +18,10 @@ inputs:
   cypressRecordKey:
     description: "cypress record key"
     required: false
+  prNumber:
+    description: "The Pull request on which comment has to be made"
+    required: false
+    default: 0
 outputs:
   mardownResult: # id of output
     description: 'The markdown result'
@@ -106,29 +110,15 @@ runs:
         echo "ORGANIZATION=$organization" >> $GITHUB_ENV
         echo "REPOSITORY=$repository" >> $GITHUB_ENV
       shell: bash
-    - name: Check Pull Request
-      run: |
-        # Read pull request number from the event payload
-        pull_request_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-        
-        echo "PR_NUM=$pull_request_number" >> $GITHUB_ENV
-      shell: bash
     - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM
       shell: bash
-      
-
-
-
-
-
-
-#  - name: Comment Success Status
-#         if: ${{ success() || steps.runTest.outcome == 'success' || steps.retryTest.outcome == 'success' || steps.retryTest2.outcome == 'success' }}
-#         uses: hasura/comment-progress@v2.1.0
-#         with:
-#           github-token: ${{ secrets.GH_ACCESS_TOKEN }}
-#           repository: 'layer5labs/meshery-extensions'
-#           number: ${{ inputs.pr_number }}
-#           id: extension-test
-#           message: ':white_check_mark: All tests passed!'
-#           append: true
+    - name: Comment Success Status
+        if: ${{ inputs.prNumber != 0 }}
+        uses: hasura/comment-progress@v2.1.0
+        with:
+          github-token: ${{ inputs.githubToken }}
+          repository: 'layer5labs/infra-shot'
+          number: ${{ inputs.prNumber }}
+          id: extension-test
+          message: "Comment done"
+          append: false
