@@ -92,7 +92,7 @@ runs:
       working-directory: cypress-action/cypress/downloads
       shell: bash
     - run: |
-        export request=$(curl --fail -d "$(base64 -i screenshot.png)" 'https://staging-meshery.layer5.io/api/integration/github/meta/artifacts' \
+        export request=$(curl --fail -d "$(base64 -i screenshot.png)" 'https://meshery.layer5.io/api/integration/github/meta/artifacts' \
           -H "Content-Type: multipart/form-data" \
           -H "Authorization: Bearer ${{ inputs.providerToken }}");
         # TODO: fail in case of not 2XX or 3XX
