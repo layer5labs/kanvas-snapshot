@@ -35,7 +35,7 @@ runs:
     - name: ping playground
       id: ping-playground
       run: |
-        echo "IS_PLAYGROUND_RUNNING=$(./playground-ping.sh)" >> "$GITHUB_OUTPUT"
+        echo "IS_PLAYGROUND_RUNNING=false" >> "$GITHUB_OUTPUT" # replace false with: $(./playground-ping.sh)
       shell: bash
     - name: set active cluster URL as playground
       if: ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
@@ -50,6 +50,9 @@ runs:
       uses: helm/kind-action@v1.7.0
       with:
         cluster_name: "kind-cluster"
+    - name: 
+      run: curl -L https://meshery.io/install | ADAPTERS=consul PLATFORM=kubernetes bash -
+      shell: bash
     - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
     - run: 

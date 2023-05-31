@@ -21,5 +21,5 @@ jobs:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           providerToken: ${{ secrets.PROVIDER_TOKEN }}
           cypressRecordKey: ${{ secrets.CYPRESS_RECORD_KEY }}
-          applicationId: c791ec8f-ec1a-47c1-b606-d39982e42ca6
+          applicationId: 35e32646-71a2-4d55-a4fa-dfc18a079f56
           prNumber: 11
