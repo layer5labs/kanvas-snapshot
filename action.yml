@@ -35,9 +35,9 @@ runs:
     - name: ping playground
       id: ping-playground
       run: |
-        echo "IS_PLAYGROUND_RUNNING=$(./playground-ping.sh)" >> "$GITHUB_OUTPUT"
+        echo "IS_PLAYGROUND_RUNNING=$(./playground-ping.sh)" >> "$GITHUB_ENV"
       shell: bash
-    - run: echo ${steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING}
+    - run: echo $IS_PLAYGROUND_RUNNING
       shell: bash
     - name: set active cluster URL as playground
       if: ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
