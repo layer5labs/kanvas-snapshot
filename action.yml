@@ -37,6 +37,8 @@ runs:
       run: |
         echo "IS_PLAYGROUND_RUNNING=$(./playground-ping.sh)" >> "$GITHUB_OUTPUT"
       shell: bash
+    - run: echo $IS_PLAYGROUND_RUNNING
+      shell: bash
     - name: set active cluster URL as playground
       if: ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       run: echo "MESHERY_URL=https://playground.meshery.io" >> $GITHUB_ENV
