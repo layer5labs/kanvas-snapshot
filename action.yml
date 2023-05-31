@@ -1,4 +1,4 @@
-name: 'Infra-shot'
+name: 'MeshMap-Snapshot'
 description: 'Walks in application and takes a shot of your infrastructure using Meshery Extension MeshMap'
 author: Layer5
 inputs:
@@ -18,83 +18,88 @@ inputs:
   cypressRecordKey:
     description: "cypress record key"
     required: false
+  prNumber:
+    description: "The Pull request on which comment has to be made"
+    required: false
+    default: 0
 outputs:
   mardownResult: # id of output
     description: 'The markdown result'
 runs:
   using: "composite"
   steps:
-    # - run: echo ${{ inputs.designId }}
-    #   shell: bash
-    # - run: echo ${{ inputs.applicationId }}
-    #   shell: bash
-    # - name: ping playground
-    #   id: ping-playground
-    #   run: |
-    #     echo "IS_PLAYGROUND_RUNNING=$(./playground-ping.sh)" >> "$GITHUB_OUTPUT"
-    #   shell: bash
-    # - name: set active cluster URL as playground
-    #   if: ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
-    #   run: echo "MESHERY_URL=https://playground.meshery.io" >> $GITHUB_ENV
-    #   shell: bash
-    # - name: set active cluster URL as localhost:9081
-    #   if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
-    #   run: echo "MESHERY_URL=http://127.0.0.1:9081" >> $GITHUB_ENV
-    #   shell: bash
-    # - name: Create k8s Kind Cluster
-    #   if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
-    #   uses: helm/kind-action@v1.7.0
-    #   with:
-    #     cluster_name: "kind-cluster"
-    # - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
-    #   shell: bash
-    # - run: 
-    #   working-directory: cypress-action/
-    #   if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
-    #   shell: bash
-    # - name: Cypress run
-    #   uses: cypress-io/github-action@v4
-    #   with:
-    #     working-directory: cypress-action
-    #     spec: cypress/e2e/e2e/**/*
-    #     browser: chrome 
-    #     # record: true
-    #   env:
-    #     GITHUB_TOKEN: ${{ inputs.githubToken }}
-    #     CYPRESS_token: ${{ inputs.providerToken }}
-    #     CYPRESS_releasetag: ${{env.tag}}
-    #     CYPRESS_applicationId: ${{ inputs.applicationId }}
-    #     # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
-    # - run: ls
-    #   shell: bash
-    # - run: tree cypress-action/cypress/ -L 2me
-    #   shell: bash
-    # - name: Upload Cypress artifacts
-    #   if: always()
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: cypress-ss
-    #     path: cypress-action/cypress/videos
-    # - name: Upload Cypress artifacts
-    #   if: always()
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: cypress-ss
-    #     path: cypress-action/cypress/screenshots
-    # - run:  echo "SCREENSHOT_NAME=$(ls)" >> $GITHUB_ENV # Assumption: There is only one screenshot in the download directory
-    #   working-directory: cypress-action/cypress/downloads
-    #   shell: bash
-    # - run: mv "$SCREENSHOT_NAME" screenshot.png
-    #   working-directory: cypress-action/cypress/downloads
-    #   shell: bash
-    # - run: |
-    #     export request=$(curl --fail -d "$(base64 -i screenshot.png)" 'https://staging-meshery.layer5.io/api/integration/github/meta/artifacts' \
-    #       -H "Content-Type: multipart/form-data" \
-    #       -H "Authorization: Bearer eyJhY2Nlc3NfdG9rZW4iOiJleUpoYkdjaU9pSlNVekkxTmlJc0ltdHBaQ0k2SW5CMVlteHBZenBqTURobFpEVm1OUzAzTWpCbExUUmlaV1l0WVRGalppMHdZMlZoWXpBNE16WTJOemNpTENKMGVYQWlPaUpLVjFRaWZRLmV5SmhkV1FpT2x0ZExDSmpiR2xsYm5SZmFXUWlPaUp0WlhOb1pYSjVMV05zYjNWa0lpd2laWGh3SWpveE5qZzFOVE01T0RZM0xDSmxlSFFpT250OUxDSnBZWFFpT2pFMk9EVTBOVE0wTmpZc0ltbHpjeUk2SW1oMGRIQnpPaTh2YzNSaFoybHVaeTF0WlhOb1pYSjVMbXhoZVdWeU5TNXBieTlvZVdSeVlTOGlMQ0pxZEdraU9pSXhORFUzWmpWbU1TMDFaRFppTFRRMU5tSXRZV0poWlMwMk5XRTRORFJpTnpWak5ESWlMQ0p1WW1ZaU9qRTJPRFUwTlRNME5qWXNJbk5qY0NJNld5SnZjR1Z1YVdRaUxDSnZabVpzYVc1bElpd2liMlptYkdsdVpWOWhZMk5sYzNNaVhTd2ljM1ZpSWpvaVdWZEtiMkZZVG05YVYzTjFZVE5XZEZsWVNrRmlSMFkxV2xoSk1VeHRiSFk2WWxkV2VtRkhWbmxsVXpGcVlrYzVNVnBCUFQwaWZRLm9vTGRjNWI2WGVjUFFCTDBkamlrZ3lGeERQLW1FYVV6amtaQzlyclo5ZWN6M0ZQT0NkRDI0M0ZJMUpuekh4OWJrLUNCOS04dVBUakxvSkVNV2Jnd2RlY3RDUDFiM0k5ZmZWbU1mVmhVcDBNSFcteG1FYm41X3hlb29kb3d4NW1pVGR0Q0ZUbVY0aVBDYVlNVEdHOE1oaGRUU1JycGdLbzhjT1MtN3Y4RlVTMEVqOFltVHJsZ1V6XzA1aDBROU1vdHREc19mdUNTOVk3Tm9sX3g0NDNSYXpXLWt1RkN4N1B5cGg4Z3dEMHZBTlh3M0l5aFZQQUZkRXdNRkEzMFluNkd4amhyT1YwaFNCclR4TmFXaS1JZE43YTJjRDlrcVUtYk1uNHVRWmRMR09CUTk4MjNxRDhnaW45cmRXbnFCSmc5UDVobExncGhUbUlqeERfOHNxcFhKWTdKcmhFTndXQW1UNVY3aEpKV0dFTzRWVGRxNWg2WkxRTTRTbFBnLWJOVU94OVZJdUxIbWUxVlR4Wmg4RXdoVWg1cUsyamhRLWhVUWstVVVFYUVXRFhfTHFkTGRkemhrMWFhdmwwTmFXc2w3aTNRN2ZKd25sejllY29nSk8wSmthV2dfLTFOZmNvbmFMclZRVUxOdWFYYnVHNlA5Vi14Y3lBdjZ5d29YNnE0RTJYd0RfS0tqVnkwUG9PdXJ3QldxbWtpa1hTeUw4NWFLOUNKaG1RRjZYVEVERGlYTHk4SHJLSUxuaEZQbDd5My1kRkJ5R0JwYjlpc3lCdU1PcGRreHhmTzBQUGFHQ2lvN1lwMkJjc19WamxRbVRhQ2U3eXdOOV9xbTJidERwQW9GUGxEYWVGSFpaUXRuRElKUXdjdVVpbU1ZanRPZU8zcDNEZGdZdmsyVVFJIiwidG9rZW5fdHlwZSI6ImJlYXJlciIsInJlZnJlc2hfdG9rZW4iOiJ1OE5adXNqSkk4ZWR2bWVKOVpSdXo5TmdnSWc0NHEyQmgtNVkwNkN1MkxZLmc2ejdkenlsUTBZMWV4SnFNMG1heUlpdW9aYjFPdFIwRm9DSVU1NkdOb0EiLCJleHBpcnkiOiIyMDIzLTA1LTMxVDEzOjMxOjA2LjczMjk4MzU5OVoifQ");
-    #     echo "RESOURCE_URL=$request" >> $GITHUB_ENV
-    #   id: cloud-response
-    #   working-directory: cypress-action/cypress/downloads
-    #   shell: bash
+    - run: echo ${{ inputs.designId }}
+      shell: bash
+    - run: echo ${{ inputs.applicationId }}
+      shell: bash
+    - name: ping playground
+      id: ping-playground
+      run: |
+        echo "IS_PLAYGROUND_RUNNING=$(./playground-ping.sh)" >> "$GITHUB_OUTPUT"
+      shell: bash
+    - name: set active cluster URL as playground
+      if: ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+      run: echo "MESHERY_URL=https://playground.meshery.io" >> $GITHUB_ENV
+      shell: bash
+    - name: set active cluster URL as localhost:9081
+      if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+      run: echo "MESHERY_URL=http://127.0.0.1:9081" >> $GITHUB_ENV
+      shell: bash
+    - name: Create k8s Kind Cluster
+      if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+      uses: helm/kind-action@v1.7.0
+      with:
+        cluster_name: "kind-cluster"
+    - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+      shell: bash
+    - run: 
+      working-directory: cypress-action/
+      if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+      shell: bash
+    - name: Cypress run
+      uses: cypress-io/github-action@v4
+      with:
+        working-directory: cypress-action
+        spec: cypress/e2e/e2e/**/*
+        browser: chrome 
+        # record: true
+      env:
+        GITHUB_TOKEN: ${{ inputs.githubToken }}
+        CYPRESS_token: ${{ inputs.providerToken }}
+        CYPRESS_releasetag: ${{env.tag}}
+        CYPRESS_applicationId: ${{ inputs.applicationId }}
+        # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
+    - run: ls
+      shell: bash
+    - run: tree cypress-action/cypress/ -L 2me
+      shell: bash
+    - name: Upload Cypress artifacts
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: cypress-ss
+        path: cypress-action/cypress/videos
+    - name: Upload Cypress artifacts
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: cypress-ss
+        path: cypress-action/cypress/screenshots
+    - run:  echo "SCREENSHOT_NAME=$(ls)" >> $GITHUB_ENV # Assumption: There is only one screenshot in the download directory
+      working-directory: cypress-action/cypress/downloads
+      shell: bash
+    - run: mv "$SCREENSHOT_NAME" screenshot.png
+      working-directory: cypress-action/cypress/downloads
+      shell: bash
+    - run: |
+        export request=$(curl --fail -d "$(base64 -i screenshot.png)" 'https://meshery.layer5.io/api/integration/github/meta/artifacts' \
+          -H "Content-Type: multipart/form-data" \
+          -H "Authorization: Bearer ${{ inputs.providerToken }}");
+        # TODO: fail in case of not 2XX or 3XX
+        echo "RESOURCE_URL=$request" >> $GITHUB_ENV
+      id: cloud-response
+      working-directory: cypress-action/cypress/downloads
+      shell: bash
     - name: Get Organization and Repository
       if: always()
       run: |
@@ -106,30 +111,15 @@ runs:
         echo "ORGANIZATION=$organization" >> $GITHUB_ENV
         echo "REPOSITORY=$repository" >> $GITHUB_ENV
       shell: bash
-    - name: Check Pull Request
-      if: ${{ env.GITHUB_EVENT_NAME == 'pull_request' }}
-      run: |
-        # Read pull request number from the event payload
-        pull_request_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-        
-        echo "PR_NUM=$pull_request_number" >> $GITHUB_ENV
-      shell: bash
     - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM
       shell: bash
-      
-
-
-
-
-
-
-#  - name: Comment Success Status
-#         if: ${{ success() || steps.runTest.outcome == 'success' || steps.retryTest.outcome == 'success' || steps.retryTest2.outcome == 'success' }}
-#         uses: hasura/comment-progress@v2.1.0
-#         with:
-#           github-token: ${{ secrets.GH_ACCESS_TOKEN }}
-#           repository: 'layer5labs/meshery-extensions'
-#           number: ${{ inputs.pr_number }}
-#           id: extension-test
-#           message: ':white_check_mark: All tests passed!'
-#           append: true
+    - name: Comment Success Status
+      if: ${{ success() && inputs.prNumber != '0' }}
+      uses: hasura/comment-progress@v2.1.0
+      with:
+        github-token: ${{ inputs.githubToken }}
+        repository: "${{env.ORGANIZATION}}/${{env.REPOSITORY}}"
+        number: ${{ inputs.prNumber }}
+        id: meshmap-snapshot
+        message: "![github-ss](${{env.RESOURCE_URL}})"
+        append: false

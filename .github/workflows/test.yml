@@ -8,17 +8,6 @@ on: # rebuild any PRs and main branch changes
       - 'releases/*'
 
 jobs:
-  build: # make sure build/ci work properly
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: install node pkges
-        working-directory: node-action
-        run: npm install
-      - name: build
-        working-directory: node-action
-        run: |
-          NODE_OPTIONS=--openssl-legacy-provider npm run all
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
@@ -31,3 +20,4 @@ jobs:
           providerToken: ${{ secrets.PROVIDER_TOKEN }}
           cypressRecordKey: ${{ secrets.CYPRESS_RECORD_KEY }}
           applicationId: c791ec8f-ec1a-47c1-b606-d39982e42ca6
+          prNumber: 11

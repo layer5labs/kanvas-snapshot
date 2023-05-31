@@ -22,3 +22,4 @@ jobs:
           providerToken: ${{ secrets.PROVIDER_TOKEN }}
           cypressRecordKey: ${{ secrets.CYPRESS_RECORD_KEY }}
           applicationId: c791ec8f-ec1a-47c1-b606-d39982e42ca6
+          prNumber: 11
