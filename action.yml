@@ -72,7 +72,7 @@ runs:
         working-directory: cypress-action
         spec: cypress/e2e/e2e/**/*
         browser: chrome 
-        config-file: ${{ env.CONFIG_PATH }}
+        config-file: "${{ env.CONFIG_PATH }}"
         # record: true
       env:
         GITHUB_TOKEN: ${{ inputs.githubToken }}
