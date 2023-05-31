@@ -41,18 +41,23 @@ runs:
       shell: bash
     - name: set active cluster URL as playground
       if: ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
-      run: echo "MESHERY_URL=https://playground.meshery.io" >> $GITHUB_ENV
+      run: | 
+        echo "MESHERY_URL=https://playground.meshery.io" >> $GITHUB_ENV;
+        echo "CONFIG_PATH=cypress-configs/cypress.playground.config.js";
       shell: bash
     - name: set active cluster URL as localhost:9081
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
-      run: echo "MESHERY_URL=http://127.0.0.1:9081" >> $GITHUB_ENV
+      run: |
+       echo "MESHERY_URL=http://127.0.0.1:9081" >> $GITHUB_ENV
+       echo "CONFIG_PATH=cypress-configs/cypress.localhost.config.js";
       shell: bash
     - name: Create k8s Kind Cluster
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       uses: helm/kind-action@v1.7.0
       with:
         cluster_name: "kind-cluster"
-    - name: 
+    - name: start meshery local instance
+      if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       run: curl -L https://meshery.io/install | ADAPTERS=consul PLATFORM=kubernetes bash -
       shell: bash
     - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
@@ -67,6 +72,7 @@ runs:
         working-directory: cypress-action
         spec: cypress/e2e/e2e/**/*
         browser: chrome 
+        config-file: ${{ env.CONFIG_PATH }}
         # record: true
       env:
         GITHUB_TOKEN: ${{ inputs.githubToken }}
