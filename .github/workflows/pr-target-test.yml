@@ -14,6 +14,10 @@ jobs:
     continue-on-error: true
     name: Run the MeshMap screenshot service
     steps:
+      - name: Set PR number
+        run: |
+          export pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          echo "PULL_NO=$pull_number" >> $GITHUB_ENV
       - uses: actions/checkout@v3
       - id: test_result
         uses: ./
@@ -22,4 +26,4 @@ jobs:
           providerToken: ${{ secrets.PROVIDER_TOKEN }}
           cypressRecordKey: ${{ secrets.CYPRESS_RECORD_KEY }}
           applicationId: c791ec8f-ec1a-47c1-b606-d39982e42ca6
-          prNumber: 11
+          prNumber: ${{ env.PULL_NO }}

@@ -56,7 +56,7 @@ Cypress.Commands.add("interceptCapabilities", () => {
 })
 
 Cypress.Commands.add("setViewPort", () => {
-  cy.viewport(1500, 900)
+  cy.viewport(1600, 950)
 })
 
 Cypress.Commands.add("deleteDesign", (designId) => {
