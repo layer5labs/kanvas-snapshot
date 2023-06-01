@@ -121,5 +121,5 @@ runs:
         repository: "${{env.ORGANIZATION}}/${{env.REPOSITORY}}"
         number: ${{ inputs.prNumber }}
         id: meshmap-snapshot
-        message: "![github-ss](${{env.RESOURCE_URL}})"
+        message: "<img src="${{env.RESOURCE_URL}}">](https://meshery.layer5.io/catalog/applications)"
         append: false
