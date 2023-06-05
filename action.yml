@@ -22,6 +22,10 @@ inputs:
     description: "The Pull request on which comment has to be made"
     required: false
     default: 0
+  filePath: 
+    description: "the relative filepath of the location where the manifests are stored"
+    required: false
+    
 outputs:
   mardownResult: # id of output
     description: 'The markdown result'
