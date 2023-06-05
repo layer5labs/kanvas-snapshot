@@ -19,6 +19,8 @@ jobs:
           export pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           echo "PULL_NO=$pull_number" >> $GITHUB_ENV
       - uses: actions/checkout@v3
+        with:
+          path: action
       - id: test_result
         uses: ./
         with:
