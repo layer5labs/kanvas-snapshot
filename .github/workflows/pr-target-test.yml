@@ -22,7 +22,7 @@ jobs:
         with:
           path: action
       - id: test_result
-        uses: ./
+        uses: ./action
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           providerToken: ${{ secrets.PROVIDER_TOKEN }}

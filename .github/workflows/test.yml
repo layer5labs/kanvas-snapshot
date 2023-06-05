@@ -19,7 +19,7 @@ jobs:
         with:
           path: action
       - id: test_result
-        uses: ./
+        uses: ./action
         with:
           designId: ${{ secrets.TEST_SECRET }} #works
           githubToken: ${{ secrets.GITHUB_TOKEN }}
