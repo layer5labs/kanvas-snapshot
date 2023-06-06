@@ -32,14 +32,10 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - run: echo ${{ inputs.designId }}
-      shell: bash
-    - run: echo ${{ inputs.applicationId }}
-      shell: bash
     - name: ping playground
       id: ping-playground
       run: |
-        echo "IS_PLAYGROUND_RUNNING=$(./action/playground-ping.sh)" >> "$GITHUB_OUTPUT"
+        echo "IS_PLAYGROUND_RUNNING=$( echo $(./action/playground-ping.sh))" >> "$GITHUB_OUTPUT"
       shell: bash
     - run: echo $IS_PLAYGROUND_RUNNING
       shell: bash
