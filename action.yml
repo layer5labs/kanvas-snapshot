@@ -64,7 +64,7 @@ runs:
     #   shell: bash That was needed if the curl approach wasn't working
     # - run: ls && echo "APPLICATION_ID=$(MESHERY_SERVER_BASE_URL=$MESHERY_URL UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplication.sh) >> "$GITHUB_OUTPUT" 
       # shell: bash
-    - run: MESHERY_SERVER_BASE_URL=$MESHERY_URL UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplication.sh
+    - run: MESHERY_SERVER_BASE_URL="http://localhost:9081" UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplication.sh
       shell: bash
     - run: echo $APPLICATION_ID
       shell: bash
