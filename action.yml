@@ -64,9 +64,9 @@ runs:
     #   shell: bash That was needed if the curl approach wasn't working
     # - run: ls && echo "APPLICATION_ID=$(MESHERY_SERVER_BASE_URL=$MESHERY_URL UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplication.sh) >> "$GITHUB_OUTPUT" 
       # shell: bash
-    - run: MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplication.sh
+    - run: "APPLICATION_ID=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplication.sh)" >> $GITHUB_ENV
       shell: bash
-    - run: echo $APPLICATION_ID
+    - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
       shell: bash
     # - name: Cypress run
     #   uses: cypress-io/github-action@v4
