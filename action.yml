@@ -58,15 +58,13 @@ runs:
       working-directory: action/cypress-action/
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
-    - run: tree . -L 3me
-      shell: bash
-    - run: tree action/__tests__ -L 3me
-      shell: bash
     - run: FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
       shell: bash
     # - run: mv __intermediate_file.yml action/cypress-action/cypress/fixtures/__intermediate_file.yml
     #   shell: bash That was needed if the curl approach wasn't working
-    - run: ls && echo "APPLICATION_ID=$(MESHERY_SERVER_BASE_URL=$MESHERY_URL UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplication.sh)" >> "$GITHUB_OUTPUT" 
+    # - run: ls && echo "APPLICATION_ID=$(MESHERY_SERVER_BASE_URL=$MESHERY_URL UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplication.sh) >> "$GITHUB_OUTPUT" 
+      # shell: bash
+    - run: APPLICATION_ID=$(MESHERY_SERVER_BASE_URL=$MESHERY_URL UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplication.sh
       shell: bash
     - run: echo $APPLICATION_ID
       shell: bash
