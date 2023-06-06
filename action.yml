@@ -58,6 +58,10 @@ runs:
       working-directory: action/cypress-action/
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
+    - run: tree . -L 3me
+      shell: bash
+    - run: tree action/__tests__ -L 3me
+      shell: bash
     - run: FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
       shell: bash
     # - run: mv __intermediate_file.yml action/cypress-action/cypress/fixtures/__intermediate_file.yml
