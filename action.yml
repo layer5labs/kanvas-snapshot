@@ -62,8 +62,8 @@ runs:
       shell: bash
     - run: FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
       shell: bash
-    - run: mv __intermediate_file.yml action/cypress-action/cypress/fixtures/__intermediate_file.yml
-      shell: bash
+    # - run: mv __intermediate_file.yml action/cypress-action/cypress/fixtures/__intermediate_file.yml
+    #   shell: bash That was needed if the curl approach wasn't working
     - run: ls && echo "APPLICATION_ID=$(./uploadApplication.sh)" >> "$GITHUB_OUTPUT" 
       shell: bash
     - run: echo $APPLICATION_ID
