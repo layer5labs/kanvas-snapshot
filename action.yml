@@ -66,7 +66,7 @@ runs:
       shell: bash
     # - run: mv __intermediate_file.yml action/cypress-action/cypress/fixtures/__intermediate_file.yml
     #   shell: bash That was needed if the curl approach wasn't working
-    - run: ls && echo "APPLICATION_ID=$(./action/uploadApplication.sh)" >> "$GITHUB_OUTPUT" 
+    - run: ls && echo "APPLICATION_ID=$(MESHERY_SERVER_BASE_URL=$MESHERY_URL UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplication.sh)" >> "$GITHUB_OUTPUT" 
       shell: bash
     - run: echo $APPLICATION_ID
       shell: bash
@@ -137,3 +137,10 @@ runs:
     #     id: meshmap-snapshot
     #     message: '[<img src="${{env.RESOURCE_URL}}">](https://meshery.layer5.io/catalog/applications)'
     #     append: false
+
+
+
+
+# TODOS:
+# Manage wrong file-path
+# Manage curl Failure
