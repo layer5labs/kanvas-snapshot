@@ -15,5 +15,5 @@ curl "$MESHERY_SERVER_BASE_URL/api/application/$UPLOAD_TYPE" \
   -H 'Content-Type: text/plain;charset=UTF-8' \
   -H "Cookie: meshery-provider=Meshery; token=$PROVIDER_TOKEN;" \
   --data-raw "{\"save\":true, \"application_data\": {\"application_file\":\"$MESHERY_APPLICATION_FILE\"}}" \
-  --compressed --trace-ascii - | jq ".[0]"
+  --compressed -v | jq "."
 
