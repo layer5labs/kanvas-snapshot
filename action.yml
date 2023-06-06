@@ -60,6 +60,14 @@ runs:
       working-directory: action/cypress-action/
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
+    - run: FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
+      shell: bash
+    - run: mv __intermediate_file.yml action/cypress-action/cypress/fixtures/__intermediate_file.yml
+      shell: bash
+    - run: ls && echo "APPLICATION_ID=$(./uploadApplication.sh)" >> "$GITHUB_OUTPUT" 
+      shell: bash
+    - run: echo $APPLICATION_ID
+      shell: bash
     - name: Cypress run
       uses: cypress-io/github-action@v4
       with:
@@ -71,7 +79,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.githubToken }}
         CYPRESS_token: ${{ inputs.providerToken }}
         CYPRESS_releasetag: ${{env.tag}}
-        CYPRESS_applicationId: ${{ inputs.applicationId }}
+        CYPRESS_applicationId: ${{ env.APPLICATION_ID }}
         # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
     - run: ls
       shell: bash
