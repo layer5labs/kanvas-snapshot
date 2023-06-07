@@ -29,4 +29,3 @@ jobs:
           prNumber: ${{ env.PULL_NO }}
           application_type: "Helm Chart"
           application_url: "https://github.com/meshery/meshery.io/raw/master/charts/meshery-v0.6.86.tgz"
-
