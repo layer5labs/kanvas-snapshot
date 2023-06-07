@@ -144,14 +144,14 @@ runs:
     #     echo "ORGANIZATION=$organization" >> $GITHUB_ENV
     #     echo "REPOSITORY=$repository" >> $GITHUB_ENV
     #   shell: bash
-    - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM && echo "${{ env.GITHUB_REPOSITORY }}"
+    - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM && echo "${{ env.GITHUB_REPOSITORY }}" && echo ${{ inputs.prNumber }}
       shell: bash
     - name: Comment Success Status
       if: ${{ success() && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
       uses: hasura/comment-progress@v2.2.0
       with:
         github-token: ${{ inputs.githubToken }}
-        repository: ${{ env.GITHUB_REPOSITORY }}
+        repository: github.repository
         number: ${{ inputs.prNumber }}
         id: meshmap-snapshot
         message: "Hello"
