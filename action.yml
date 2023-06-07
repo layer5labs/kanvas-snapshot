@@ -3,11 +3,11 @@ description: 'Walks in application and takes a shot of your infrastructure using
 author: Layer5
 inputs:
   designId:  # id of input  #deprecated
-    description: "The design uuid example: 3c116d0a-49ea-4294-addc-d9ab34210662"
+    description: "The design uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
     default: '{}'
   applicationId:  #deprecated
-    description: "The application uuid example: 3c116d0a-49ea-4294-addc-d9ab34210662"
+    description: "The application uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
   githubToken:
     description: "Github PAT token"
@@ -67,7 +67,7 @@ runs:
       if: ${{ !inputs.application_url }}
       shell: bash
     - run: |
-        AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplicationFile.sh)
+        AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplicationFile.sh)
         echo $AppId
         echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
       if: ${{ !inputs.application_url }}
