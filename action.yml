@@ -144,7 +144,7 @@ runs:
     #     echo "ORGANIZATION=$organization" >> $GITHUB_ENV
     #     echo "REPOSITORY=$repository" >> $GITHUB_ENV
     #   shell: bash
-    - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM && echo "${{ GITHUB_REPOSITORY }}" && echo ${{ inputs.prNumber }} && echo ${{github.repository}}
+    - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM && echo ${{ inputs.prNumber }} && echo ${{github.repository}}
       shell: bash
     - name: Comment Success Status
       # if: ${{ success() && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
