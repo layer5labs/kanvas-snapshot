@@ -2,16 +2,16 @@ name: 'MeshMap-Snapshot'
 description: 'Walks in application and takes a shot of your infrastructure using Meshery Extension MeshMap'
 author: Layer5
 inputs:
-  designId:  # id of input
+  designId:  # id of input  #deprecated
     description: 'Give the Design Id'
     required: false
     default: '{}'
-  applicationId:
+  applicationId:  #deprecated
     description: "Give the application Id"
     required: false
   githubToken:
     description: "Github token"
-    required: false
+    required: true
   providerToken:
     description: "Meshery Authentication Provider Token"
     required: true
@@ -25,7 +25,12 @@ inputs:
   filePath: 
     description: "the relative filepath of the location where the manifests are stored"
     required: false
-    
+  application_type:
+    description: "Application upload type, any of the three, Kubernetes Manifest, Docker Compose, Helm Chart"
+    required: false
+  application_url:
+    description: "Application's source url where the manifests or data is stored"
+    required: false
 outputs:
   mardownResult: # id of output
     description: 'The markdown result'
@@ -60,14 +65,17 @@ runs:
       shell: bash
     - run: FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
       shell: bash
-    # - run: mv __intermediate_file.yml action/cypress-action/cypress/fixtures/__intermediate_file.yml
-    #   shell: bash That was needed if the curl approach wasn't working
-    # - run: ls && echo "APPLICATION_ID=$(MESHERY_SERVER_BASE_URL=$MESHERY_URL UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplication.sh) >> "$GITHUB_OUTPUT" 
-      # shell: bash
     - run: |
-        AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplication.sh)
+        AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplicationFile.sh)
         echo $AppId
         echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
+      if: ${{ !inputs.application_url }}
+      shell: bash
+    - run: |
+        AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }} UPLOAD_URL=${{ inputs.application_url }}  ./action/uploadApplicationUrl.sh)
+        echo $AppId
+        echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
+      if: ${{ inputs.application_url }}
       shell: bash
     - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
       shell: bash
@@ -116,7 +124,7 @@ runs:
       working-directory: action/cypress-action/cypress/downloads
       shell: bash
     - name: Get Organization and Repository
-      if: always()
+      if: ${{ !inputs.application_url }}
       run: |
         # Extract organization and repository names from GITHUB_REPOSITORY
         IFS='/' read -r -a repoArray <<< "$GITHUB_REPOSITORY"
@@ -129,7 +137,7 @@ runs:
     - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM
       shell: bash
     - name: Comment Success Status
-      if: ${{ success() && inputs.prNumber != '0' }}
+      if: ${{ success() && inputs.prNumber != '0'}}
       uses: hasura/comment-progress@v2.1.0
       with:
         github-token: ${{ inputs.githubToken }}
@@ -138,10 +146,3 @@ runs:
         id: meshmap-snapshot
         message: '[<img src="${{env.RESOURCE_URL}}">](https://meshery.layer5.io/catalog/applications)'
         append: false
-
-
-
-
-# TODOS:
-# Manage wrong file-path
-# Manage curl Failure
