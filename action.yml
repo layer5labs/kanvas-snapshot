@@ -116,6 +116,9 @@ runs:
     #   shell: bash
     - run: node --version
       shell: bash
+    - run: npm ci
+      working-directory: action/  
+      shell: bash
     - run: node node-file-upload/index.js
       working-directory: action/  
       shell: bash
