@@ -1,90 +1,118 @@
 # Infrashot
 Walks in application and takes a shot of your infrastructure using Meshery Extension MeshMap
-## Code in Main
 
-> First, you'll need to have a reasonably modern version of `node` handy. This won't work with versions older than 9, for instance.
 
-Install the dependencies  
-```bash
-$ npm install
-```
+## Design Prologue
+MeshMap Snapshot is a screenshot service provided via MeshMap for the design or Application user is interested in. It Enables users to visualize the changes being done in the code-base rapidly over each PR and inform the user about any potential changesin their infrastructure. It doesn't need any configuration or setup neither any deployment by the client rather a simple one time setup is able to provide a long time value.
 
-Build the typescript and package it for distribution
-```bash
-$ npm run build && npm run package
-```
 
-Run the tests :heavy_check_mark:  
-```bash
-$ npm test
+## Functional/Sequence Diagram
+For Github Workflows:
+![sequence-diag](.github/readme/images/meshmap-snapshot.png)
 
- PASS  ./index.test.js
-  ✓ throws invalid number (3ms)
-  ✓ wait 500 ms (504ms)
-  ✓ test runs (95ms)
+## Example Usage:
 
-...
-```
-
-## Change action.yml
-
-The action.yml defines the inputs and output for your action.
-
-Update the action.yml with your name, description, inputs and outputs for your action.
-
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
-
-## Change the Code
-
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
-
-```javascript
-import * as core from '@actions/core';
-...
-
-async function run() {
-  try { 
-      ...
-  } 
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run()
-```
-
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
-
-## Publish to a distribution branch
-
-Actions are run from GitHub repos so we will checkin the packed dist folder. 
-
-Then run [ncc](https://github.com/zeit/ncc) and push the results:
-```bash
-$ npm run package
-$ git add dist
-$ git commit -a -m "prod dependencies"
-$ git push origin releases/v1
-```
-
-Note: We recommend using the `--license` option for ncc, which will create a license file for all of the production node modules used in your project.
-
-Your action is now published! :rocket: 
-
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-
-## Validate
-
-You can now validate the action by referencing `./` in a workflow in your repo (see [test.yml](.github/workflows/test.yml))
-
+### When Infrastructure is located in the file-system
 ```yaml
-uses: ./
-with:
-  milliseconds: 1000
+name: 'MeshMap Snapshot With File-located in Fs'
+on: # rebuild any PRs and main branch changes
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+      - 'releases/*'
+
+jobs:
+  test: # make sure the action works on a clean machine without building
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set PR number # To comment the final status on the Pull-request opened in any repository
+        run: |
+          export pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          echo "PULL_NO=$pull_number" >> $GITHUB_ENV
+      - uses: actions/checkout@v3 # the repository where your infrastructure is located
+      - uses: actions/checkout@v3 #this step would go and would be no longer needed to be written
+        with:
+          path: action
+          repository: layer5labs/meshmap-snapshot
+      - id: test_result
+        uses: layer5labs/MeshMap-Snapshot@v0.0.4
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }} # github's personal access token example: "ghp_...."
+          providerToken: ${{ secrets.PROVIDER_TOKEN }} # Meshery Cloud Authentication token, signin to meshery-cloud to get one, example: ey.....
+          prNumber: ${{ env.PULL_NO }} # auto-filled from the above step
+          application_type: "Kubernetes Manifest" # your application type, could be any of three: "Kubernetes Manifest", "Docker Compose", "Helm Chart"
+          filePath: "action/__tests__/manifest-test" # relative file-path from the root directory in the github-runner env, you might require to checkout the repository as described in step 2
+```
+### When Infrastructure is identified via URL
+```yaml
+name: 'MeshMap Snapshot With URL-Upload'
+on: # rebuild any PRs and main branch changes
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+      - 'releases/*'
+
+jobs:
+  test: # make sure the action works on a clean machine without building
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set PR number # To comment the final status on the Pull-request opened in any repository
+        run: |
+          export pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          echo "PULL_NO=$pull_number" >> $GITHUB_ENV
+      - uses: actions/checkout@v3 #this step would go and would be no longer needed to be written
+        with:
+          path: action
+          repository: layer5labs/meshmap-snapshot
+      - id: test_result
+        uses: layer5labs/MeshMap-Snapshot@v0.0.4
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }} # github's personal access token example: "ghp_...."
+          providerToken: ${{ secrets.PROVIDER_TOKEN }} # Meshery Cloud Authentication token, signin to meshery-cloud to get one, example: ey.....
+          prNumber: ${{ env.PULL_NO }} # auto-filled from the above step
+          application_type: "Helm Chart" # your application type, could be any of three: "Kubernetes Manifest", "Docker Compose", "Helm Chart"
+          application_url: "https://github.com/meshery/meshery.io/raw/master/charts/meshery-v0.6.88.tgz"
 ```
 
-See the [actions tab](https://github.com/layer5labs/cypress-test-summary/actions) for runs of this action! :rocket:
+#### FileSystem Approach Notes
+The filesystem-approach asks for your relative file-path and automatically merges all the yaml files together to bundle up into one. So you might like to give the root directory where all the yamls are located. It doesn't move recursevely in internal folders, so only the first level yaml files are checked.
+
+## List of Input variables supported:
+```yaml
+designId:  # id of input  #deprecated
+  description: "The design uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
+  required: false
+  default: '{}'
+applicationId:  #deprecated
+  description: "The application uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
+  required: false
+githubToken:
+  description: "Github PAT token"
+  required: true
+providerToken:
+  description: "Meshery Authentication Provider Token"
+  required: true
+cypressRecordKey:
+  description: "cypress record key"
+  required: false
+prNumber:
+  description: "The Pull request on which comment has to be made"
+  required: false
+  default: 0
+filePath: 
+  description: "The relative filepath of the location where the manifests are stored"
+  required: false
+application_type:
+  description: "Application upload type, any of the three, Kubernetes Manifest, Docker Compose, Helm Chart"
+  required: true
+application_url:
+  description: "Application's source url where the manifests or data is stored"
+  required: false
+```
 
 ## Usage:
 
