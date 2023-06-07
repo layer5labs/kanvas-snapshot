@@ -9,7 +9,7 @@ describe("Infra Shot Automated Runner", () => {
   beforeEach(()=> beforeEachCallbackForCustomUrl(`/extension/meshmap?application=${Cypress.env("applicationId").replace(/['"]+/g, '')}`))
 
   it("load a design/application with ID", () => {
-    cy.wait(TIME.XXXLARGE)
+    cy.wait(TIME.X4LARGE)
     cy.get("#download").click({force: true});
   })
 })
