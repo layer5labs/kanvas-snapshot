@@ -3,14 +3,14 @@ description: 'Walks in application and takes a shot of your infrastructure using
 author: Layer5
 inputs:
   designId:  # id of input  #deprecated
-    description: 'Give the Design Id'
+    description: "The design uuid example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
     default: '{}'
   applicationId:  #deprecated
-    description: "Give the application Id"
+    description: "The application uuid example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
   githubToken:
-    description: "Github token"
+    description: "Github PAT token"
     required: true
   providerToken:
     description: "Meshery Authentication Provider Token"
@@ -23,7 +23,7 @@ inputs:
     required: false
     default: 0
   filePath: 
-    description: "the relative filepath of the location where the manifests are stored"
+    description: "The relative filepath of the location where the manifests are stored"
     required: false
   application_type:
     description: "Application upload type, any of the three, Kubernetes Manifest, Docker Compose, Helm Chart"
