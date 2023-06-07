@@ -3,11 +3,11 @@ description: 'Walks in application and takes a shot of your infrastructure using
 author: Layer5
 inputs:
   designId:  # id of input  #deprecated
-    description: "The design uuid example: 3c116d0a-49ea-4294-addc-d9ab34210662"
+    description: "The design uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
     default: '{}'
   applicationId:  #deprecated
-    description: "The application uuid example: 3c116d0a-49ea-4294-addc-d9ab34210662"
+    description: "The application uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
   githubToken:
     description: "Github PAT token"
@@ -27,7 +27,7 @@ inputs:
     required: false
   application_type:
     description: "Application upload type, any of the three, Kubernetes Manifest, Docker Compose, Helm Chart"
-    required: false
+    required: true
   application_url:
     description: "Application's source url where the manifests or data is stored"
     required: false
@@ -64,9 +64,10 @@ runs:
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
     - run: FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
+      if: ${{ !inputs.application_url }}
       shell: bash
     - run: |
-        AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplicationFile.sh)
+        AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplicationFile.sh)
         echo $AppId
         echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
       if: ${{ !inputs.application_url }}
@@ -132,25 +133,12 @@ runs:
         fi
       working-directory: action/
       shell: bash
-    - name: Get Organization and Repository
-      if: ${{ !inputs.application_url }}
-      run: |
-        # Extract organization and repository names from GITHUB_REPOSITORY
-        IFS='/' read -r -a repoArray <<< "$GITHUB_REPOSITORY"
-        organization=${repoArray[0]}
-        repository=${repoArray[1]}
-
-        echo "ORGANIZATION=$organization" >> $GITHUB_ENV
-        echo "REPOSITORY=$repository" >> $GITHUB_ENV
-      shell: bash
-    - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM
-      shell: bash
     - name: Comment Success Status
       if: ${{ success() && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
       uses: hasura/comment-progress@v2.2.0
       with:
         github-token: ${{ inputs.githubToken }}
-        repository: "${{env.ORGANIZATION}}/${{env.REPOSITORY}}"
+        repository: ${{github.repository}}
         number: ${{ inputs.prNumber }}
         id: meshmap-snapshot
         message: '[<img src="${{env.RESOURCE_URL}}">](https://meshery.layer5.io/catalog/applications)'

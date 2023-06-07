@@ -1,4 +1,4 @@
-name: 'build-test'
+name: 'url-upload-test'
 on: # rebuild any PRs and main branch changes
   pull_request:
   push:
@@ -27,5 +27,5 @@ jobs:
           cypressRecordKey: ${{ secrets.CYPRESS_RECORD_KEY }}
           applicationId: c791ec8f-ec1a-47c1-b606-d39982e42ca6
           prNumber: ${{ env.PULL_NO }}
-          filePath: "action/__tests__/manifest-test"
-
+          application_type: "Helm Chart"
+          application_url: "https://github.com/meshery/meshery.io/raw/master/charts/meshery-v0.6.86.tgz"
