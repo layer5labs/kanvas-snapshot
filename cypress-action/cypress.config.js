@@ -18,5 +18,6 @@ module.exports = defineConfig({
     },
     baseUrl: 'https://playground.meshery.io',
     specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
-  }
+  },
+  videoCompression: false
 })
