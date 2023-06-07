@@ -124,15 +124,16 @@ runs:
         else
             "RESOURCE_URL=false" >> $GITHUB_ENV
         fi
+      shell: bash
     # - run: |
     #     export request=$(curl --fail -d "$(base64 -i screenshot.png)" 'https://meshery.layer5.io/api/integration/github/meta/artifacts' \
     #       -H "Content-Type: multipart/form-data" \
     #       -H "Authorization: Bearer ${{ inputs.providerToken }}");
     #     # TODO: fail in case of not 2XX or 3XX
     #     echo "RESOURCE_URL=$request" >> $GITHUB_ENV
-      id: cloud-response
-      working-directory: action/cypress-action/cypress/downloads
-      shell: bash
+      # id: cloud-response
+      # working-directory: action/cypress-action/cypress/downloads
+      # shell: bash
     - name: Get Organization and Repository
       if: ${{ !inputs.application_url }}
       run: |
