@@ -22,20 +22,22 @@ inputs:
     description: "The Pull request on which comment has to be made"
     required: false
     default: 0
+  filePath: 
+    description: "the relative filepath of the location where the manifests are stored"
+    required: false
+    
 outputs:
   mardownResult: # id of output
     description: 'The markdown result'
 runs:
   using: "composite"
   steps:
-    - run: echo ${{ inputs.designId }}
-      shell: bash
-    - run: echo ${{ inputs.applicationId }}
-      shell: bash
     - name: ping playground
       id: ping-playground
       run: |
-        echo "IS_PLAYGROUND_RUNNING=$(./playground-ping.sh)" >> "$GITHUB_OUTPUT"
+        echo "IS_PLAYGROUND_RUNNING=$( echo $(./action/playground-ping.sh))" >> "$GITHUB_OUTPUT"
+      shell: bash
+    - run: echo $IS_PLAYGROUND_RUNNING
       shell: bash
     - name: set active cluster URL as playground
       if: ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
@@ -53,13 +55,26 @@ runs:
     - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
     - run: 
-      working-directory: cypress-action/
+      working-directory: action/cypress-action/
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+      shell: bash
+    - run: FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
+      shell: bash
+    # - run: mv __intermediate_file.yml action/cypress-action/cypress/fixtures/__intermediate_file.yml
+    #   shell: bash That was needed if the curl approach wasn't working
+    # - run: ls && echo "APPLICATION_ID=$(MESHERY_SERVER_BASE_URL=$MESHERY_URL UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplication.sh) >> "$GITHUB_OUTPUT" 
+      # shell: bash
+    - run: |
+        AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplication.sh)
+        echo $AppId
+        echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
+      shell: bash
+    - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
       shell: bash
     - name: Cypress run
       uses: cypress-io/github-action@v4
       with:
-        working-directory: cypress-action
+        working-directory: action/cypress-action
         spec: cypress/e2e/e2e/**/*
         browser: chrome 
         # record: true
@@ -67,29 +82,29 @@ runs:
         GITHUB_TOKEN: ${{ inputs.githubToken }}
         CYPRESS_token: ${{ inputs.providerToken }}
         CYPRESS_releasetag: ${{env.tag}}
-        CYPRESS_applicationId: ${{ inputs.applicationId }}
+        CYPRESS_applicationId: ${{ env.APPLICATION_ID }}
         # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
     - run: ls
       shell: bash
-    - run: tree cypress-action/cypress/ -L 2me
+    - run: tree action/cypress-action/cypress/ -L 2me
       shell: bash
     - name: Upload Cypress artifacts
       if: always()
       uses: actions/upload-artifact@v3
       with:
         name: cypress-ss
-        path: cypress-action/cypress/videos
+        path: action/cypress-action/cypress/videos
     - name: Upload Cypress artifacts
       if: always()
       uses: actions/upload-artifact@v3
       with:
         name: cypress-ss
-        path: cypress-action/cypress/screenshots
+        path: action/cypress-action/cypress/screenshots
     - run:  echo "SCREENSHOT_NAME=$(ls)" >> $GITHUB_ENV # Assumption: There is only one screenshot in the download directory
-      working-directory: cypress-action/cypress/downloads
+      working-directory: action/cypress-action/cypress/downloads
       shell: bash
     - run: mv "$SCREENSHOT_NAME" screenshot.png
-      working-directory: cypress-action/cypress/downloads
+      working-directory: action/cypress-action/cypress/downloads
       shell: bash
     - run: |
         export request=$(curl --fail -d "$(base64 -i screenshot.png)" 'https://meshery.layer5.io/api/integration/github/meta/artifacts' \
@@ -98,7 +113,7 @@ runs:
         # TODO: fail in case of not 2XX or 3XX
         echo "RESOURCE_URL=$request" >> $GITHUB_ENV
       id: cloud-response
-      working-directory: cypress-action/cypress/downloads
+      working-directory: action/cypress-action/cypress/downloads
       shell: bash
     - name: Get Organization and Repository
       if: always()
@@ -123,3 +138,10 @@ runs:
         id: meshmap-snapshot
         message: '[<img src="${{env.RESOURCE_URL}}">](https://meshery.layer5.io/catalog/applications)'
         append: false
+
+
+
+
+# TODOS:
+# Manage wrong file-path
+# Manage curl Failure
