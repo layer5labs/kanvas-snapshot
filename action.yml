@@ -37,83 +37,83 @@ outputs:
 runs:
   using: "composite"
   steps:
-    # - name: ping playground
-    #   id: ping-playground
-    #   run: |
-    #     echo "IS_PLAYGROUND_RUNNING=$( echo $(./action/playground-ping.sh))" >> "$GITHUB_OUTPUT"
-    #   shell: bash
-    # - run: echo $IS_PLAYGROUND_RUNNING
-    #   shell: bash
-    # - name: set active cluster URL as playground
-    #   if: ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
-    #   run: echo "MESHERY_URL=https://playground.meshery.io" >> $GITHUB_ENV
-    #   shell: bash
-    # - name: set active cluster URL as localhost:9081
-    #   if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
-    #   run: echo "MESHERY_URL=http://127.0.0.1:9081" >> $GITHUB_ENV
-    #   shell: bash
-    # - name: Create k8s Kind Cluster
-    #   if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
-    #   uses: helm/kind-action@v1.7.0
-    #   with:
-    #     cluster_name: "kind-cluster"
-    # - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
-    #   shell: bash
-    # - run: 
-    #   working-directory: action/cypress-action/
-    #   if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
-    #   shell: bash
-    # - run: FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
-    #   shell: bash
-    # - run: |
-    #     AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplicationFile.sh)
-    #     echo $AppId
-    #     echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
-    #   if: ${{ !inputs.application_url }}
-    #   shell: bash
-    # - run: |
-    #     AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }} UPLOAD_URL=${{ inputs.application_url }}  ./action/uploadApplicationUrl.sh)
-    #     echo $AppId
-    #     echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
-    #   if: ${{ inputs.application_url }}
-    #   shell: bash
-    # - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
-    #   shell: bash
-    # - name: Cypress run
-    #   uses: cypress-io/github-action@v4
-    #   with:
-    #     working-directory: action/cypress-action
-    #     spec: cypress/e2e/e2e/**/*
-    #     browser: chrome 
-    #     # record: true
-    #   env:
-    #     GITHUB_TOKEN: ${{ inputs.githubToken }}
-    #     CYPRESS_token: ${{ inputs.providerToken }}
-    #     CYPRESS_releasetag: ${{env.tag}}
-    #     CYPRESS_applicationId: ${{ env.APPLICATION_ID }}
-    #     # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
-    # - run: ls
-    #   shell: bash
-    # - run: tree action/cypress-action/cypress/ -L 2me
-    #   shell: bash
-    # - name: Upload Cypress artifacts
-    #   if: always()
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: cypress-ss
-    #     path: action/cypress-action/cypress/videos
-    # - name: Upload Cypress artifacts
-    #   if: always()
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: cypress-ss
-    #     path: action/cypress-action/cypress/screenshots
-    # - run:  echo "SCREENSHOT_NAME=$(ls)" >> $GITHUB_ENV # Assumption: There is only one screenshot in the download directory
-    #   working-directory: action/cypress-action/cypress/downloads
-    #   shell: bash
-    # - run: mv "$SCREENSHOT_NAME" screenshot.png
-    #   working-directory: action/cypress-action/cypress/downloads
-    #   shell: bash
+    - name: ping playground
+      id: ping-playground
+      run: |
+        echo "IS_PLAYGROUND_RUNNING=$( echo $(./action/playground-ping.sh))" >> "$GITHUB_OUTPUT"
+      shell: bash
+    - run: echo $IS_PLAYGROUND_RUNNING
+      shell: bash
+    - name: set active cluster URL as playground
+      if: ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+      run: echo "MESHERY_URL=https://playground.meshery.io" >> $GITHUB_ENV
+      shell: bash
+    - name: set active cluster URL as localhost:9081
+      if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+      run: echo "MESHERY_URL=http://127.0.0.1:9081" >> $GITHUB_ENV
+      shell: bash
+    - name: Create k8s Kind Cluster
+      if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+      uses: helm/kind-action@v1.7.0
+      with:
+        cluster_name: "kind-cluster"
+    - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+      shell: bash
+    - run: 
+      working-directory: action/cypress-action/
+      if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+      shell: bash
+    - run: FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
+      shell: bash
+    - run: |
+        AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplicationFile.sh)
+        echo $AppId
+        echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
+      if: ${{ !inputs.application_url }}
+      shell: bash
+    - run: |
+        AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }} UPLOAD_URL=${{ inputs.application_url }}  ./action/uploadApplicationUrl.sh)
+        echo $AppId
+        echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
+      if: ${{ inputs.application_url }}
+      shell: bash
+    - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
+      shell: bash
+    - name: Cypress run
+      uses: cypress-io/github-action@v4
+      with:
+        working-directory: action/cypress-action
+        spec: cypress/e2e/e2e/**/*
+        browser: chrome 
+        # record: true
+      env:
+        GITHUB_TOKEN: ${{ inputs.githubToken }}
+        CYPRESS_token: ${{ inputs.providerToken }}
+        CYPRESS_releasetag: ${{env.tag}}
+        CYPRESS_applicationId: ${{ env.APPLICATION_ID }}
+        # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
+    - run: ls
+      shell: bash
+    - run: tree action/cypress-action/cypress/ -L 2me
+      shell: bash
+    - name: Upload Cypress artifacts
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: cypress-ss
+        path: action/cypress-action/cypress/videos
+    - name: Upload Cypress artifacts
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: cypress-ss
+        path: action/cypress-action/cypress/screenshots
+    - run:  echo "SCREENSHOT_NAME=$(ls)" >> $GITHUB_ENV # Assumption: There is only one screenshot in the download directory
+      working-directory: action/cypress-action/cypress/downloads
+      shell: bash
+    - run: mv "$SCREENSHOT_NAME" screenshot.png
+      working-directory: action/cypress-action/cypress/downloads
+      shell: bash
     - run: node --version
       shell: bash
     - run: npm ci
