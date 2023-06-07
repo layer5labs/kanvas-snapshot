@@ -120,14 +120,15 @@ runs:
       working-directory: action/node-file-upload
       shell: bash
     - run: |
-        PROVIDER_TOKEN=${{inputs.providerToken}} node node-file-upload/index.js > __fileResponse.txt
+        PROVIDER_TOKEN=${{inputs.providerToken}} node node-file-upload/index.js > __fileResponse.txt  
         outputstr=$(head -n 1  __fileResponse.txt)
         required_string="https"
+        echo $outputstr
 
         if [[ "$outputstr" == "$required_string"* ]]; then
-            "RESOURCE_URL=$request" >> $GITHUB_ENV
+            echo "RESOURCE_URL=$outputstr" >> $GITHUB_ENV
         else
-            "RESOURCE_URL=false" >> $GITHUB_ENV
+            echo "RESOURCE_URL=false" >> $GITHUB_ENV
         fi
       working-directory: action/
       shell: bash
