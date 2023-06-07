@@ -132,15 +132,6 @@ runs:
         fi
       working-directory: action/
       shell: bash
-    # - run: |
-    #     export request=$(curl --fail -d "$(base64 -i screenshot.png)" 'https://meshery.layer5.io/api/integration/github/meta/artifacts' \
-    #       -H "Content-Type: multipart/form-data" \
-    #       -H "Authorization: Bearer ${{ inputs.providerToken }}");
-    #     # TODO: fail in case of not 2XX or 3XX
-    #     echo "RESOURCE_URL=$request" >> $GITHUB_ENV
-      # id: cloud-response
-      # working-directory: action/cypress-action/cypress/downloads
-      # shell: bash
     - name: Get Organization and Repository
       if: ${{ !inputs.application_url }}
       run: |
@@ -155,7 +146,7 @@ runs:
     - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM
       shell: bash
     - name: Comment Success Status
-      if: ${{ success() && inputs.prNumber != '0' }}
+      if: ${{ success() && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
       uses: hasura/comment-progress@v2.2.0
       with:
         github-token: ${{ inputs.githubToken }}
