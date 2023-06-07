@@ -99,3 +99,5 @@ __tests__/runner/*
 lib/**/*
 
 __intermediate_file.yml
+
+**/cypress/downloads/*
