@@ -56,7 +56,7 @@ Cypress.Commands.add("interceptCapabilities", () => {
 })
 
 Cypress.Commands.add("setViewPort", () => {
-  cy.viewport(1500, 900) // until the base64 error is resolved
+  cy.viewport(1920, 1080) // until the base64 error is resolved
 })
 
 Cypress.Commands.add("deleteDesign", (designId) => {
