@@ -133,26 +133,26 @@ runs:
     #     fi
     #   working-directory: action/
     #   shell: bash
-    - name: Get Organization and Repository
-      if: ${{ !inputs.application_url }}
-      run: |
-        # Extract organization and repository names from GITHUB_REPOSITORY
-        IFS='/' read -r -a repoArray <<< "$GITHUB_REPOSITORY"
-        organization=${repoArray[0]}
-        repository=${repoArray[1]}
+    # - name: Get Organization and Repository
+    #   if: ${{ !inputs.application_url }}
+    #   run: |
+    #     # Extract organization and repository names from GITHUB_REPOSITORY
+    #     IFS='/' read -r -a repoArray <<< "$GITHUB_REPOSITORY"
+    #     organization=${repoArray[0]}
+    #     repository=${repoArray[1]}
 
-        echo "ORGANIZATION=$organization" >> $GITHUB_ENV
-        echo "REPOSITORY=$repository" >> $GITHUB_ENV
+    #     echo "ORGANIZATION=$organization" >> $GITHUB_ENV
+    #     echo "REPOSITORY=$repository" >> $GITHUB_ENV
+    #   shell: bash
+    - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM && echo "${{ env.GITHUB_REPOSITORY }}"
       shell: bash
-    - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM && echo "$GITHUB_REPOSITORY"
-      shell: bash
-    # - name: Comment Success Status
-    #   if: ${{ success() && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
-    #   uses: hasura/comment-progress@v2.2.0
-    #   with:
-    #     github-token: ${{ inputs.githubToken }}
-    #     repository: "${{env.ORGANIZATION}}/${{env.REPOSITORY}}"
-    #     number: ${{ inputs.prNumber }}
-    #     id: meshmap-snapshot
-    #     message: '[<img src="${{env.RESOURCE_URL}}">](https://meshery.layer5.io/catalog/applications)'
-    #     append: false
+    - name: Comment Success Status
+      if: ${{ success() && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
+      uses: hasura/comment-progress@v2.2.0
+      with:
+        github-token: ${{ inputs.githubToken }}
+        repository: ${{ env.GITHUB_REPOSITORY }}
+        number: ${{ inputs.prNumber }}
+        id: meshmap-snapshot
+        message: "Hello"
+        append: false
