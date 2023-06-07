@@ -152,7 +152,7 @@ runs:
       uses: hasura/comment-progress@v2.2.0
       with:
         github-token: ${{ inputs.githubToken }}
-        repository: github.repository
+        repository: ${{github.repository}}
         number: ${{ inputs.prNumber }}
         id: meshmap-snapshot
         message: "Hello"
