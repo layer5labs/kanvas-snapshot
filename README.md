@@ -37,7 +37,7 @@ jobs:
           path: action
           repository: layer5labs/meshmap-snapshot
       - id: test_result
-        uses: ./action
+        uses: layer5labs/MeshMap-Snapshot@v0.0.4
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }} # github's personal access token example: "ghp_...."
           providerToken: ${{ secrets.PROVIDER_TOKEN }} # Meshery Cloud Authentication token, signin to meshery-cloud to get one, example: ey.....
@@ -64,13 +64,12 @@ jobs:
         run: |
           export pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
           echo "PULL_NO=$pull_number" >> $GITHUB_ENV
-      - uses: actions/checkout@v3 # the repository where your infrastructure is located
       - uses: actions/checkout@v3 #this step would go and would be no longer needed to be written
         with:
           path: action
           repository: layer5labs/meshmap-snapshot
       - id: test_result
-        uses: ./action
+        uses: layer5labs/MeshMap-Snapshot@v0.0.4
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }} # github's personal access token example: "ghp_...."
           providerToken: ${{ secrets.PROVIDER_TOKEN }} # Meshery Cloud Authentication token, signin to meshery-cloud to get one, example: ey.....
