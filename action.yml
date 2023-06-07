@@ -123,7 +123,7 @@ runs:
       working-directory: action/  
       shell: bash
     - run: |
-        node-file-upload/index.js > __fileResponse.txt
+        PROVIDER_TOKEN=${{inputs.providerToken}} node node-file-upload/index.js > __fileResponse.txt
         outputstr=$(head -n 1  __fileResponse.txt)
         required_string="https"
 
