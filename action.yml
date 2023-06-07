@@ -27,7 +27,7 @@ inputs:
     required: false
   application_type:
     description: "Application upload type, any of the three, Kubernetes Manifest, Docker Compose, Helm Chart"
-    required: false
+    required: true
   application_url:
     description: "Application's source url where the manifests or data is stored"
     required: false
