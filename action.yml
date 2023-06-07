@@ -64,6 +64,7 @@ runs:
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
     - run: FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
+      if: ${{ !inputs.application_url }}
       shell: bash
     - run: |
         AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE='Kubernetes Manifest' PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplicationFile.sh)
@@ -72,86 +73,87 @@ runs:
       if: ${{ !inputs.application_url }}
       shell: bash
     - run: |
-        AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }} UPLOAD_URL=${{ inputs.application_url }}  ./action/uploadApplicationUrl.sh)
-        echo $AppId
-        echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
+        MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }} UPLOAD_URL=${{ inputs.application_url }}  ./action/uploadApplicationUrl.sh
+        # AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }} UPLOAD_URL=${{ inputs.application_url }}  ./action/uploadApplicationUrl.sh)
+        # echo $AppId
+        # echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
       if: ${{ inputs.application_url }}
       shell: bash
-    - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
-      shell: bash
-    - name: Cypress run
-      uses: cypress-io/github-action@v4
-      with:
-        working-directory: action/cypress-action
-        spec: cypress/e2e/e2e/**/*
-        browser: chrome 
-        # record: true
-      env:
-        GITHUB_TOKEN: ${{ inputs.githubToken }}
-        CYPRESS_token: ${{ inputs.providerToken }}
-        CYPRESS_releasetag: ${{env.tag}}
-        CYPRESS_applicationId: ${{ env.APPLICATION_ID }}
-        # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
-    - run: ls
-      shell: bash
-    - run: tree action/cypress-action/cypress/ -L 2me
-      shell: bash
-    - name: Upload Cypress artifacts
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: cypress-ss
-        path: action/cypress-action/cypress/videos
-    - name: Upload Cypress artifacts
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: cypress-ss
-        path: action/cypress-action/cypress/screenshots
-    - run:  echo "SCREENSHOT_NAME=$(ls)" >> $GITHUB_ENV # Assumption: There is only one screenshot in the download directory
-      working-directory: action/cypress-action/cypress/downloads
-      shell: bash
-    - run: mv "$SCREENSHOT_NAME" screenshot.png
-      working-directory: action/cypress-action/cypress/downloads
-      shell: bash
-    - run: node --version
-      shell: bash
-    - run: npm ci
-      working-directory: action/node-file-upload
-      shell: bash
-    - run: |
-        PROVIDER_TOKEN=${{inputs.providerToken}} node node-file-upload/index.js > __fileResponse.txt  
-        outputstr=$(head -n 1  __fileResponse.txt)
-        required_string="https"
-        echo $outputstr
+    # - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
+    #   shell: bash
+    # - name: Cypress run
+    #   uses: cypress-io/github-action@v4
+    #   with:
+    #     working-directory: action/cypress-action
+    #     spec: cypress/e2e/e2e/**/*
+    #     browser: chrome 
+    #     # record: true
+    #   env:
+    #     GITHUB_TOKEN: ${{ inputs.githubToken }}
+    #     CYPRESS_token: ${{ inputs.providerToken }}
+    #     CYPRESS_releasetag: ${{env.tag}}
+    #     CYPRESS_applicationId: ${{ env.APPLICATION_ID }}
+    #     # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
+    # - run: ls
+    #   shell: bash
+    # - run: tree action/cypress-action/cypress/ -L 2me
+    #   shell: bash
+    # - name: Upload Cypress artifacts
+    #   if: always()
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: cypress-ss
+    #     path: action/cypress-action/cypress/videos
+    # - name: Upload Cypress artifacts
+    #   if: always()
+    #   uses: actions/upload-artifact@v3
+    #   with:
+    #     name: cypress-ss
+    #     path: action/cypress-action/cypress/screenshots
+    # - run:  echo "SCREENSHOT_NAME=$(ls)" >> $GITHUB_ENV # Assumption: There is only one screenshot in the download directory
+    #   working-directory: action/cypress-action/cypress/downloads
+    #   shell: bash
+    # - run: mv "$SCREENSHOT_NAME" screenshot.png
+    #   working-directory: action/cypress-action/cypress/downloads
+    #   shell: bash
+    # - run: node --version
+    #   shell: bash
+    # - run: npm ci
+    #   working-directory: action/node-file-upload
+    #   shell: bash
+    # - run: |
+    #     PROVIDER_TOKEN=${{inputs.providerToken}} node node-file-upload/index.js > __fileResponse.txt  
+    #     outputstr=$(head -n 1  __fileResponse.txt)
+    #     required_string="https"
+    #     echo $outputstr
 
-        if [[ "$outputstr" == "$required_string"* ]]; then
-            echo "RESOURCE_URL=$outputstr" >> $GITHUB_ENV
-        else
-            echo "RESOURCE_URL=false" >> $GITHUB_ENV
-        fi
-      working-directory: action/
-      shell: bash
-    - name: Get Organization and Repository
-      if: ${{ !inputs.application_url }}
-      run: |
-        # Extract organization and repository names from GITHUB_REPOSITORY
-        IFS='/' read -r -a repoArray <<< "$GITHUB_REPOSITORY"
-        organization=${repoArray[0]}
-        repository=${repoArray[1]}
+    #     if [[ "$outputstr" == "$required_string"* ]]; then
+    #         echo "RESOURCE_URL=$outputstr" >> $GITHUB_ENV
+    #     else
+    #         echo "RESOURCE_URL=false" >> $GITHUB_ENV
+    #     fi
+    #   working-directory: action/
+    #   shell: bash
+    # - name: Get Organization and Repository
+    #   if: ${{ !inputs.application_url }}
+    #   run: |
+    #     # Extract organization and repository names from GITHUB_REPOSITORY
+    #     IFS='/' read -r -a repoArray <<< "$GITHUB_REPOSITORY"
+    #     organization=${repoArray[0]}
+    #     repository=${repoArray[1]}
 
-        echo "ORGANIZATION=$organization" >> $GITHUB_ENV
-        echo "REPOSITORY=$repository" >> $GITHUB_ENV
-      shell: bash
-    - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM
-      shell: bash
-    - name: Comment Success Status
-      if: ${{ success() && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
-      uses: hasura/comment-progress@v2.2.0
-      with:
-        github-token: ${{ inputs.githubToken }}
-        repository: "${{env.ORGANIZATION}}/${{env.REPOSITORY}}"
-        number: ${{ inputs.prNumber }}
-        id: meshmap-snapshot
-        message: '[<img src="${{env.RESOURCE_URL}}">](https://meshery.layer5.io/catalog/applications)'
-        append: false
+    #     echo "ORGANIZATION=$organization" >> $GITHUB_ENV
+    #     echo "REPOSITORY=$repository" >> $GITHUB_ENV
+    #   shell: bash
+    # - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM
+    #   shell: bash
+    # - name: Comment Success Status
+    #   if: ${{ success() && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
+    #   uses: hasura/comment-progress@v2.2.0
+    #   with:
+    #     github-token: ${{ inputs.githubToken }}
+    #     repository: "${{env.ORGANIZATION}}/${{env.REPOSITORY}}"
+    #     number: ${{ inputs.prNumber }}
+    #     id: meshmap-snapshot
+    #     message: '[<img src="${{env.RESOURCE_URL}}">](https://meshery.layer5.io/catalog/applications)'
+    #     append: false
