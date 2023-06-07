@@ -3,14 +3,14 @@ description: 'Walks in application and takes a shot of your infrastructure using
 author: Layer5
 inputs:
   designId:  # id of input  #deprecated
-    description: 'Give the Design Id'
+    description: "The design uuid example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
     default: '{}'
   applicationId:  #deprecated
-    description: "Give the application Id"
+    description: "The application uuid example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
   githubToken:
-    description: "Github token"
+    description: "Github PAT token"
     required: true
   providerToken:
     description: "Meshery Authentication Provider Token"
@@ -23,7 +23,7 @@ inputs:
     required: false
     default: 0
   filePath: 
-    description: "the relative filepath of the location where the manifests are stored"
+    description: "The relative filepath of the location where the manifests are stored"
     required: false
   application_type:
     description: "Application upload type, any of the three, Kubernetes Manifest, Docker Compose, Helm Chart"
@@ -114,14 +114,23 @@ runs:
     - run: mv "$SCREENSHOT_NAME" screenshot.png
       working-directory: action/cypress-action/cypress/downloads
       shell: bash
+    - run: node --version
+      shell: bash
+    - run: npm ci
+      working-directory: action/node-file-upload
+      shell: bash
     - run: |
-        export request=$(curl --fail -d "$(base64 -i screenshot.png)" 'https://meshery.layer5.io/api/integration/github/meta/artifacts' \
-          -H "Content-Type: multipart/form-data" \
-          -H "Authorization: Bearer ${{ inputs.providerToken }}");
-        # TODO: fail in case of not 2XX or 3XX
-        echo "RESOURCE_URL=$request" >> $GITHUB_ENV
-      id: cloud-response
-      working-directory: action/cypress-action/cypress/downloads
+        PROVIDER_TOKEN=${{inputs.providerToken}} node node-file-upload/index.js > __fileResponse.txt  
+        outputstr=$(head -n 1  __fileResponse.txt)
+        required_string="https"
+        echo $outputstr
+
+        if [[ "$outputstr" == "$required_string"* ]]; then
+            echo "RESOURCE_URL=$outputstr" >> $GITHUB_ENV
+        else
+            echo "RESOURCE_URL=false" >> $GITHUB_ENV
+        fi
+      working-directory: action/
       shell: bash
     - name: Get Organization and Repository
       if: ${{ !inputs.application_url }}
@@ -137,8 +146,8 @@ runs:
     - run: echo $ORGANIZATION && echo $REPOSITORY && echo $PR_NUM
       shell: bash
     - name: Comment Success Status
-      if: ${{ success() && inputs.prNumber != '0'}}
-      uses: hasura/comment-progress@v2.1.0
+      if: ${{ success() && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
+      uses: hasura/comment-progress@v2.2.0
       with:
         github-token: ${{ inputs.githubToken }}
         repository: "${{env.ORGANIZATION}}/${{env.REPOSITORY}}"
