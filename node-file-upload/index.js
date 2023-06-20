@@ -20,7 +20,7 @@ function convertFileToBase64(filePath) {
 const filePath = path.join(__dirname, "..", "cypress-action", "cypress", "downloads", "screenshot.png");
 const base64Data = convertFileToBase64(filePath);
 
-const url = "https://meshery.layer5.io/api/integration/github/meta/artifacts";
+const url = "https://meshery.layer5.io/api/integrations/github/meta/artifacts";
 
 const headers = {
   "Content-Type": "multipart/form-data",
