@@ -24,7 +24,6 @@ jobs:
           designId: ${{ secrets.TEST_SECRET }} #works
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           providerToken: ${{ secrets.PROVIDER_TOKEN }}
-          cypressRecordKey: ${{ secrets.CYPRESS_RECORD_KEY }}
           applicationId: c791ec8f-ec1a-47c1-b606-d39982e42ca6
           prNumber: ${{ env.PULL_NO }}
           application_type: "Kubernetes Manifest"
