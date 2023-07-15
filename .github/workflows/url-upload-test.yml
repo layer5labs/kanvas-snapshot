@@ -11,13 +11,6 @@ jobs:
   test: # make sure the action works on a clean machine without building
     runs-on: ubuntu-latest
     steps:
-      - name: Set PR number
-        run: |
-          export pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          echo "PULL_NO=$pull_number" >> $GITHUB_ENV
-      - uses: actions/checkout@v3
-        with:
-          path: action
       - id: test_result
         uses: ./action
         with:

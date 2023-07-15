@@ -34,6 +34,13 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: Set PR number
+      run: |
+          export pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
+          echo "PULL_NO=$pull_number" >> $GITHUB_ENV
+    - uses: actions/checkout@v3
+      with:
+        path: action
     - name: ping playground
       id: ping-playground
       run: |
