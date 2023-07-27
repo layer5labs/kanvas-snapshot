@@ -1,0 +1,24 @@
+name: Cypress-ss
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  cypress-ss:
+    runs-on: ubuntu-latest
+
+  steps:
+    - name: Upload Cypress artifacts
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: cypress-ss
+        path: action/cypress-action/cypress/videos
+        
+    - name: Upload Cypress artifacts
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: cypress-ss
+        path: action/cypress-action/cypress/screenshots

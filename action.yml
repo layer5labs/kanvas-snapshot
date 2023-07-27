@@ -1,12 +1,12 @@
-name: 'MeshMap-Snapshot'
-description: 'Walks in application and takes a shot of your infrastructure using Meshery Extension MeshMap'
+name: "MeshMap-Snapshot"
+description: "Walks in application and takes a shot of your infrastructure using Meshery Extension MeshMap"
 author: Layer5
 inputs:
-  designId:  # id of input  #deprecated
+  designId: # id of input  #deprecated
     description: "The design uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
-    default: '{}'
-  applicationId:  #deprecated
+    default: "{}"
+  applicationId: #deprecated
     description: "The application uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
   githubToken:
@@ -19,7 +19,7 @@ inputs:
     description: "The Pull request on which comment has to be made"
     required: false
     default: 0
-  filePath: 
+  filePath:
     description: "The relative filepath of the location where the manifests are stored"
     required: false
   application_type:
@@ -30,7 +30,7 @@ inputs:
     required: false
 outputs:
   mardownResult: # id of output
-    description: 'The markdown result'
+    description: "The markdown result"
 runs:
   using: "composite"
   steps:
@@ -56,7 +56,7 @@ runs:
         cluster_name: "kind-cluster"
     - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
-    - run: 
+    - run:
       working-directory: action/cypress-action/
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
@@ -78,35 +78,16 @@ runs:
     - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
       shell: bash
     - name: Cypress run
-      uses: cypress-io/github-action@v4
-      with:
-        working-directory: action/cypress-action
-        spec: cypress/e2e/e2e/**/*
-        browser: chrome 
-        # record: true
-      env:
-        GITHUB_TOKEN: ${{ inputs.githubToken }}
-        CYPRESS_token: ${{ inputs.providerToken }}
-        CYPRESS_releasetag: ${{env.tag}}
-        CYPRESS_applicationId: ${{ env.APPLICATION_ID }}
-        # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
+      uses: action/cypress-job #reference to cypress workflow
     - run: ls
       shell: bash
     - run: tree action/cypress-action/cypress/ -L 2me
       shell: bash
     - name: Upload Cypress artifacts
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: cypress-ss
-        path: action/cypress-action/cypress/videos
+      uses: cypress-ss
     - name: Upload Cypress artifacts
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: cypress-ss
-        path: action/cypress-action/cypress/screenshots
-    - run:  echo "SCREENSHOT_NAME=$(ls)" >> $GITHUB_ENV # Assumption: There is only one screenshot in the download directory
+      uses: cypress-artifacts
+    - run: echo "SCREENSHOT_NAME=$(ls)" >> $GITHUB_ENV # Assumption: There is only one screenshot in the download directory
       working-directory: action/cypress-action/cypress/downloads
       shell: bash
     - run: mv "$SCREENSHOT_NAME" screenshot.png
@@ -117,17 +98,7 @@ runs:
     - run: npm ci
       working-directory: action/node-file-upload
       shell: bash
-    - run: |
-        PROVIDER_TOKEN=${{inputs.providerToken}} node node-file-upload/index.js > __fileResponse.txt  
-        outputstr=$(head -n 1  __fileResponse.txt)
-        required_string="https"
-        echo $outputstr
-
-        if [[ "$outputstr" == "$required_string"* ]]; then
-            echo "RESOURCE_URL=$outputstr" >> $GITHUB_ENV
-        else
-            echo "RESOURCE_URL=false" >> $GITHUB_ENV
-        fi
+    - run: ./token-provider.sh
       working-directory: action/
       shell: bash
     - name: Comment Success Status
