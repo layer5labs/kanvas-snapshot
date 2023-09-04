@@ -1,5 +1,8 @@
 # Dependency directory
 **/node_modules
+**/test-results/
+**/playwright-report/
+**/playwright/.cache/
 
 # Rest pulled from https://github.com/github/gitignore/blob/master/Node.gitignore
 # Logs
