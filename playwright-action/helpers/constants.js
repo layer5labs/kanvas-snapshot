@@ -1,4 +1,4 @@
-import { id } from "../helpers/playwrightSetup.js";
+import { id } from "./playwrightUtils.js";
 
 export const DESIGNER = "designer"
 export const VISUALIZER = "visualizer"
