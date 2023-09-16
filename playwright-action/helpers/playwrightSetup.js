@@ -1,12 +1,10 @@
-//@ts-check
-import  { waitFor, id, InitialEnvSetup, captureAndSaveScreenshot, saveGraph, Login, setViewportSize,interceptAndModifyRequest, navigateToCustomURL, waitForNetworkResponse } from "./playwrightUtils"
+import  { waitFor, id, InitialEnvSetup, captureAndSaveScreenshot, saveGraph, login, setViewportSize,interceptAndModifyRequest, navigateToCustomURL, waitForNetworkResponse } from "./playwrightUtils"
 
 
 //Set Up Playwright capabilities
 const doInitialSetup = () => {
-      InitialEnvSetup()
       setViewportSize();
-      Login();
+      login();
       interceptAndModifyRequest();
 }
 

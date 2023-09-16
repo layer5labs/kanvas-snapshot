@@ -30,25 +30,25 @@ export const TIME = {
   X4LARGE: 15_000
 }
 
-export const canvasContainer = {
-  query: id(CANVAS_CONTAINER_ID),
-  alias: "canvas"
-}
+// export const canvasContainer = {
+//   query: id(CANVAS_CONTAINER_ID),
+//   alias: "canvas"
+// }
 
 export const playwrightTestDesign = {
   url: "/extension/meshmap?design=142f0054-d9ae-4352-8618-887104a81928",
   id: "142f0054-d9ae-4352-8618-887104a81928",
 }
 //Objects related to specific designs or patterns within the application.
-export const hierarchyRelationshipDesign = cypressTestDesign;
+export const hierarchyRelationshipDesign = playwrightTestDesign;
 
 // An object specifying a URL, HTTP method, and aliases related to pattern conversion.
-export const cytoConversion = {
-  url: "/api/pattern?output=cytoscape",
-  method: "POST",
-  alias: "cytoPatternConversion",
-  wait: "@cytoPatternConversion"
-}
+// export const cytoConversion = {
+//   url: "/api/pattern?output=cytoscape",
+//   method: "POST",
+//   alias: "cytoPatternConversion",
+//   wait: "@cytoPatternConversion"
+// }
 
 /**
  * Selection and general Event Binding Layer

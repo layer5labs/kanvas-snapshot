@@ -1,10 +1,9 @@
 //@ts-check
 //Playwright configurations for setting up tests
-const { chromium } = require("@playwright/test");
+import { makeDeleteRequest } from "./apirequest";
+import { designEndpoint } from "./constants";
+import { chromium, expect, firefox, webkit } from "@playwright/test";
 const path = require('path');
-const browser = await chromium.launch();
-const context = await browser.newContext();
-const page = await context.newPage();
 
 const getFormattedDateTime = () =>{
       const now = new Date();
@@ -37,26 +36,14 @@ function id(str) {
 }
 
 
-//create a fresh testing env for testcases
-async function InitialEnvSetup() {
-      const browser = await chromium.launch();
-      const context = await browser.newContext();
-      const page = await context.newPage();
-
-      return { browser, context, page };
-}
-
 
 //capture and save a screenshot
-async function captureAndSaveScreenshot(filename) {
+async function captureAndSaveScreenshot(page, filename) {
       await page.screenshot({ path: filename });
 }
 
 //Save meshmapscreenshot and generate a download link.    
-async function saveGraph(customUrl) {
-      const browser = await chromium.launch();
-      const page = await browser.newPage();
-    
+async function saveGraph(page,customUrl) {
       await page.goto(customUrl);
     
       // Capture a screenshot and save it with a custom filename
@@ -66,8 +53,6 @@ async function saveGraph(customUrl) {
       const filePath = path.join(__dirname, fileName); // Full path to the saved screenshot
     
       await captureAndSaveScreenshot(filePath);
-      await browser.close();
-    
       // Create a download link
       const downloadLink = `/download?fileName=${encodeURIComponent(fileName)}`;
     
@@ -78,24 +63,33 @@ async function saveGraph(customUrl) {
 }
 
 //Login to be used for settingup tests
-async function Login(page, username, password) {
+export async function login(page, username, password) {
       await page.goto('https://meshery.layer5.io/login');
 
       await page.locator('input[name="identifier"]').fill(username);
       // Press the Tab key (to move to the password field)
       await page.locator('input[name="identifier"]').press('Tab');
-      await page.fill('input[name="password"]').fill(password);
-      await page.getByRole('button', { name: 'Sign in', exact: true }).click();
+      await page.fill('input[name="password"]',password)
+      await page.waitForSelector('input[name="password"]');
+      await page.fill('input[name="password"]', password);
+
+      // Wait for the "Sign in" button to appear and then click it
+      const signInButton = await page.waitForSelector('button[type="submit"]');
+      await signInButton.click(); 
+      // Wait for some time (e.g., 5 seconds) for any post-login actions or page navigation to complete
+      await page.waitForTimeout(5000);
+      const logout =  await page.locator('a[href="/logout"]')
+      await page.close()
 }      
 
 //set a visiblesize of webpage
-async function setViewportSize(width, height) {
+export async function setViewportSize(page,width, height) {
       await page.setViewportSize({ width, height });
 }
    
 // intercept and modify network requests to specific endpoint 
 // to control network interactions during testing and automation
-async function interceptAndModifyRequest(targetUrl, modifiedResponse) {
+export async function interceptAndModifyRequest(page, targetUrl, modifiedResponse) {
       await page.route(targetUrl, (route) => {
         route.fulfill({
           status: 200,
@@ -105,17 +99,26 @@ async function interceptAndModifyRequest(targetUrl, modifiedResponse) {
       });
 }
     
-async function navigateToCustomURL(customPath) {
-      const browser = await chromium.launch();
-      const context = await browser.newContext();
-      const page = await context.newPage();
+export async function navigateToCustomURL(page, customPath) {
       await page.goto(customPath);
 }
 
-async function waitForNetworkResponse(targetUrl) { 
+export async function waitForNetworkResponse(page, targetUrl) { 
       const timeout = 60000
       await page.waitForResponse(targetUrl, { timeout });
-    }
+}
     
+export async function deleteDesign(designId) {
+      //URL for deleteRequest
+      const deleteUrl =  `${designEndpoint.absolutePath}/${designId}`;
+      const response = await makeDeleteRequest(deleteUrl);
+      console.log("Delete Design Response:", response);
 
-export { waitFor, id, InitialEnvSetup, captureAndSaveScreenshot, saveGraph, Login, setViewportSize, interceptAndModifyRequest, navigateToCustomURL, waitForNetworkResponse };
+      // Optionally, check the response status to ensure the delete was successful
+      if (response.status === 204) {
+      console.log("Design successfully deleted.");
+       } else {
+      console.error("Failed to delete design. Status code:", response.status);
+     }
+}
+

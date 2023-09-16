@@ -1,10 +1,6 @@
-//@ts-check
-const { chromium } = require("@playwright/test");
-const browser = await chromium.launch();
-const context = await browser.newContext();
-const page = await context.newPage();
+import playwright from  "@playwright/test"
 
-async function makeDeleteRequest(url) {
+export async function makeDeleteRequest(url) {
       const response = await page.evaluate(async (url)=>{
             //send request to specified url 
             const response = await fetch(url, {
@@ -15,7 +11,7 @@ async function makeDeleteRequest(url) {
       return response
 }
 
-async function makePostRequest(url) {
+export async function makePostRequest(url) {
       const response = await page.evaluate(async (url)=>{
             //send request to specified url 
             const response = await fetch(url, {
@@ -26,7 +22,7 @@ async function makePostRequest(url) {
       return response
 }
 
-async function makeGetRequest(url) {
+export async function makeGetRequest(url) {
       const response = await page.evaluate(async (url)=>{
             //send request to specified url 
             const response = await fetch(url, {
@@ -37,5 +33,3 @@ async function makeGetRequest(url) {
       return response
 }
 
-
-export { makeDeleteRequest, makeGetRequest, makePostRequest}
