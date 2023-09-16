@@ -1,14 +1,10 @@
-const { test, expect } = require("@playwright/test");
+// @ts-check
+const { test, expect} = require("@playwright/test");
+import { login } from "../helpers/playwrightUtils";
 
-test("Login and logout test", async ({ page }) => {
-  await page.goto("https://meshery.layer5.io/login");
-  await page.locator('input[name="identifier"]').fill("test-admin@layer5.io");
-  await page.locator('input[name="identifier"]').press("Tab");
-  await page.locator('input[name="password"]').fill("test-admin");
-  await page.getByRole("button", { name: "Sign in", exact: true }).click();
-  await page.getByRole("banner").locator("button").click();
-  await page.locator("#simple-popover > .MuiBackdrop-root").click();
-  await page.getByRole("banner").locator("button").click();
-  await page.getByText("Logout").click();
-  await page.waitForTimeout(5000);
+
+test('Login Test', async ({ page }) => { // 'page' is provided by Playwright
+  const username = 'leecatcole-admin@layer5.io';
+  const password = 'meshery23';
+  await login(page, username, password); // Use 'page' directly
 });
