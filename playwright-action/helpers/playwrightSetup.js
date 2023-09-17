@@ -1,5 +1,15 @@
-import  { waitFor, id, InitialEnvSetup, captureAndSaveScreenshot, saveGraph, login, setViewportSize,interceptAndModifyRequest, navigateToCustomURL, waitForNetworkResponse } from "./playwrightUtils"
+import  {InitialEnvSetup, captureAndSaveScreenshot, saveGraph, login, setViewportSize,interceptAndModifyRequest, navigateToCustomURL, waitForNetworkResponse } from "./playwrightUtils"
 
+//Playwright configurations for setting up tests
+
+//utility func to generate css selector and return id and strings
+function waitFor(str) {
+      return `@${str}`;
+}
+
+function id(str) {
+      return `#${str}`;
+}
 
 //Set Up Playwright capabilities
 const doInitialSetup = () => {

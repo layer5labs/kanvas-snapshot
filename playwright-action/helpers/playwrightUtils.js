@@ -37,6 +37,7 @@ function id(str) {
 
 export async function MesheryPlayground(page){
       await page.goto('https://playground.meshery.io/')
+      await page.waitForNavigation()
       const mesheryHeading = await page.locator('h1:has-text("Meshery")');
       // Describe the "Dashboard" element 
       const dashboardLink = await page.locator('h2:has-text("Dashboard")');
@@ -51,6 +52,7 @@ export async function MesheryPlayground(page){
 
 export async function MeshMap(page){
       await page.goto('https://playground.meshery.io/extension/meshmap');
+      await page.waitForNavigation()
       const meshMapBetaHeading = page.locator('h1:has-text(/MeshMap\s*beta/i)');
      // Use page.locator() to describe the headings under "MeshMap beta."
       const designsHeading = page.locator('h1:has-text(/MeshMap\\s*beta/i) + h2:has-text("Designs")');
@@ -92,7 +94,7 @@ async function saveGraph(page,customUrl) {
 //Login to be used for settingup tests
 export async function login(page, username, password) {
       await page.goto('https://meshery.layer5.io/login');
-
+      await page.waitForNavigation()
       await page.locator('input[name="identifier"]').fill(username);
       // Press the Tab key (to move to the password field)
       await page.locator('input[name="identifier"]').press('Tab');
@@ -148,4 +150,3 @@ export async function deleteDesign(designId) {
       console.error("Failed to delete design. Status code:", response.status);
      }
 }
-
