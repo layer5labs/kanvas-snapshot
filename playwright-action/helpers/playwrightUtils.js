@@ -35,7 +35,34 @@ function id(str) {
       return `#${str}`;
 }
 
+export async function MesheryPlayground(page){
+      await page.goto('https://playground.meshery.io/')
+      const mesheryHeading = await page.locator('h1:has-text("Meshery")');
+      // Describe the "Dashboard" element 
+      const dashboardLink = await page.locator('h2:has-text("Dashboard")');
+      const lifecycleLink = await page.locator('a[href="/management"]');
+      const configurationsLink = await page.locator('a[href="/configuration/application"]');
+      const performanceLink = await page.locator('a[href="/performance"]');
+      const extensionsLink = await page.locator('a[href="/extension"]');
+      const meshmapLink = await page.locator('a[href="/extension/meshmap"]');
+      await page.waitForTimeout(30000)
+      await page.close()
+}
 
+export async function MeshMap(page){
+      await page.goto('https://playground.meshery.io/extension/meshmap');
+      const meshMapBetaHeading = page.locator('h1:has-text(/MeshMap\s*beta/i)');
+     // Use page.locator() to describe the headings under "MeshMap beta."
+      const designsHeading = page.locator('h1:has-text(/MeshMap\\s*beta/i) + h2:has-text("Designs")');
+      const componentsHeading = page.locator('h1:has-text(/MeshMap\\s*beta/i) + h2:has-text("Components")');
+      const applicationsHeading = page.locator('h1:has-text(/MeshMap\\s*beta/i) + h2:has-text("Applications")');
+      // Describe the headings.
+      const designsText = await designsHeading.innerText();
+      const componentsText = await componentsHeading.innerText();
+      const applicationsText = await applicationsHeading.innerText();
+      await page.waitForTimeout(10000)
+      await page.close()
+}
 
 //capture and save a screenshot
 async function captureAndSaveScreenshot(page, filename) {
@@ -80,7 +107,7 @@ export async function login(page, username, password) {
       await page.waitForTimeout(5000);
       const logout =  await page.locator('a[href="/logout"]')
       await page.close()
-}      
+}     
 
 //set a visiblesize of webpage
 export async function setViewportSize(page,width, height) {
