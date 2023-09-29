@@ -43,9 +43,9 @@ export async function MeshMap(page) {
 	await page.close();
 }
 
-export async function meshmapdesign(page, designId) {
-	const customUrl = `https://playground.meshery.io/extension/meshmap?application=${designId}`;
+export async function meshmapdesign(page, applicationId) {
+	const customUrl = `https://playground.meshery.io/extension/meshmap?application=${applicationId}`;
 	await page.goto(customUrl);
 	const link = await saveGraph(page, customUrl);
 	console.log(`Meshmap application ${link} Captured`);
-}
+  }

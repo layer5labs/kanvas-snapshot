@@ -1,6 +1,6 @@
 // @ts-check
 const { test, expect } = require("@playwright/test");
-import { login, MesheryPlayground, MeshMap } from "../helpers/playwrightUtils";
+import { login, MesheryPlayground, MeshMap, meshmapdesign } from "../helpers/playwrightUtils";
 
 test("Login Test", async ({ page }) => {
 	// 'page' is provided by Playwright
@@ -15,4 +15,9 @@ test("Meshery Playground", async ({ page }) => {
 
 test("Meshmap", async ({ page }) => {
 	await MeshMap(page);
+});
+
+test("Meshmap Design", async ({ page }) => {
+	const appenvId =  await page.fill('[applicationId]', process.env.APPLICATION_ID);
+	await meshmapdesign(page, appenvId);
 });
