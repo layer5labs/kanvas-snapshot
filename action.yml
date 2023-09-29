@@ -84,7 +84,6 @@ runs:
       shell: bash
 
     - name: Trigger Playwright Workflow
-      if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       uses: actions/github-script@v6
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
