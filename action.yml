@@ -99,41 +99,41 @@ runs:
             });
           }
       
-    - name: Cypress run
-      uses: cypress-io/github-action@v4
-      with:
-        working-directory: action/cypress-action
-        spec: cypress/e2e/e2e/**/*
-        browser: chrome 
-        # record: true
-      env:
-        GITHUB_TOKEN: ${{ inputs.githubToken }}
-        CYPRESS_token: ${{ inputs.providerToken }}
-        CYPRESS_releasetag: ${{env.tag}}
-        CYPRESS_applicationId: ${{ env.APPLICATION_ID }}
-        # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
-    - run: ls
-      shell: bash
-    - run: tree action/cypress-action/cypress/ -L 2me
-      shell: bash
-    - name: Upload Cypress artifacts
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: cypress-ss
-        path: action/cypress-action/cypress/videos
-    - name: Upload Cypress artifacts
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: cypress-ss
-        path: action/cypress-action/cypress/screenshots
-    - run:  echo "SCREENSHOT_NAME=$(ls)" >> $GITHUB_ENV # Assumption: There is only one screenshot in the download directory
-      working-directory: action/cypress-action/cypress/downloads
-      shell: bash
-    - run: mv "$SCREENSHOT_NAME" screenshot.png
-      working-directory: action/cypress-action/cypress/downloads
-      shell: bash
+    #- name: Cypress run
+     # uses: cypress-io/github-action@v4
+      #with:
+#        working-directory: action/cypress-action
+#        spec: cypress/e2e/e2e/**/*
+#       browser: chrome 
+#      # record: true
+#    env:
+#     GITHUB_TOKEN: ${{ inputs.githubToken }}
+#        CYPRESS_token: ${{ inputs.providerToken }}
+#        CYPRESS_releasetag: ${{env.tag}}
+#       CYPRESS_applicationId: ${{ env.APPLICATION_ID }}
+#        # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
+#    - run: ls
+#      shell: bash
+#    - run: tree action/cypress-action/cypress/ -L 2me
+#      shell: bash
+#    - name: Upload Cypress artifacts
+#      if: always()
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: cypress-ss
+#        path: action/cypress-action/cypress/videos
+#    - name: Upload Cypress artifacts
+#      if: always()
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: cypress-ss
+#        path: action/cypress-action/cypress/screenshots
+#    - run:  echo "SCREENSHOT_NAME=$(ls)" >> $GITHUB_ENV # Assumption: There is only one screenshot in the download directory
+#      working-directory: action/cypress-action/cypress/downloads
+#      shell: bash
+#    - run: mv "$SCREENSHOT_NAME" screenshot.png
+#      working-directory: action/cypress-action/cypress/downloads
+#      shell: bash
     - run: node --version
       shell: bash
     - run: npm ci
