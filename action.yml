@@ -77,6 +77,24 @@ runs:
       shell: bash
     - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
       shell: bash
+
+    - name: Trigger Playwright Workflow
+      if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+      uses: actions/github-script@v6
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const { data: workflows } = await github.actions.listRepoWorkflows({ owner: context.repo.owner, repo: context.repo.repo });
+          const playwrightWorkflow = workflows.find(wf => wf.path === '.github/playwright.yml');
+          if (playwrightWorkflow) {
+            await github.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: playwrightWorkflow.id,
+              ref: 'master',
+            });
+          }
+      
     - name: Cypress run
       uses: cypress-io/github-action@v4
       with:
