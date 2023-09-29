@@ -56,13 +56,18 @@ runs:
         cluster_name: "kind-cluster"
     - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
-    - run: 
-      working-directory: action/cypress-action/
-      if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+   
+    - run: |
+        if [[ ! "${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}" ]]; then
+        cd action/cypress-action/
+        fi
       shell: bash
-    - run: FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
-      if: ${{ !inputs.application_url }}
+    - run: |
+          if [[ ! "${{ inputs.application_url }}" ]]; then
+            FILE_PATH="${{ inputs.filePath }}" ./action/manifest-merger.sh # creates file in root dir
+          fi
       shell: bash
+
     - run: |
         AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplicationFile.sh)
         echo $AppId
