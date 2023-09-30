@@ -57,16 +57,16 @@ runs:
     - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
    
-    - run: |
-        if [[ ! "${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}" ]]; then
-        cd action/cypress-action/
-        fi
-      shell: bash
-    - run: |
-          if [[ ! "${{ inputs.application_url }}" ]]; then
-            FILE_PATH="${{ inputs.filePath }}" ./action/manifest-merger.sh # creates file in root dir
-          fi
-      shell: bash
+#    - run: |
+#        if [[ ! "${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}" ]]; then
+#        cd action/cypress-action/
+#        fi
+#      shell: bash
+#    - run: |
+#          if [[ ! "${{ inputs.application_url }}" ]]; then
+#            FILE_PATH="${{ inputs.filePath }}" ./action/manifest-merger.sh # creates file in root dir
+#          fi
+#      shell: bash
 
     - run: |
         AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplicationFile.sh)
@@ -82,7 +82,7 @@ runs:
       shell: bash
     - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
       shell: bash
-
+#Tiggering the Playwright tests, and passes the necessary input values
     - name: Trigger Playwright Workflow
       uses: actions/github-script@v6
       with:
@@ -96,6 +96,9 @@ runs:
               repo: context.repo.repo,
               workflow_id: playwrightWorkflow.id,
               ref: 'master',
+              inputs: {
+                applicationId:${{env.APPLICATION_ID}}
+              }
             });
           }
       
