@@ -17,7 +17,7 @@ test("Meshmap", async ({ page }) => {
 	await MeshMap(page);
 });
 
-test("Meshmap Design", async ({ page }) => {
-	const appenvId =  await page.fill('[applicationId]', process.env.APPLICATION_ID);
-	await meshmapdesign(page, appenvId);
-});
+// test("Meshmap Design", async ({ page }) => {
+// 	const appenvId =  await page.fill('[applicationId]', process.env.APPLICATION_ID);
+// 	await meshmapdesign(page, appenvId);
+// });

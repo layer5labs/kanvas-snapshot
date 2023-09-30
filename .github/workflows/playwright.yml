@@ -25,9 +25,10 @@ jobs:
         run: |
           cd playwright-action
           npx playwright test
-      - uses: actions/upload-artifact@v3
+      - name: Upload Playwright Artifacts    
         if: always()
+        uses: actions/upload-artifact@v3
         with:
-          name: /playwright-action/playwright-report
-          path: /playwright-action/playwright-report/
+          name: playwright-action report
+          path: /playwright-action/playwright-report/action.yml
           retention-days: 10
