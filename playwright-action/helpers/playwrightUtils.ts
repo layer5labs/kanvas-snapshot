@@ -44,8 +44,16 @@ export async function MeshMap(page) {
 }
 
 export async function meshmapdesign(page, applicationId) {
-	const customUrl = `https://playground.meshery.io/extension/meshmap?application=${applicationId}`;
+	const customUrl = `https://playground.meshery.io/extension/meshmap`;
 	await page.goto(customUrl);
-	const link = await saveGraph(page, customUrl);
+	const applicationsSection = await page.locator(
+		'h1:has-text(/MeshMap\\s*beta/i) + h2:has-text("Applications")'
+	);
+	// Find the "Name" heading under the "Applications" section
+	const nameLabel = await applicationsSection.locator('label:has-text("Name")');
+	const appUrl = await page.goto(
+		`https://playground.meshery.io/extension/meshmapmeshmap?application=${applicationId}`
+	);
+	const link = await saveGraph(page, appUrl);
 	console.log(`Meshmap application ${link} Captured`);
-  }
+}
