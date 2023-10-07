@@ -95,7 +95,6 @@ runs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: playwrightWorkflow.id,
-              ref: 'master',
               inputs: {
                 applicationId:${{env.APPLICATION_ID}}
               }
