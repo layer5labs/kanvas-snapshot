@@ -89,7 +89,7 @@ runs:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         script: |
           const { data: workflows } = await github.actions.listRepoWorkflows({ owner: context.repo.owner, repo: context.repo.repo });
-          const playwrightWorkflow = workflows.find(wf => wf.path === '.github/playwright.yml');
+          const playwrightWorkflow = workflows.find(wf => wf.path === '.github/workflows/playwright.yml');
           if (playwrightWorkflow) {
             await github.actions.createWorkflowDispatch({
               owner: context.repo.owner,
