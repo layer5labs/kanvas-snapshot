@@ -17,7 +17,7 @@ export async function setViewportSize(page, width, height) {
 	await page.setViewportSize({ width, height });
 }
 
-const getFormattedDateTime = () => {
+export const getFormattedDateTime = () => {
 	const now = new Date();
 
 	// Extract date components (YYYY_MM_DD format)
@@ -43,25 +43,8 @@ async function captureAndSaveScreenshot(page, filename) {
 	await page.screenshot({ path: filename });
 }
 
-//Save meshmapscreenshot and generate a download link.
-export async function saveGraph(page, customUrl) {
-	await page.goto(customUrl);
 
-	// Capture a screenshot and save it with a custom filename
-	const date = new Date();
-	// Format: Meshmap_2023_09_23_14_30_45.png
-	const fileName = getFormattedDateTime();
-	const filePath = path.join(__dirname, fileName); // Full path to the saved screenshot
 
-	await captureAndSaveScreenshot(page, filePath);
-	// Create a download link
-	const downloadLink = `/download?fileName=${encodeURIComponent(fileName)}`;
-
-	console.log(`Screenshot saved as ${fileName}`);
-	console.log("Download link:", downloadLink);
-
-	return downloadLink;
-}
 
 // intercept and modify network requests to specific endpoint
 // to control network interactions during testing and automation

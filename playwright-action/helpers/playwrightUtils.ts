@@ -1,4 +1,5 @@
-import { saveGraph } from "./playwrightSetup";
+import { getFormattedDateTime } from "./playwrightSetup";
+const path = require("path");
 
 //Defining test functions for playwright to be used in the spec file
 
@@ -51,9 +52,16 @@ export async function meshmapdesign(page, applicationId) {
 	);
 	// Find the "Name" heading under the "Applications" section
 	const nameLabel = await applicationsSection.locator('label:has-text("Name")');
-	const appUrl = await page.goto(
-		`https://playground.meshery.io/extension/meshmapmeshmap?application=${applicationId}`
-	);
-	const link = await saveGraph(page, appUrl);
-	console.log(`Meshmap application ${link} Captured`);
+	const appUrl = `https://playground.meshery.io/extension/meshmapmeshmap?application=${applicationId}`;
+	await page.goto(appUrl);
+	const fileName = getFormattedDateTime();
+	const filePath = path.join(__dirname, fileName);
+	//capture and Save meshmapscreenshot and generate a download link.
+	await page.screenshot({ path: filePath });
+
+	// Return the download link for the captured screenshot
+	const downloadLink = `/download?fileName=${encodeURIComponent(fileName)}`;
+	console.log(`Screenshot saved as ${fileName}`);
+	console.log("Download link:", downloadLink);
+	return downloadLink;
 }
