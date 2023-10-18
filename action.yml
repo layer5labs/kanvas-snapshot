@@ -82,7 +82,7 @@ runs:
       shell: bash
     - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
       shell: bash
-#Tiggering the Playwright tests, and passes the necessary input values
+#Tiggering the Playwright tests, and passes the necessary input values.
     - name: Trigger Playwright Workflow
       uses: actions/github-script@v6
       with:
