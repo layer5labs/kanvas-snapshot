@@ -28,4 +28,3 @@ jobs:
           prNumber: ${{ env.PULL_NO }}
           application_type: "Kubernetes Manifest"
           filePath: "action/__tests__/manifest-test"
-
