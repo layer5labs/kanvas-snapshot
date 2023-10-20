@@ -56,18 +56,13 @@ runs:
         cluster_name: "kind-cluster"
     - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
-   
-#    - run: |
-#        if [[ ! "${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}" ]]; then
-#        cd action/cypress-action/
-#        fi
-#      shell: bash
-#    - run: |
-#          if [[ ! "${{ inputs.application_url }}" ]]; then
-#            FILE_PATH="${{ inputs.filePath }}" ./action/manifest-merger.sh # creates file in root dir
-#          fi
-#      shell: bash
-
+    - run: 
+      working-directory: action/cypress-action/
+      if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
+      shell: bash
+    - run: FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
+      if: ${{ !inputs.application_url }}
+      shell: bash
     - run: |
         AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplicationFile.sh)
         echo $AppId
@@ -82,85 +77,66 @@ runs:
       shell: bash
     - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
       shell: bash
-#Tiggering the Playwright tests, and passes the necessary input values.
-    - name: Trigger Playwright Workflow
-      uses: actions/github-script@v6
+    - name: Cypress run
+      uses: cypress-io/github-action@v4
+      with:
+        working-directory: action/cypress-action
+        spec: cypress/e2e/e2e/**/*
+        browser: chrome 
+        # record: true
+      env:
+        GITHUB_TOKEN: ${{ inputs.githubToken }}
+        CYPRESS_token: ${{ inputs.providerToken }}
+        CYPRESS_releasetag: ${{env.tag}}
+        CYPRESS_applicationId: ${{ env.APPLICATION_ID }}
+        # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
+    - run: ls
+      shell: bash
+    - run: tree action/cypress-action/cypress/ -L 2me
+      shell: bash
+    - name: Upload Cypress artifacts
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: cypress-ss
+        path: action/cypress-action/cypress/videos
+    - name: Upload Cypress artifacts
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: cypress-ss
+        path: action/cypress-action/cypress/screenshots
+    - run:  echo "SCREENSHOT_NAME=$(ls)" >> $GITHUB_ENV # Assumption: There is only one screenshot in the download directory
+      working-directory: action/cypress-action/cypress/downloads
+      shell: bash
+    - run: mv "$SCREENSHOT_NAME" screenshot.png
+      working-directory: action/cypress-action/cypress/downloads
+      shell: bash
+    - run: node --version
+      shell: bash
+    - run: npm ci
+      working-directory: action/node-file-upload
+      shell: bash
+    - run: |
+        PROVIDER_TOKEN=${{inputs.providerToken}} node node-file-upload/index.js > __fileResponse.txt  
+        outputstr=$(head -n 1  __fileResponse.txt)
+        required_string="https"
+        echo $outputstr
+
+        if [[ "$outputstr" == "$required_string"* ]]; then
+            echo "RESOURCE_URL=$outputstr" >> $GITHUB_ENV
+        else
+            echo "RESOURCE_URL=false" >> $GITHUB_ENV
+        fi
+      working-directory: action/
+      shell: bash
+    - name: Comment Success Status
+      if: ${{ success() && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
+      uses: hasura/comment-progress@v2.2.0
       with:
         github-token: ${{ inputs.githubToken }}
-        script: |
-          const { data: workflows } = await github.actions.listRepoWorkflows({ owner: context.repo.owner, repo: context.repo.repo });
-          const playwrightWorkflow = workflows.find(wf => wf.path === '.github/workflows/playwright.yml');
-          if (playwrightWorkflow) {
-            await github.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: playwrightWorkflow.id,
-              inputs: {
-                applicationId:${{env.APPLICATION_ID}}
-              }
-            });
-          }
-      
-    #- name: Cypress run
-     # uses: cypress-io/github-action@v4
-      #with:
-#        working-directory: action/cypress-action
-#        spec: cypress/e2e/e2e/**/*
-#       browser: chrome 
-#      # record: true
-#    env:
-#     GITHUB_TOKEN: ${{ inputs.githubToken }}
-#        CYPRESS_token: ${{ inputs.providerToken }}
-#        CYPRESS_releasetag: ${{env.tag}}
-#       CYPRESS_applicationId: ${{ env.APPLICATION_ID }}
-#        # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
-#    - run: ls
-#      shell: bash
-#    - run: tree action/cypress-action/cypress/ -L 2me
-#      shell: bash
-#    - name: Upload Cypress artifacts
-#      if: always()
-#      uses: actions/upload-artifact@v3
-#      with:
-#        name: cypress-ss
-#        path: action/cypress-action/cypress/videos
-#    - name: Upload Cypress artifacts
-#      if: always()
-#      uses: actions/upload-artifact@v3
-#      with:
-#        name: cypress-ss
-#        path: action/cypress-action/cypress/screenshots
-#    - run:  echo "SCREENSHOT_NAME=$(ls)" >> $GITHUB_ENV # Assumption: There is only one screenshot in the download directory
-#      working-directory: action/cypress-action/cypress/downloads
-#      shell: bash
-#    - run: mv "$SCREENSHOT_NAME" screenshot.png
-#      working-directory: action/cypress-action/cypress/downloads
-#      shell: bash
-#    - run: node --version
-#     shell: bash
-#    - run: npm ci
-#     working-directory: action/node-file-upload
-#      shell: bash
-#    - run: |
-#        PROVIDER_TOKEN=${{inputs.providerToken}} node node-file-upload/index.js > __fileResponse.txt  
-#        outputstr=$(head -n 1  __fileResponse.txt)
-#        required_string="https"
-#        echo $outputstr
-#
-#        if [[ "$outputstr" == "$required_string"* ]]; then
-#            echo "RESOURCE_URL=$outputstr" >> $GITHUB_ENV
-#        else
-#            echo "RESOURCE_URL=false" >> $GITHUB_ENV
-#        fi
-#      working-directory: action/
-#      shell: bash
-#    - name: Comment Success Status
-#      if: ${{ success() && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
-#      uses: hasura/comment-progress@v2.2.0
-#      with:
-#        github-token: ${{ inputs.githubToken }}
-#        repository: ${{github.repository}}
-#        number: ${{ inputs.prNumber }}
-#        id: meshmap-snapshot
-#        message: '[<img src="${{env.RESOURCE_URL}}">](https://meshery.layer5.io/catalog/content/applications)'
-#        append: false
+        repository: ${{github.repository}}
+        number: ${{ inputs.prNumber }}
+        id: meshmap-snapshot
+        message: '[<img src="${{env.RESOURCE_URL}}">](https://meshery.layer5.io/catalog/content/applications)'
+        append: false
