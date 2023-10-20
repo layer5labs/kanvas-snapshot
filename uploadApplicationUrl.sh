@@ -8,6 +8,11 @@
 # # convert to uri-encoded str
 UPLOAD_TYPE=$(printf %s "$UPLOAD_TYPE" | jq -sRr @uri)
 
+echo upload type is here
+echo $UPLOAD_TYPE
+echo $UPLOAD_URL
+echo upload url was there
+
 curl "$MESHERY_SERVER_BASE_URL/api/application/$UPLOAD_TYPE" \
   -H 'Accept: */*' \
   -H 'Connection: close' \

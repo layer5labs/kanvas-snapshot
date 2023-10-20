@@ -75,7 +75,9 @@ runs:
         echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
       if: ${{ inputs.application_url }}
       shell: bash
-    - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
+    - run: |
+          echo chekpoint 1 
+          echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
       shell: bash
     - name: Cypress run
       uses: cypress-io/github-action@v4
