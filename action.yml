@@ -86,7 +86,7 @@ runs:
     - name: Trigger Playwright Workflow
       uses: actions/github-script@v6
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        github-token: ${{ inputs.githubToken }}
         script: |
           const { data: workflows } = await github.actions.listRepoWorkflows({ owner: context.repo.owner, repo: context.repo.repo });
           const playwrightWorkflow = workflows.find(wf => wf.path === '.github/workflows/playwright.yml');
