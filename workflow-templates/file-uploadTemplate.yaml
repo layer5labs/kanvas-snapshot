@@ -2,7 +2,17 @@ name: MeshMap Screenshot Service
 on: # rebuild any PRs and main branch changes
   pull_request_target:
     types: [opened, synchronize, reopened]
-
+  
+  workflow_call:
+    inputs:
+      fileName: 
+        description: Relative file path from the root directory
+        required: true
+        type: string
+    outputs:
+      resource_url:
+        description: "The URL of the generated resource."
+        value: ${{ jobs.MeshMapScreenshot.outputs.resource_url }}
 permissions: 
   actions: read
   contents: write
@@ -14,6 +24,8 @@ permissions:
 jobs:
   MeshMapScreenshot:
     runs-on: ubuntu-latest
+    outputs:
+      resource_url: ${{ steps.test_result.outputs.resource_url }}
     steps:
       - name: Set PR number # To comment the final status on the Pull-request opened in any repository
         run: |
@@ -31,4 +43,4 @@ jobs:
           providerToken: ${{ secrets.PROVIDER_TOKEN }} # Meshery Cloud Authentication token, signin to meshery-cloud to get one, example: ey.....
           prNumber: ${{ env.PULL_NO }} # auto-filled from the above step
           application_type: $ph_application_type # your application type, could be any of three: "Kubernetes Manifest", "Docker Compose", "Helm Chart"
-          filePath: $ph_filePath # relative file-path from the root directory in the github-runner env, you might require to checkout the repository as described in step 2
+          filePath: ${{ inputs.fileName == '' && $ph_filePath || inputs.fileName }} # relative file-path from the root directory in the github-runner env, you might require to checkout the repository as described in step 2
