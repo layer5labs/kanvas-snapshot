@@ -31,6 +31,9 @@ inputs:
 outputs:
   mardownResult: # id of output
     description: 'The markdown result'
+  resource_url: 
+    description: "The URL of the generated resource."
+    value: ${{ steps.outputurl.outputs.RESOURCE_URL }}      
 runs:
   using: "composite"
   steps:
@@ -117,7 +120,8 @@ runs:
     - run: npm ci
       working-directory: action/node-file-upload
       shell: bash
-    - run: |
+    - id: outputurl
+      run: |
         PROVIDER_TOKEN=${{inputs.providerToken}} node node-file-upload/index.js > __fileResponse.txt  
         outputstr=$(head -n 1  __fileResponse.txt)
         required_string="https"
@@ -125,6 +129,7 @@ runs:
 
         if [[ "$outputstr" == "$required_string"* ]]; then
             echo "RESOURCE_URL=$outputstr" >> $GITHUB_ENV
+            echo "RESOURCE_URL=$outputstr" >> $GITHUB_OUTPUT
         else
             echo "RESOURCE_URL=false" >> $GITHUB_ENV
         fi
