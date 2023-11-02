@@ -3,7 +3,7 @@
 # MESHERY_SERVER_BASE_URL
 # UPLOAD_TYPE: can be "Kubernetes Manifest" | "Helm Chart" | "Docker Compose"
 # PROVIDER_TOKEN: MESHERY provider token
-# UPLOAD_URL: APPlication's url upload link
+# UPLOAD_URL: Pattern's url upload link
 
 # # convert to uri-encoded str
 UPLOAD_TYPE=$(printf %s "$UPLOAD_TYPE" | jq -sRr @uri)
