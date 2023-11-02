@@ -1,6 +1,10 @@
-# Infrashot
-Walks in application and takes a shot of your infrastructure using Meshery Extension MeshMap
+# Layer5 MeshMap Snapshot
+Give your pipelines super powers with Meshery's GitHub Actions.
 
+## MeshMap GitHub Action
+1. See your deployment before you merge
+1. Connect MeshMap to your GitHub repo and see changes pull request-to-pull request
+1. Get snapshots of your infrastructure directly in your PRs
 
 ## Design Prologue
 MeshMap Snapshot is a screenshot service provided via MeshMap for the design or Application user is interested in. It Enables users to visualize the changes being done in the code-base rapidly over each PR and inform the user about any potential changesin their infrastructure. It doesn't need any configuration or setup neither any deployment by the client rather a simple one time setup is able to provide a long time value.
