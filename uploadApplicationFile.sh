@@ -10,7 +10,7 @@ MESHERY_PATTERN_FILE=$(awk '{ gsub(/"/, "\\\"", $0); printf "%s\\n", $0}' __inte
 # # convert to uri-encoded str
 UPLOAD_TYPE=$(printf %s "$UPLOAD_TYPE" | jq -sRr @uri)
 
-curl "$MESHERY_SERVER_BASE_URL/api/pattern/$UPLOAD_TYPE" \
+curl "https://fictional-halibut-59567v944vrh547-9081.app.github.dev/api/pattern/$UPLOAD_TYPE" \
   -H 'Accept: */*' \
   -H 'Connection: close' \
   -H 'Content-Type: text/plain;charset=UTF-8' \
