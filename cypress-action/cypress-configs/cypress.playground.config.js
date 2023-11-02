@@ -15,7 +15,7 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       return require('./cypress/plugins/index.js')(on, config)
     },
-    baseUrl: 'https://playground.meshery.io',
+    baseUrl: 'https://sturdy-eureka-w4x6qv49rr4h96r4-9081.app.github.dev',
     specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
   }
 })
