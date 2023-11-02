@@ -6,7 +6,7 @@ import { TIME } from "../../support/constants";
 import { beforeEachCallbackForCustomUrl, saveGraph } from "../../support/helpers";
 
 describe("Infra Shot Automated Runner", () => {
-  beforeEach(() => beforeEachCallbackForCustomUrl(`/extension/meshmap?application=${Cypress.env("applicationId").replace(/['"]+/g, '')}`))
+  beforeEach(() => beforeEachCallbackForCustomUrl(`/extension/meshmap?design=${Cypress.env("applicationId").replace(/['"]+/g, '')}`))
 
   it("load a design/application with ID", () => {
     cy.wait(TIME.X4LARGE);
