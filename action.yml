@@ -135,7 +135,7 @@ runs:
       shell: bash
     - id: outputurl
       run: |
-        PROVIDER_TOKEN=${{inputs.providerToken}} node node-file-upload/index.js > __fileResponse.txt  
+        PROVIDER_TOKEN=${{inputs.providerToken}} assetLocation=${{ inputs.assetLocation }} node node-file-upload/index.js > __fileResponse.txt  
         outputstr=$(head -n 1  __fileResponse.txt)
         required_string="https"
         echo $outputstr
