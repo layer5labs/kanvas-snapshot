@@ -17,7 +17,7 @@ function convertFileToBase64(filePath) {
   }
 }
 
-const filePath = path.join(__dirname, "..", "screenshot.png");
+const filePath = path.join(__dirname, "..", "cypress-action", "cypress", "downloads", "screenshot.png");
 const base64Data = convertFileToBase64(filePath);
 const formData = new FormData();
 formData.append("image", base64Data);
@@ -27,7 +27,7 @@ if (assetLocation != "" && assetLocation !== undefined) {
   formData.append("assetLocation", process.env.assetLocation);
 }
 
-const url = "http://meshery.layer5.io/api/integrations/github/meta/artifacts";
+const url = "https://meshery.layer5.io/api/integrations/github/meta/artifacts";
 
 const headers = {
   "Content-Type": "multipart/form-data",
