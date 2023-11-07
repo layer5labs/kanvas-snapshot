@@ -2,7 +2,7 @@ name: 'MeshMap-Snapshot'
 description: 'Walks in application and takes a shot of your infrastructure using Meshery Extension MeshMap'
 author: Layer5
 inputs:
-  designId:  # id of input  #deprecated
+  designID: 
     description: "The design uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
     default: '{}'
@@ -18,7 +18,7 @@ inputs:
   prNumber:
     description: "The Pull request on which comment has to be made"
     required: false
-    default: 0
+    default: "0"
   filePath: 
     description: "The relative filepath of the location where the manifests are stored"
     required: false
@@ -28,9 +28,18 @@ inputs:
   application_url:
     description: "Application's source url where the manifests or data is stored"
     required: false
+  skipComment:
+    default: "false"
+    description: "Skip the step of commenting on the PR when the action is invoked not for any specific PR or commit but dispatched manually for eg: as part of publishing catalog."
+  assetLocation:
+    required: false
+    description: Remote location where the generated asset (screenshot) for the design will be stored.
 outputs:
   mardownResult: # id of output
     description: 'The markdown result'
+  resource_url: 
+    description: "The URL of the generated resource."
+    value: ${{ steps.outputurl.outputs.RESOURCE_URL }}      
 runs:
   using: "composite"
   steps:
@@ -61,19 +70,27 @@ runs:
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
     - run: FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
-      if: ${{ !inputs.application_url }}
+      if: ${{ !inputs.application_url &&  !inputs.skipComment }}
       shell: bash
+    - run: cat "__intermediate_file.yml"
+      shell: bash
+      if: ${{ !inputs.skipComment }}
     - run: |
         AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplicationFile.sh)
         echo $AppId
         echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
-      if: ${{ !inputs.application_url }}
+      if: ${{ !inputs.application_url && !inputs.skipComment }}
       shell: bash
     - run: |
         AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }} UPLOAD_URL=${{ inputs.application_url }}  ./action/uploadApplicationUrl.sh)
         echo $AppId
         echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
-      if: ${{ inputs.application_url }}
+      if: ${{ inputs.application_url && !inputs.skipComment }}
+      shell: bash
+    - run: |
+        echo ${{ inputs.designID }}
+        echo "APPLICATION_ID=${{ inputs.designID }}" >> $GITHUB_ENV
+      if: ${{ inputs.skipComment }}
       shell: bash
     - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
       shell: bash
@@ -117,21 +134,23 @@ runs:
     - run: npm ci
       working-directory: action/node-file-upload
       shell: bash
-    - run: |
-        PROVIDER_TOKEN=${{inputs.providerToken}} node node-file-upload/index.js > __fileResponse.txt  
+    - id: outputurl
+      run: |
+        PROVIDER_TOKEN=${{inputs.providerToken}} assetLocation=${{ inputs.assetLocation }} node node-file-upload/index.js > __fileResponse.txt  
         outputstr=$(head -n 1  __fileResponse.txt)
         required_string="https"
         echo $outputstr
-
+        echo ${{inputs.prNumber}}
         if [[ "$outputstr" == "$required_string"* ]]; then
             echo "RESOURCE_URL=$outputstr" >> $GITHUB_ENV
+            echo "RESOURCE_URL=$outputstr" >> $GITHUB_OUTPUT
         else
             echo "RESOURCE_URL=false" >> $GITHUB_ENV
         fi
       working-directory: action/
       shell: bash
     - name: Comment Success Status
-      if: ${{ success() && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
+      if: ${{ success() && !inputs.skipComment && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
       uses: hasura/comment-progress@v2.2.0
       with:
         github-token: ${{ inputs.githubToken }}
