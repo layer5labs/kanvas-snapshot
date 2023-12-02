@@ -157,5 +157,5 @@ runs:
         repository: ${{github.repository}}
         number: ${{ inputs.prNumber }}
         id: meshmap-snapshot
-        message: '[<img src="${{env.RESOURCE_URL}}">](https://playground.meshery.io/extensions/meshmap?design=${{ env.DESIGN_ID }})'
+        message: '[<img src="${{env.RESOURCE_URL}}">](https://playground.meshery.io/extension/meshmap?design=${{ env.DESIGN_ID }})'
         append: false
