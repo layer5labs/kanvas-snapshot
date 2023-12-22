@@ -21,7 +21,6 @@ jobs:
       - id: test_result
         uses: ./action
         with:
-          designId: ${{ secrets.TEST_SECRET }} #works
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           providerToken: ${{ secrets.PROVIDER_TOKEN }}
           prNumber: ${{ env.PULL_NO }}
