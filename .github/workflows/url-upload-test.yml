@@ -1,4 +1,4 @@
-name: 'url-upload-test'
+name: 'URL Upload Build Test'
 on: # rebuild any PRs and main branch changes
   pull_request:
   push:
