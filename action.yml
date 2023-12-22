@@ -72,24 +72,24 @@ runs:
     - run: |
         FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
         cat "__intermediate_file.yml" # debug
-      if: ${{ !inputs.application_url &&  inputs.skipComment == 'false' }}
+      if: ${{ inputs.filePath &&  inputs.skipComment == 'false' }}
       shell: bash
     - run: |
         AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplicationFile.sh)
         echo $AppId
         echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
-      if: ${{ !inputs.application_url && inputs.skipComment == 'false'}}
+      if: ${{ inputs.filePath && !inputs.designID }}
       shell: bash
     - run: |
         AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }} UPLOAD_URL=${{ inputs.application_url }}  ./action/uploadApplicationUrl.sh)
         echo $AppId
         echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
-      if: ${{ inputs.application_url && inputs.skipComment == 'false' }}
+      if: ${{ inputs.application_url && !inputs.designID }}
       shell: bash
     - run: |
         echo ${{ inputs.designID }}
         echo "APPLICATION_ID=${{ inputs.designID }}" >> $GITHUB_ENV
-      if: ${{ inputs.skipComment == 'true' }}
+      if: ${{ inputs.designID }}
       shell: bash
     - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
       shell: bash
