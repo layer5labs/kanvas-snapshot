@@ -5,7 +5,6 @@ inputs:
   designID: 
     description: "The design uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
-    default: '{}'
   applicationId:  #deprecated
     description: "The application uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
@@ -69,28 +68,30 @@ runs:
       working-directory: action/cypress-action/
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
-    - run: FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
-      if: ${{ !inputs.application_url &&  inputs.skipComment == 'false' }}
-      shell: bash
-    - run: cat "__intermediate_file.yml"
-      shell: bash
-      if: ${{ inputs.skipComment == 'false' }}
     - run: |
+        FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
+        cat "__intermediate_file.yml" # debug
+      if: ${{ inputs.filePath }}
+      shell: bash
+    - run: |
+        echo "Uploading using application file"
         AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplicationFile.sh)
         echo $AppId
         echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
-      if: ${{ !inputs.application_url && inputs.skipComment == 'false'}}
+      if: ${{ inputs.filePath && !inputs.designID }}
       shell: bash
     - run: |
+        echo "Uploading using application url"
         AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }} UPLOAD_URL=${{ inputs.application_url }}  ./action/uploadApplicationUrl.sh)
         echo $AppId
         echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
-      if: ${{ inputs.application_url && inputs.skipComment == 'false' }}
+      if: ${{ inputs.application_url && !inputs.designID }}
       shell: bash
     - run: |
+        echo "Uploading using design id"
         echo ${{ inputs.designID }}
         echo "APPLICATION_ID=${{ inputs.designID }}" >> $GITHUB_ENV
-      if: ${{ inputs.skipComment == 'true' }}
+      if: ${{ inputs.designID }}
       shell: bash
     - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
       shell: bash
