@@ -71,7 +71,7 @@ runs:
     - run: |
         FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
         cat "__intermediate_file.yml" # debug
-      if: ${{ inputs.filePath &&  inputs.skipComment == 'false' }}
+      if: ${{ inputs.filePath }}
       shell: bash
     - run: |
         echo "Uploading using application file"
