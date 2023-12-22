@@ -150,7 +150,7 @@ runs:
       working-directory: action/
       shell: bash
     - name: Comment Success Status
-      if: ${{ success() && !inputs.skipComment && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
+      if: ${{ success() && inputs.skipComment == 'false' && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
       uses: hasura/comment-progress@v2.2.0
       with:
         github-token: ${{ inputs.githubToken }}
