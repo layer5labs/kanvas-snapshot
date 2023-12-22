@@ -5,7 +5,6 @@ inputs:
   designID: 
     description: "The design uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
-    default: '{}'
   applicationId:  #deprecated
     description: "The application uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
