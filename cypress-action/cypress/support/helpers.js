@@ -1,35 +1,41 @@
-import { DESIGNER, extension, MESHMAP_PATH } from "./constants"
-
+import { DESIGNER, extension, MESHMAP_PATH } from "./constants";
 
 export function waitFor(str) {
   return "@" + str;
 }
 
 export function id(str) {
-  return "#" + str
+  return "#" + str;
 }
 
 const doInitialSetup = () => {
-  cy.setViewPort();
+  // cy.setViewPort();
+  cy.dpiAndResize(3, 1920, 1080);
   cy.login();
   cy.setReleaseTag();
   cy.interceptCapabilities();
   cy.setMode(DESIGNER);
-}
+};
 
 export const beforeEachCallback = () => {
   doInitialSetup();
   cy.intercept(extension.path).as(extension.alias);
-  cy.visit(MESHMAP_PATH)
+  cy.visit(MESHMAP_PATH);
   cy.wait(waitFor(extension.alias), { timeout: 15000 });
-}
+};
 
-export const beforeEachCallbackForCustomUrl = (customPath) => {
+export const setThemeMode = async (mode) => {
+  const window = await cy.window();
+  window.localStorage.setItem("theme", mode);
+};
+
+export const beforeEachCallbackForCustomUrl = (customPath, theme = "light") => {
+  cy.setThemeMode(theme);
   doInitialSetup();
   cy.intercept(extension.path).as(extension.alias);
   cy.visit(customPath);
   cy.wait(waitFor(extension.alias), { timeout: 60_000 });
-}
+};
 
 export const saveGraph = (cy) => {
   let image = cy.png();
