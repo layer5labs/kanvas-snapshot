@@ -1,5 +1,5 @@
-name: 'MeshMap-Snapshot'
-description: 'Walks in application and takes a shot of your infrastructure using Meshery Extension MeshMap'
+name: "MeshMap-Snapshot"
+description: "Walks in application and takes a shot of your infrastructure using Meshery Extension MeshMap"
 author: Layer5
 inputs:
   designID: 
@@ -64,7 +64,7 @@ runs:
         cluster_name: "kind-cluster"
     - run: echo ${{ steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
-    - run: 
+    - run:
       working-directory: action/cypress-action/
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
@@ -96,35 +96,16 @@ runs:
     - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
       shell: bash
     - name: Cypress run
-      uses: cypress-io/github-action@v4
-      with:
-        working-directory: action/cypress-action
-        spec: cypress/e2e/e2e/**/*
-        browser: chrome 
-        # record: true
-      env:
-        GITHUB_TOKEN: ${{ inputs.githubToken }}
-        CYPRESS_token: ${{ inputs.providerToken }}
-        CYPRESS_releasetag: ${{env.tag}}
-        CYPRESS_applicationId: ${{ env.APPLICATION_ID }}
-        # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
+      uses: action/cypress-job #reference to cypress workflow
     - run: ls
       shell: bash
     - run: tree action/cypress-action/cypress/ -L 2me
       shell: bash
     - name: Upload Cypress artifacts
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: cypress-ss
-        path: action/cypress-action/cypress/videos
+      uses: cypress-ss
     - name: Upload Cypress artifacts
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: cypress-ss
-        path: action/cypress-action/cypress/screenshots
-    - run:  echo "SCREENSHOT_NAME=$(ls)" >> $GITHUB_ENV # Assumption: There is only one screenshot in the download directory
+      uses: cypress-artifacts
+    - run: echo "SCREENSHOT_NAME=$(ls)" >> $GITHUB_ENV # Assumption: There is only one screenshot in the download directory
       working-directory: action/cypress-action/cypress/downloads
       shell: bash
     - run: mv "$SCREENSHOT_NAME" screenshot.png

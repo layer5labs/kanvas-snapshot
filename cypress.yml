@@ -1,0 +1,28 @@
+name: Cypress Run Workflow
+
+on: 
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+jobs:
+  cypress-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v4
+        with:
+          working-directory: action/cypress-action
+          spec: cypress/e2e/e2e/**/*
+          browser: chrome
+          # record: true
+        env:
+          GITHUB_TOKEN: ${{ inputs.githubToken }}
+          CYPRESS_token: ${{ inputs.providerToken }}
+          CYPRESS_releasetag: ${{env.tag}}
+          CYPRESS_applicationId: ${{ env.APPLICATION_ID }}
+          # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
+
+      
