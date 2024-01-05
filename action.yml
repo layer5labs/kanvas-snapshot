@@ -114,13 +114,13 @@ runs:
       shell: bash
     - name: Upload Cypress artifacts
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: cypress-ss
         path: action/cypress-action/cypress/videos
     - name: Upload Cypress artifacts
       if: always()
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: cypress-ss
         path: action/cypress-action/cypress/screenshots
