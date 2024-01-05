@@ -19,6 +19,13 @@ function convertFileToBase64(filePath) {
 
 const filePath = path.join(__dirname, "..", "cypress-action", "cypress", "downloads", "screenshot.png");
 const base64Data = convertFileToBase64(filePath);
+const formData = new FormData();
+formData.append("image", base64Data);
+const assetLocation = process.env.assetLocation;
+if (assetLocation != "" && assetLocation !== undefined) {
+  console.log("assetLocation: ", assetLocation);
+  formData.append("assetLocation", process.env.assetLocation);
+}
 
 const url = "https://meshery.layer5.io/api/integrations/github/meta/artifacts";
 
@@ -27,8 +34,8 @@ const headers = {
   "Authorization": `Bearer ${process.env.PROVIDER_TOKEN}`
 }
 
-if (base64Data) {
-  axios.post(url, base64Data, {
+if (formData) {
+  axios.post(url, formData, {
     headers,
   }).then(response => {
     console.log(response.data)

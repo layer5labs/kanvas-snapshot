@@ -2,11 +2,10 @@ name: "MeshMap-Snapshot"
 description: "Walks in application and takes a shot of your infrastructure using Meshery Extension MeshMap"
 author: Layer5
 inputs:
-  designId: # id of input  #deprecated
+  designID: 
     description: "The design uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
-    default: "{}"
-  applicationId: #deprecated
+  applicationId:  #deprecated
     description: "The application uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
   githubToken:
@@ -18,8 +17,8 @@ inputs:
   prNumber:
     description: "The Pull request on which comment has to be made"
     required: false
-    default: 0
-  filePath:
+    default: "0"
+  filePath: 
     description: "The relative filepath of the location where the manifests are stored"
     required: false
   application_type:
@@ -28,9 +27,18 @@ inputs:
   application_url:
     description: "Application's source url where the manifests or data is stored"
     required: false
+  skipComment:
+    default: "false"
+    description: "Skip the step of commenting on the PR when the action is invoked not for any specific PR or commit but dispatched manually for eg: as part of publishing catalog."
+  assetLocation:
+    required: false
+    description: Remote location where the generated asset (screenshot) for the design will be stored.
 outputs:
   mardownResult: # id of output
-    description: "The markdown result"
+    description: 'The markdown result'
+  resource_url: 
+    description: "The URL of the generated resource."
+    value: ${{ steps.outputurl.outputs.RESOURCE_URL }}      
 runs:
   using: "composite"
   steps:
@@ -60,20 +68,30 @@ runs:
       working-directory: action/cypress-action/
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       shell: bash
-    - run: FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
-      if: ${{ !inputs.application_url }}
+    - run: |
+        FILE_PATH=${{ inputs.filePath }} ./action/manifest-merger.sh # creates file in root dir
+        cat "__intermediate_file.yml" # debug
+      if: ${{ inputs.filePath }}
       shell: bash
     - run: |
+        echo "Uploading using application file"
         AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplicationFile.sh)
-        echo $AppId
+        AppId=$(echo "$AppId" | sed 's/"//g')
         echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
-      if: ${{ !inputs.application_url }}
+      if: ${{ inputs.filePath && !inputs.designID }}
       shell: bash
     - run: |
+        echo "Uploading using application url"
         AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }} UPLOAD_URL=${{ inputs.application_url }}  ./action/uploadApplicationUrl.sh)
-        echo $AppId
+        AppId=$(echo "$AppId" | sed 's/"//g')
         echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
-      if: ${{ inputs.application_url }}
+      if: ${{ inputs.application_url && !inputs.designID }}
+      shell: bash
+    - run: |
+        echo "Uploading using design id"
+        echo ${{ inputs.designID }}
+        echo "APPLICATION_ID=${{ inputs.designID }}" >> $GITHUB_ENV
+      if: ${{ inputs.designID }}
       shell: bash
     - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
       shell: bash
@@ -98,16 +116,28 @@ runs:
     - run: npm ci
       working-directory: action/node-file-upload
       shell: bash
-    - run: ./token-provider.sh
+    - id: outputurl
+      run: |
+        PROVIDER_TOKEN=${{inputs.providerToken}} assetLocation=${{ inputs.assetLocation }} node node-file-upload/index.js > __fileResponse.txt  
+        outputstr=$(head -n 1  __fileResponse.txt)
+        required_string="https"
+        echo $outputstr
+        echo ${{inputs.prNumber}}
+        if [[ "$outputstr" == "$required_string"* ]]; then
+            echo "RESOURCE_URL=$outputstr" >> $GITHUB_ENV
+            echo "RESOURCE_URL=$outputstr" >> $GITHUB_OUTPUT
+        else
+            echo "RESOURCE_URL=false" >> $GITHUB_ENV
+        fi
       working-directory: action/
       shell: bash
     - name: Comment Success Status
-      if: ${{ success() && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
+      if: ${{ success() && inputs.skipComment == 'false' && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
       uses: hasura/comment-progress@v2.2.0
       with:
         github-token: ${{ inputs.githubToken }}
         repository: ${{github.repository}}
         number: ${{ inputs.prNumber }}
         id: meshmap-snapshot
-        message: '[<img src="${{env.RESOURCE_URL}}">](https://meshery.layer5.io/catalog/content/applications)'
+        message: '[<img src="${{env.RESOURCE_URL}}">](https://meshery.layer5.io/catalog/${{ env.APPLICATION_ID }})'
         append: false
