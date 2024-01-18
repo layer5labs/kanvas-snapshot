@@ -3,73 +3,72 @@
 
 import { TIME, canvasContainer } from "../../support/constants";
 import {
-  beforeEachCallbackForCustomUrl,
-  doSnapshotSetup,
-  waitFor,
+    beforeEachCallbackForCustomUrl,
+    doSnapshotSetup,
+    waitFor,
 } from "../../support/helpers";
 
 const InfraShot = (theme) => {
-  return describe(`Infra Shot Automated Runner ${theme} Mode`, () => {
-    beforeEach(() =>
-      beforeEachCallbackForCustomUrl(
-        `/extension/meshmap?design=${getDesignId()}`,
-        theme
-      )
-    );
+    return describe(`Infra Shot Automated Runner ${theme} Mode`, () => {
+        beforeEach(() =>
+            beforeEachCallbackForCustomUrl(
+                `/extension/meshmap?design=${getDesignId()}`,
+                theme
+            )
+        );
 
-    it(`take light mode infra shot`, () => {
-      const designId = getDesignId();
-      waitForDesignRender();
-      cy.window().then((window) => {
-        cy.wait(TIME.MEDIUM);
-        captureSnapshot({
-          window,
-          designId: designId,
-          theme,
+        it(`take light mode infra shot`, () => {
+            const designId = getDesignId();
+            waitForDesignRender();
+            cy.window().then((window) => {
+                cy.wait(TIME.MEDIUM);
+                captureSnapshot({
+                    window,
+                    designId: designId,
+                    theme,
+                });
+            });
         });
-      });
     });
-  });
 };
 
 const getDesignId = () => {
-  return Cypress.env("applicationId").replace(/['"]+/g, "");
+    return Cypress.env("applicationId").replace(/['"]+/g, "");
 };
 
 const waitForDesignRender = () => {
-  waitFor(canvasContainer.query, { timeout: 60_000 });
-  cy.wait(TIME.X4LARGE);
+    waitFor(canvasContainer.query, { timeout: 60_000 });
+    cy.wait(TIME.X4LARGE);
 };
 
 const snapshotPath = (designId, theme) => {
-  const date = new Date();
-  return `MeshMap-${designId}-${date.toDateString()}/${date.toLocaleTimeString()}-${theme}`;
+    return `snapshot-${theme}`;
 };
 
 const captureSnapshot = ({ window, designId, theme }) => {
-  console.log("Taking snapshot", designId, theme);
-  removeWidgets(window.document);
-  const cytoscape = window.cyto;
-  cytoscape.fit();
-  cytoscape.center();
-  const path = snapshotPath(designId, theme);
-  cy.get(canvasContainer.query).should("exist").screenshot(path, {
-    scale: true,
-  });
-  console.log(`Snapshot taken at ${path}`);
+    console.log("Taking snapshot", designId, theme);
+    removeWidgets(window.document);
+    const cytoscape = window.cyto;
+    cytoscape.fit();
+    cytoscape.center();
+    const path = snapshotPath(designId, theme);
+    cy.get(canvasContainer.query).should("exist").screenshot(path, {
+        scale: true,
+    });
+    console.log(`Snapshot taken at ${path}`);
 };
 
 const removeWidgets = (document) => {
-  const classes = ["MuiBox-root", "MuiSpeedDial-root"];
+    const classes = ["MuiBox-root", "MuiSpeedDial-root"];
 
-  classes.forEach((className) => {
-    const elements = [...document.getElementsByClassName(className)];
-    elements.forEach((element) => {
-      element.remove();
+    classes.forEach((className) => {
+        const elements = [...document.getElementsByClassName(className)];
+        elements.forEach((element) => {
+            element.remove();
+        });
     });
-  });
 };
 
 ["light", "dark"].forEach((theme) => {
-  InfraShot(theme);
+    InfraShot(theme);
 });
