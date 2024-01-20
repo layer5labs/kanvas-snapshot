@@ -1,7 +1,7 @@
 #!/bin/bash
 # ENV Variables expected
 # MESHERY_SERVER_BASE_URL
-# UPLOAD_TYPE: can be "Kubernetes Manifest" | "Helm Chart" | "Docker Compose"
+# UPLOAD_TYPE: can be "Kubernetes Manifest" | "Helm Chart" | "Docker Compose" | "Meshery Design"
 # PROVIDER_TOKEN: MESHERY provider token
 
 # # get Meshery pattern file as escaped yaml str
@@ -16,6 +16,6 @@ curl "$MESHERY_SERVER_BASE_URL/api/pattern/$UPLOAD_TYPE" \
   -H 'Connection: close' \
   -H 'Content-Type: text/plain;charset=UTF-8' \
   -H "Cookie: meshery-provider=Meshery; token=$PROVIDER_TOKEN;" \
-  --data-raw "{\"save\":true, \"pattern_data\": {\"pattern_file\":\"$MESHERY_PATTERN_FILE\"}}" \
+  --data-raw "{\"save\":true, \"pattern_data\": {\"pattern_file\":$MESHERY_PATTERN_FILE}}" \
   --compressed | jq ".[0].id"
 
