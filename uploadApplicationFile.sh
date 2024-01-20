@@ -4,6 +4,7 @@
 # UPLOAD_TYPE: can be "Kubernetes Manifest" | "Helm Chart" | "Docker Compose" | "Meshery Design"
 # PROVIDER_TOKEN: MESHERY provider token
 
+node -v
 # # get Meshery pattern file as escaped yaml str
 MESHERY_PATTERN_FILE=$(pattern_file=$(cat __intermediate_file.yml) node normalize-configuration-file/index.js)
 # MESHERY_PATTERN_FILE=$(awk '{ gsub(/"/, "\\\"", $0); printf "%s\\n", $0}' __intermediate_file.yml)
