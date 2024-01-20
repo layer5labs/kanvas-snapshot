@@ -9,6 +9,8 @@ node -v
 MESHERY_PATTERN_FILE=$(pattern_file=$(cat __intermediate_file.yml) node ./action/normalize-configuration-file/index.js)
 # MESHERY_PATTERN_FILE=$(awk '{ gsub(/"/, "\\\"", $0); printf "%s\\n", $0}' __intermediate_file.yml)
 
+echo $MESHERY_PATTERN_FILE
+
 # # convert to uri-encoded str
 UPLOAD_TYPE=$(printf %s "$UPLOAD_TYPE" | jq -sRr @uri)
 
