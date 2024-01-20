@@ -28,12 +28,12 @@ jobs:
           path: action
           repository: layer5labs/meshmap-snapshot
       - id: test_result
-        uses: layer5labs/MeshMap-Snapshot@v0.0.8
+        uses: layer5labs/MeshMap-Snapshot@v0.1.5
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }} # github's personal access token example: "ghp_...."
           providerToken: ${{ secrets.PROVIDER_TOKEN }} # Meshery Cloud Authentication token, signin to meshery-cloud to get one, example: ey.....
           prNumber: ${{ env.PULL_NO }} # auto-filled from the above step
           application_type: $ph_application_type # your application type, could be any of three: "Kubernetes Manifest", "Docker Compose", "Helm Chart"
-          application_url: ${{ inputs.fileURL == '' && $ph_application_url || inputs.fileURL }}
+          application_url: ${{ inputs.fileURL == '' && '$ph_application_url' || inputs.fileURL }}
           
         
