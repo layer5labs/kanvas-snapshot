@@ -1,7 +1,7 @@
 #!/bin/bash
 # ENV Variables expected
 # MESHERY_SERVER_BASE_URL
-# UPLOAD_TYPE: can be "Kubernetes Manifest" | "Helm Chart" | "Docker Compose" | "Meshery Design"
+# UPLOAD_TYPE: can be "Kubernetes Manifest" | "Helm Chart" | "Docker Compose" | "Meshery Design" 
 # PROVIDER_TOKEN: MESHERY provider token
 
 node -v
