@@ -6,7 +6,7 @@ if [[ -d $FILE_PATH ]]; then
     if [[ $file == *yaml ]] ||  [[ $file == *yml ]]
     then 
       cat $file >> __intermediate_file.yml
-      echo "\n---\n" >> __intermediate_file.yml
+      echo "---" >> __intermediate_file.yml
     fi
   done;
 else
