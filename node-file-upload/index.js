@@ -40,7 +40,7 @@ fs.readdirSync(dirPath).forEach((fileName, index) => {
       );
     }
     const url =
-      "https://staging-meshery.layer5.io/api/integrations/github/meta/artifacts";
+      "https://meshery.layer5.io/api/integrations/github/meta/artifacts";
 
     const headers = {
       "Content-Type": "multipart/form-data",
