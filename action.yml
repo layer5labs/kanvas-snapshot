@@ -116,20 +116,14 @@ runs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: cypress-ss
+        name: cypress-video
         path: action/cypress-action/cypress/videos
     - name: Upload Cypress artifacts
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: cypress-ss
+        name: cypress-screenshots
         path: action/cypress-action/cypress/screenshots
-    - run:  echo "SCREENSHOT_NAME=$(ls)" >> $GITHUB_ENV # Assumption: There is only one screenshot in the download directory
-      working-directory: action/cypress-action/cypress/downloads
-      shell: bash
-    - run: mv "$SCREENSHOT_NAME" screenshot.png
-      working-directory: action/cypress-action/cypress/downloads
-      shell: bash
     - run: node --version
       shell: bash
     - run: npm ci
@@ -150,6 +144,12 @@ runs:
         fi
       working-directory: action/
       shell: bash
+    - name: Upload Screenshot upload logs
+      if: ${{ -f  __fileResponse.txt }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: screenshot-upload-logs
+        path: action/node-file-upload/__fileResponse.txt
     - name: Comment Success Status
       if: ${{ success() && inputs.skipComment == 'false' && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
       uses: hasura/comment-progress@v2.2.0
