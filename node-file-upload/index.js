@@ -2,6 +2,11 @@ const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
 
+const themes = {
+  DARK: "dark",
+  LIGHT: "light"
+}
+
 function convertFileToBase64(filePath) {
   try {
     // Read file as binary data
@@ -16,6 +21,20 @@ function convertFileToBase64(filePath) {
     return null;
   }
 }
+
+let location = [];
+let snapshotlocationToThemeMap = {}
+if (process.env.assetLocation != "" && process.env.assetLocation !== undefined) {
+  location = process.env.assetLocation.split(",")
+}
+
+location?.forEach(val => {
+  if (val.endsWith("dark.png")) {
+    snapshotlocationToThemeMap[themes.DARK] = val;
+  } else {
+    snapshotlocationToThemeMap[themes.LIGHT] = val;
+  }
+})
 
 const dirPath = path.join(
   __dirname,
@@ -32,11 +51,14 @@ fs.readdirSync(dirPath).forEach((fileName, index) => {
     const base64Data = convertFileToBase64(filePath);
     const formData = new FormData();
     formData.append("image", base64Data);
-    const assetLocation = process.env.assetLocation;
-    if (assetLocation != "" && assetLocation !== undefined) {
+    if (location.length > 0) {
+      let theme = themes.LIGHT;
+      if (fileName.endsWith("dark.png")) {
+        theme = theme.DARK;
+      }
       formData.append(
         "assetLocation",
-        process.env.assetLocation[index].concat(fileName)
+        snapshotlocationToThemeMap[theme]
       );
     }
     const url =
