@@ -146,7 +146,7 @@ runs:
       shell: bash
     - name: Comment Success Status
       if: ${{ success() && inputs.skipComment == 'false' && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
-      uses: hasura/comment-progress@v2.2.0
+      uses: hasura/comment-progress@v2.3.0
       with:
         github-token: ${{ inputs.githubToken }}
         repository: ${{github.repository}}
