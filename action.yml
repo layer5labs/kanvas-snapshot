@@ -96,7 +96,7 @@ runs:
     - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
       shell: bash
     - name: Cypress run
-      uses: cypress-io/github-action@v4
+      uses: cypress-io/github-action@v6
       with:
         working-directory: action/cypress-action
         spec: cypress/e2e/e2e/**/*
