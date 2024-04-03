@@ -66,7 +66,7 @@ fs.readdirSync(dirPath).forEach((fileName, index) => {
 
     const headers = {
       "Content-Type": "multipart/form-data",
-      Authorization: `Bearer ${process.env.PROVIDER_TOKEN}`,
+      Authorization: `Bearer ${process.env.MESHERY_TOKEN}`,
     };
 
     if (formData) {
