@@ -33,7 +33,7 @@ jobs:
         uses: layer5labs/MeshMap-Snapshot@v0.2.4
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          providerToken: ${{ secrets.PROVIDER_TOKEN }}
+          mesheryToken: ${{ secrets.MESHERY_TOKEN }}
           prNumber: ${{ env.PULL_NO }}
           application_type: $ph_application_type
           application_url: ${{ inputs.fileURL == '' && '$ph_application_url' || inputs.fileURL }}

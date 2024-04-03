@@ -11,7 +11,7 @@ inputs:
   githubToken:
     description: "Github PAT token"
     required: true
-  providerToken:
+  mesheryToken:
     description: "Meshery Authentication Provider Token"
     required: true
   prNumber:
@@ -75,14 +75,14 @@ runs:
       shell: bash
     - run: |
         echo "Uploading using application file"
-        AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }}  ./action/uploadApplicationFile.sh)
+        AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" MESHERY_TOKEN=${{ inputs.mesheryToken }}  ./action/uploadApplicationFile.sh)
         AppId=$(echo "$AppId" | sed 's/"//g')
         echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
       if: ${{ inputs.filePath && !inputs.designID }}
       shell: bash
     - run: |
         echo "Uploading using application url"
-        AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" PROVIDER_TOKEN=${{ inputs.providerToken }} UPLOAD_URL=${{ inputs.application_url }}  ./action/uploadApplicationUrl.sh)
+        AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" MESHERY_TOKEN=${{ inputs.mesheryToken }} UPLOAD_URL=${{ inputs.application_url }}  ./action/uploadApplicationUrl.sh)
         AppId=$(echo "$AppId" | sed 's/"//g')
         echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
       if: ${{ inputs.application_url && !inputs.designID }}
@@ -104,7 +104,7 @@ runs:
         # record: true
       env:
         GITHUB_TOKEN: ${{ inputs.githubToken }}
-        CYPRESS_token: ${{ inputs.providerToken }}
+        CYPRESS_token: ${{ inputs.mesheryToken }}
         CYPRESS_releasetag: ${{env.tag}}
         CYPRESS_applicationId: ${{ env.APPLICATION_ID }}
         # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
@@ -131,7 +131,7 @@ runs:
       shell: bash
     - id: outputurl
       run: |
-        PROVIDER_TOKEN=${{inputs.providerToken}} assetLocation=${{ inputs.assetLocation }} node node-file-upload/index.js > __fileResponse.txt  
+        MESHERY_TOKEN=${{inputs.mesheryToken}} assetLocation=${{ inputs.assetLocation }} node node-file-upload/index.js > __fileResponse.txt  
         outputstr=$(head -n 1  __fileResponse.txt)
         required_string="https"
         echo $outputstr
