@@ -12,7 +12,7 @@ const InfraShot = (theme) => {
     return describe(`Infra Shot Automated Runner ${theme} Mode`, () => {
         beforeEach(() =>
             beforeEachCallbackForCustomUrl(
-                `/extension/meshmap?design=${getDesignId()}`,
+                `/extension/meshmap?mode=design&design=${getDesignId()}`,
                 theme
             )
         );
