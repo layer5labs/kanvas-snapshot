@@ -165,33 +165,23 @@ runs:
         server_port: 465                
         username: ${{ secrets.MAIL_USERNAME }}  
         password: ${{ secrets.MAIL_PASSWORD }}  
-        subject: "MeshMap Snapshot"
-        from: '"MeshMap" <${{ secrets.MAIL_USERNAME }}>'  
+        subject: "Your Meshery Snapshot"
+        from: '"Layer5" <${{ secrets.MAIL_USERNAME }}>'  
         to: ${{ inputs.email }}  
         body: |
-          Hello,
+          <p>Hello,</p>
 
-          Your MeshMap snapshot has been generated and is now ready for you to view!
+         <p>Your ${{ inputs.application_type }} has been converted to a Meshery Design. Your snapshot has been generated and is now available.</p>
+          
+          <p><a href="${{ env.RESOURCE_URL }}"><img src="${{ env.RESOURCE_URL }}" width="80%" /></a></p>
+          <p><b>Next Steps</b></p>
+          <ul>
+  <ol><b>Edit your snapshot</b>: Create or sign into your <a href="https://meshery.layer5.io">Layer5 Cloud</a> account to edit your snapshot.</ol>
+  <ol><b>Share with your team</b>: Use this snapshot to facilitate discussions and planning with your team.</ol>
+  <ol><b>Add Snapshots to your GitHub Pull Requests</b>: <a href="http://meshery.layer5.io/connect/github/new">Connect Meshery Snapshots with your GitHub repo</a> and see changes pull request-to-pull request. Get snapshots of your infrastructure directly in your PRs.</ol>
+</ul>
 
-          **Snapshot Details:**
-          - **Design ID**: ${{ inputs.designID }}
-          - **Resource Type**: ${{ inputs.application_type }}
+          <p>Thank you for using Meshery! If you enjoy this tool, share with your friends.</p>
 
-          You can view and download your snapshot by clicking the link below:
-          [View Your MeshMap Snapshot](${{ env.RESOURCE_URL }})
-
-          **Next Steps:**
-          - **Review the Snapshot**: Ensure all components are correctly represented and the infrastructure layout aligns with your expectations.
-          - **Share with Your Team**: Use this snapshot to facilitate discussions and planning with your team.
-          - **Explore Further**: Learn more about how MeshMap can help visualize and manage your infrastructure by visiting our [documentation](https://docs.layer5.io/meshmap).
-
-          If you have any questions or need further assistance, please feel free to reach out to our support team.
-
-          Thank you for using MeshMap!
-
-          Best regards,  
-          The MeshMap Team
-
-          ---
-          Meshery by Layer5 - The Cloud Native Management Plane.
-          Learn more at [https://layer5.io/meshery](https://layer5.io/meshery)
+          ---<br />
+          Meshery by Layer5 - The Collaborative Cloud Native Manager.  Learn more at <a href="https://layer5.io/meshery">layer5.io</a>.
