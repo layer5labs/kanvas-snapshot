@@ -171,7 +171,7 @@ runs:
         body: |
           Hello,
 
-          Your MeshMap snapshot has been successfully generated and is now ready for you to view!
+          Your MeshMap snapshot has been generated and is now ready for you to view!
 
           **Snapshot Details:**
           - **Design ID**: ${{ inputs.designID }}
