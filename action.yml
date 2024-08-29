@@ -33,6 +33,9 @@ inputs:
   assetLocation:
     required: false
     description: Remote location where the generated asset (screenshot) for the design will be stored.
+  email:
+    required: false
+    description: The email address provided by the user to receive the snapshot.
 outputs:
   mardownResult: # id of output
     description: "The markdown result"
@@ -154,3 +157,41 @@ runs:
         id: meshmap-snapshot
         message: '[<img src="${{env.RESOURCE_URL}}">](https://meshery.layer5.io/catalog/content/catalog/${{ env.APPLICATION_ID }}) _[Understanding Meshery Relationships](https://docs.layer5.io/meshmap/concepts/relationships/)_'
         append: false
+    - name: Email Snapshot to user
+      if: ${{ success() && inputs.email && env.RESOURCE_URL != 'false' }}
+      uses: dawidd6/action-send-mail@v3.7.1
+      with:
+        server_address: smtp.gmail.com  
+        server_port: 465                
+        username: ${{ secrets.MAIL_USERNAME }}  
+        password: ${{ secrets.MAIL_PASSWORD }}  
+        subject: "MeshMap Snapshot"
+        from: '"MeshMap" <${{ secrets.MAIL_USERNAME }}>'  
+        to: ${{ inputs.email }}  
+        body: |
+          Hello,
+
+          Your MeshMap snapshot has been successfully generated and is now ready for you to view!
+
+          **Snapshot Details:**
+          - **Design ID**: ${{ inputs.designID }}
+          - **Resource Type**: ${{ inputs.application_type }}
+
+          You can view and download your snapshot by clicking the link below:
+          [View Your MeshMap Snapshot](${{ env.RESOURCE_URL }})
+
+          **Next Steps:**
+          - **Review the Snapshot**: Ensure all components are correctly represented and the infrastructure layout aligns with your expectations.
+          - **Share with Your Team**: Use this snapshot to facilitate discussions and planning with your team.
+          - **Explore Further**: Learn more about how MeshMap can help visualize and manage your infrastructure by visiting our [documentation](https://docs.layer5.io/meshmap).
+
+          If you have any questions or need further assistance, please feel free to reach out to our support team.
+
+          Thank you for using MeshMap!
+
+          Best regards,  
+          The MeshMap Team
+
+          ---
+          Meshery by Layer5 - The Cloud Native Management Plane.
+          Learn more at [https://layer5.io/meshery](https://layer5.io/meshery)
