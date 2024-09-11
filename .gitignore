@@ -105,3 +105,4 @@ lib/**/*
 __intermediate_file.yml
 
 **/cypress/downloads/*
+.vscode/settings.json
