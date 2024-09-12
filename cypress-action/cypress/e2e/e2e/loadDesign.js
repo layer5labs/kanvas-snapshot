@@ -8,6 +8,7 @@ import {
     waitFor,
 } from "../../support/helpers";
 
+
 const InfraShot = (theme) => {
     return describe(`Infra Shot Automated Runner ${theme} Mode`, () => {
         beforeEach(() =>
