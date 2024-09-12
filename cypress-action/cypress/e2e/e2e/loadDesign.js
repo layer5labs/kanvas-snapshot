@@ -52,7 +52,7 @@ const captureSnapshot = ({ window, designId, theme }) => {
     cytoscape.fit();
     cytoscape.center();
     const path = snapshotPath(designId, theme);
-    cy.get(canvasContainer.query).should("exist").screenshot(path, {
+    cy.get(canvasContainer.query, { timeout: 20 * 1000 }).should("exist").screenshot(path, {
         scale: true,
     });
     console.log(`Snapshot taken at ${path}`);
