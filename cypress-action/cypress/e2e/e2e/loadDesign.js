@@ -59,7 +59,7 @@ const captureSnapshot = ({ window, designId, theme }) => {
 };
 
 const removeWidgets = (document) => {
-    const classes = ["MuiBox-root", "MuiSpeedDial-root"];
+    const classes = ["MuiSpeedDial-root"];
 
     classes.forEach((className) => {
         const elements = [...document.getElementsByClassName(className)];
