@@ -1,0 +1,21 @@
+name: "snapshot"
+version: "0.1.0"
+usage: "Generate a visual snapshot of your Helm chart as a Meshery Snapshot"
+description: "A Helm plugin to generate Meshery Snapshots from Helm charts using a custom Go binary"
+command: "$HELM_PLUGIN_DIR/helm-plugin-snapshot"
+hooks:
+  install: |
+    echo $HELM_PLUGIN_DIR
+    make -f $HELM_PLUGIN_DIR/Makefile build
+  uninstall: |
+    make -f $HELM_PLUGIN_DIR/Makefile clean
+platformCommand:
+  - os: linux
+    arch: i386
+    command: "$HELM_PLUGIN_DIR/helm-plugin-snapshot"
+  - os: linux
+    arch: amd64
+    command: "$HELM_PLUGIN_DIR/helm-plugin-snapshot"
+  - os: windows
+    arch: amd64
+    command: "$HELM_PLUGIN_DIR/helm-plugin-snapshot"
