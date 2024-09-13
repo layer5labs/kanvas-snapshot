@@ -48,7 +48,7 @@ const snapshotPath = (designId, theme) => {
 const captureSnapshot = ({ window, designId, theme }) => {
     console.log("Taking snapshot", designId, theme);
     removeWidgets();
-    const cytoscape = cy.window.cyto;
+    const cytoscape = cy.window().cyto;
     cytoscape.fit();
     cytoscape.center();
     const path = snapshotPath(designId, theme);
