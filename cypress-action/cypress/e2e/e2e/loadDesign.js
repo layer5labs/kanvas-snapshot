@@ -47,8 +47,8 @@ const snapshotPath = (designId, theme) => {
 
 const captureSnapshot = ({ window, designId, theme }) => {
     console.log("Taking snapshot", designId, theme);
-    removeWidgets(window.document);
-    const cytoscape = window.cyto;
+    removeWidgets(cy.document);
+    const cytoscape = cy.window.cyto;
     cytoscape.fit();
     cytoscape.center();
     const path = snapshotPath(designId, theme);
@@ -61,7 +61,7 @@ const captureSnapshot = ({ window, designId, theme }) => {
 };
 
 const removeWidgets = (document) => {
-    const classes = ["MuiSpeedDial-root"] ;
+    const classes = ["MuiToolbar-root", "MuiDrawer-paperAnchorDockedLeft", "MuiSpeedDial-root"] ;
 
     classes.forEach((className) => {
         const elements = [...document.getElementsByClassName(className)];
