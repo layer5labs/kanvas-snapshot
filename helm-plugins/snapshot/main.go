@@ -30,6 +30,7 @@ type Config struct {
 	Workflow            string
 	Branch              string
 	MesheryCloudBaseUrl string
+	SystemID            string
 }
 
 type MesheryDesignPayload struct {
@@ -122,7 +123,7 @@ func GenerateSnapshot(config *Config, designID, chartURI, assetLocation string) 
 	payload := map[string]interface{}{
 		"Owner":       config.Owner,
 		"Repo":        config.Repo,
-		"Workflow":    config.Repo,
+		"Workflow":    config.Workflow,
 		"Branch":      config.Branch,
 		"GithubToken": config.GithubToken,
 		"Payload": map[string]string{
@@ -151,6 +152,7 @@ func GenerateSnapshot(config *Config, designID, chartURI, assetLocation string) 
 	req.Header.Set("Cookie", config.Cookie)
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+config.GithubToken) // Use the GitHub token for authentication
+	req.Header.Set("SystemID", config.SystemID)
 
 	// Send the request
 	client := &http.Client{}
@@ -199,6 +201,7 @@ func main() {
 		Workflow:            os.Getenv("WORKFLOW"),
 		Branch:              os.Getenv("BRANCH"),
 		MesheryCloudBaseUrl: os.Getenv("MESHERY_CLOUD_BASE_URL"),
+		SystemID:            os.Getenv("SystemID"),
 	}
 
 	err = CreateLogFile(config.LogFilePath)
