@@ -55,7 +55,7 @@ const captureSnapshot = ({ window, designId, theme }) => {
     })
     const path = snapshotPath(designId, theme);
     cy.wait(2000)
-    cy.viewport(1280, 720)
+  
     cy.get(canvasContainer.query, { timeout: 10 * 1000 }).should("exist").screenshot(path, {
         scale: true,
     });
