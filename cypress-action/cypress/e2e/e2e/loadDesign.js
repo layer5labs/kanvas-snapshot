@@ -64,9 +64,16 @@ const captureSnapshot = ({ window, designId, theme }) => {
 
 const removeWidgets = () => {
     const classes = ["MuiToolbar-root", "MuiDrawer-paperAnchorDockedLeft", "MuiSpeedDial-root"] ;
+    const ids = ["action-toolbar", "kanvas-bottom-dock"] ;
 
     classes.forEach((className) => {
         cy.get(`.${className}`).each(($el) => {
+            cy.wrap($el).invoke('remove');
+        });
+    });
+
+    ids.forEach((className) => {
+        cy.get(`#${className}`).each(($el) => {
             cy.wrap($el).invoke('remove');
         });
     });
