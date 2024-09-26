@@ -63,17 +63,8 @@ const captureSnapshot = ({ window, designId, theme }) => {
 };
 
 const removeWidgets = () => {
-    const classes = ["MuiToolbar-root", "MuiDrawer-paperAnchorDockedLeft", "MuiSpeedDial-root"] ;
-    const ids = ["action-toolbar", "kanvas-bottom-dock"] ;
+    const ids = ["action-toolbar", "kanvas-bottom-dock", "design-drawer", "visualiser-drawer", "left-navigation-bar", "top-navigation-bar"];
 
-    // This approach for multiple element having same classname
-    classes.forEach((className) => {
-        cy.get(`.${className}`).each(($el) => {
-            cy.wrap($el).invoke('remove');
-        });
-    });
-
-    // This approach for single element using ID
     ids.forEach((className) => {
         cy.get(`#${className}`).invoke('remove');
     });
