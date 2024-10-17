@@ -11,13 +11,17 @@ MeshMap Snapshot is a screenshot service provided via MeshMap for the design or 
 
 
 ## Functional/Sequence Diagram
-For Github Workflows:
-![sequence-diag](.github/readme/images/meshmap-snapshot.png)
+<!--For Github Workflows:
+![sequence-diag](.github/readme/images/meshmap-snapshot.png)-->
 
-## Example Usage:
+## Setting Up
 
-### When Infrastructure is located in the file-system
-```yaml
+See [Configuring Kanvas Snapshots](https://docs.layer5.io/cloud/tutorials/gitops-snapshots/) in Layer5 Docs.
+
+<details>
+  <summary><h4>Example: Importing design from filesystem</h4>
+</summary>
+<pre><code>
 name: 'MeshMap Snapshot With File-located in Fs'
 on: # rebuild any PRs and main branch changes
   pull_request:
@@ -48,9 +52,15 @@ jobs:
           prNumber: ${{ env.PULL_NO }} # auto-filled from the above step
           application_type: "Kubernetes Manifest" # your application type, could be any of three: "Kubernetes Manifest", "Docker Compose", "Helm Chart"
           filePath: "action/__tests__/manifest-test" # relative file-path from the root directory in the github-runner env, you might require to checkout the repository as described in step 2
-```
-### When Infrastructure is identified via URL
-```yaml
+</code></pre>
+<h4>Notes</h4>
+The filesystem-approach asks for your relative file-path and automatically merges all the yaml files together to bundle up into one. So you might like to give the root directory where all the yamls are located. It doesn't move recursevely in internal folders, so only the first level yaml files are checked.
+</details>
+
+<details>
+  <summary><h4>Example: Importing design from URL</h4>
+</summary>
+<pre><code>
 name: 'MeshMap Snapshot With URL-Upload'
 on: # rebuild any PRs and main branch changes
   pull_request:
@@ -80,13 +90,15 @@ jobs:
           prNumber: ${{ env.PULL_NO }} # auto-filled from the above step
           application_type: "Helm Chart" # your application type, could be any of three: "Kubernetes Manifest", "Docker Compose", "Helm Chart"
           application_url: "https://github.com/meshery/meshery.io/raw/master/charts/meshery-v0.6.88.tgz"
-```
+</code></pre>
+</details>
 
-#### FileSystem Approach Notes
-The filesystem-approach asks for your relative file-path and automatically merges all the yaml files together to bundle up into one. So you might like to give the root directory where all the yamls are located. It doesn't move recursevely in internal folders, so only the first level yaml files are checked.
+<details>
+  <summary><h4>Customizing your workflow</h4></summary>
 
-## List of Input variables supported:
-```yaml
+The following is a list of Action Inputs.
+
+<pre><code lang="yaml">
 designId:  # id of input  #deprecated
   description: "The design uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
   required: false
@@ -113,12 +125,8 @@ application_type:
 application_url:
   description: "Application's source url where the manifests or data is stored"
   required: false
-```
-
-## Usage:
-
-After testing you can [create a v1 tag](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md) to reference the stable and latest V1 action
-
+</code></pre>
+</details>
 
 
 <div>&nbsp;</div>
