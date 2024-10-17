@@ -1,22 +1,34 @@
-# Layer5 MeshMap Snapshot
-Give your pipelines super powers with Meshery's GitHub Actions.
+# Layer5 Kanvas Snapshot
 
-## MeshMap GitHub Action
-1. See your deployment before you merge
-1. Connect MeshMap to your GitHub repo and see changes pull request-to-pull request
-1. Get snapshots of your infrastructure directly in your PRs
+Give your pipelines super powers with Kanvas Snapshot GitHub Actions.
 
-## Design Prologue
-MeshMap Snapshot is a screenshot service provided via MeshMap for the design or Application user is interested in. It Enables users to visualize the changes being done in the code-base rapidly over each PR and inform the user about any potential changesin their infrastructure. It doesn't need any configuration or setup neither any deployment by the client rather a simple one time setup is able to provide a long time value.
+## Kanvas Snapshot GitHub Action
+1. See your deployment before you merge.
+1. Connect Kanvas to your GitHub repo and see changes pull request-to-pull request.
+1. Get snapshots of your infrastructure directly in your PRs.
 
+## Overview
 
-## Functional/Sequence Diagram
-<!--For Github Workflows:
-![sequence-diag](.github/readme/images/meshmap-snapshot.png)-->
+The **Kanvas Snapshot GitHub Action** allows you to generate and snapshot a visual diagram of your infrastructure as code whether that be Kubernetes manifests, Helm charts, or Docker compose files. This action automates the process of creating Kanvas Snapshots. 
 
-## Setting Up
+### Features
+
+1. **Snapshot Generation:** Create visual snapshots of infrastructure as code, complete with associated resources.
+2. **Delivery via Email or PR Comment:** Snapshots can be delivered via email, image in your design catalog, or via comment in a GitHub pull request.
+3. **Plugins:**
+  1.  See [Helm Kanvas Snapshot](https://github.com/meshery/helm-kanvas-snapshot) plugin
+  2.  See [Kubectl Kanvas Snapshot](https://github.com/meshery/kubectl-kanvas-snapshot) plugin
+
+## Standard Installation and Use
 
 See [Configuring Kanvas Snapshots](https://docs.layer5.io/cloud/tutorials/gitops-snapshots/) in Layer5 Docs.
+
+
+<!--## Functional/Sequence Diagram
+For Github Workflows:
+![sequence-diag](.github/readme/images/meshmap-snapshot.png)-->
+
+## Customized Use
 
 <details>
   <summary><h4>Example: Importing design from filesystem</h4>
@@ -56,7 +68,6 @@ jobs:
 <h4>Notes</h4>
 The filesystem-approach asks for your relative file-path and automatically merges all the yaml files together to bundle up into one. So you might like to give the root directory where all the yamls are located. It doesn't move recursevely in internal folders, so only the first level yaml files are checked.
 </details>
-
 <details>
   <summary><h4>Example: Importing design from URL</h4>
 </summary>
@@ -92,7 +103,6 @@ jobs:
           application_url: "https://github.com/meshery/meshery.io/raw/master/charts/meshery-v0.6.88.tgz"
 </code></pre>
 </details>
-
 <details>
   <summary><h4>Customizing your workflow</h4></summary>
 
@@ -130,9 +140,9 @@ application_url:
 
 
 <div>&nbsp;</div>
-
+<h1>Join the Layer5 Community!</h1>
 <p style="clear:both;">
-<h1><a name="contributing"></a><a name="community"></a> <a href="https://layer5.io/community">Community</a> and <a href="https://layer5.io/community/handbook">Contributions</a></h1>
+<h2><a name="contributing"></a><a name="community"></a> <a href="https://layer5.io/community">Community</a> and <a href="https://layer5.io/community/handbook">Contributions</a></h2>
 <p> We warmly welcome all contributors! Our projects are community-built and each welcomes open collaboration. As you get started, please review this project's <a href="https://github.com/layer5io/layer5/blob/master/CONTRIBUTING.md">contributing guidelines</a>. Whether you are a user or code contributor and whether you're opening an <a href="/../../issues">issue</a> or a <a href="/../../pulls">pull request</a>, know that any form of your engagement is considered contribution and is appreciated. Contributors are expected to adhere to the <a href="https://github.com/cncf/foundation/blob/master/code-of-conduct.md">CNCF Code of Conduct</a>.
 </p>
 <p>
