@@ -1,31 +1,31 @@
-name: "MeshMap-Snapshot"
-description: "Walks in application and takes a shot of your infrastructure using Meshery Extension MeshMap"
-author: Layer5
+name: "Kanvas Snapshot"
+description: "Returns a visual rendering of your infrastructure as code (helm, k8s, docker) as a Meshery Design."
+author: Layer5 Authors
 inputs:
   designID:
     description: "The design uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
   applicationId: #deprecated
-    description: "The application uuid, example: 3c116d0a-49ea-4294-addc-d9ab34210662"
+    description: "Meshery design ID. Example: 3c116d0a-49ea-4294-addc-d9ab34210662"
     required: false
   githubToken:
-    description: "Github PAT token"
+    description: "Github Personal Access Token"
     required: true
   mesheryToken:
-    description: "Meshery Authentication Provider Token"
+    description: "Layer5 Cloud API Token"
     required: true
   prNumber:
-    description: "The Pull request on which comment has to be made"
+    description: "GitHub pull request on which to comment."
     required: false
     default: "0"
   filePath:
-    description: "The relative filepath of the location where the manifests are stored"
+    description: "URI of the infrastructure as code manifest(s) to be rendered."
     required: false
   application_type:
-    description: "Application upload type, any of the three, Kubernetes Manifest, Docker Compose, Helm Chart"
+    description: "Design type. Specific one of the following three types: 1) "Kubernetes Manifest", 2) "Docker Compose", or 3) "Helm Chart"
     required: true
   application_url:
-    description: "Application's source url where the manifests or data is stored"
+    description: "Design's source URI; location of the original manifests"
     required: false
   skipComment:
     default: "false"
@@ -57,7 +57,7 @@ runs:
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       run: echo "MESHERY_URL=http://127.0.0.1:9081" >> $GITHUB_ENV
       shell: bash
-    - name: Create k8s Kind Cluster
+    - name: Create k8s KinD Cluster
       if: ${{ !steps.ping-playground.outputs.IS_PLAYGROUND_RUNNING }}
       uses: helm/kind-action@v1.10.0
       with:
@@ -153,6 +153,5 @@ runs:
         number: ${{ inputs.prNumber }}
         id: meshmap-snapshot
         message: '[<img src="${{env.RESOURCE_URL}}">](${{env.RESOURCE_URL}})
-          [View the design on Meshery Playground](https://playground.meshery.io/extension/meshmap?mode=design&design=${{ env.APPLICATION_ID }}) ,
-         _[Interpreting Meshery Designs](https://meshery.layer5.io/academy/learning-paths/mastering-meshery/introduction-to-meshery?chapter=interpreting-meshery-designs)_'
+          _[View in catalog](https://meshery.layer5.io/catalog/content/design/${{ env.APPLICATION_ID }}), [Edit in playground](https://playground.meshery.io/extension/meshmap?mode=design&design=${{ env.APPLICATION_ID }}) or learn how to [interpret Meshery Designs](https://meshery.layer5.io/academy/learning-paths/mastering-meshery/introduction-to-meshery?chapter=interpreting-meshery-designs)_'
         append: false
