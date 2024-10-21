@@ -22,7 +22,7 @@ inputs:
     description: "URI of the infrastructure as code manifest(s) to be rendered."
     required: false
   application_type:
-    description: "Design type. Specific one of the following three types: 1) "Kubernetes Manifest", 2) "Docker Compose", or 3) "Helm Chart"
+    description: 'Design type. Specific one of the following three types: 1) "Kubernetes Manifest", 2) "Docker Compose", or 3) "Helm Chart"'
     required: true
   application_url:
     description: "Design's source URI; location of the original manifests"
