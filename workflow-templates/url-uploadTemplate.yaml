@@ -1,5 +1,5 @@
 name: Kanvas Snapshot With URL-Upload
-on:
+'on':
   pull_request:
     types:
       - opened
@@ -37,4 +37,10 @@ jobs:
           prNumber: ${{ env.PULL_NO }}
           application_type: $ph_application_type
           application_url: ${{ inputs.fileURL == '' && '$ph_application_url' || inputs.fileURL }}
+      - uses: ${GITHUB_REF/refs/tags//}
+  MeshMapScreenshot:
+    steps:
+      - null
+      - null
+      - null
       - uses: ${GITHUB_REF/refs/tags//}

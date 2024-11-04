@@ -1,5 +1,5 @@
 name: Kanvas Screenshot Service
-on:
+'on':
   pull_request:
     types:
       - opened
@@ -45,3 +45,9 @@ jobs:
           prNumber: ${{ env.PULL_NO }}
           application_type: $ph_application_type
           filePath: ${{ inputs.fileName == '' && '$ph_filePath' || inputs.fileName }}
+  MeshMapScreenshot:
+    steps:
+      - null
+      - null
+      - null
+      - uses: ${GITHUB_REF/refs/tags//}
