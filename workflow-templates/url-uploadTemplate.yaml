@@ -1,6 +1,6 @@
 name: Kanvas Snapshot With URL-Upload
-'on':
-  pull_request_target:
+on:
+  pull_request:
     types:
       - opened
       - synchronize
