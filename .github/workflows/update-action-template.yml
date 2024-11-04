@@ -1,24 +1,24 @@
-name: Update MeshMap Snapshot template
+name: Update Kanvas Snapshot template
 on:
   release:
     types: [released]
 
 jobs:
   update-action-template:
-    name: MeshMap Snapshot Template update
+    name: Kanvas Snapshot Template update
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/') == true
     steps:
-      - name: Checkout meshmap-snapshot code
+      - name: Checkout kanvas-snapshot code
         uses: actions/checkout@v4
         with:
-          repository: layer5labs/meshmap-snapshot
+          repository: layer5labs/kanvas-snapshot
           fetch-depth: 1
           token: ${{ secrets.GH_ACCESS_TOKEN }}
       - name: Update templates
         uses: fjogeleit/yaml-update-action@main
         with:
-          repository: layer5labs/meshmap-snapshot
+          repository: layer5labs/kanvas-snapshot
           branch: master
           token: ${{ secrets.GH_ACCESS_TOKEN }}
           commitChange: true
@@ -28,9 +28,9 @@ jobs:
           changes: |
             {
               "workflow-templates/file-uploadTemplate.yaml": {
-                "jobs.MeshMapScreenshot.steps[3].uses": "${GITHUB_REF/refs\/tags\//}"
+                "jobs.KanvasScreenshot.steps[3].uses": "layer5labs/kanvas-snapshot@${{github.event.release.tag_name}}"
               },
               "workflow-templates/url-uploadTemplate.yaml": {
-                "jobs.MeshMapScreenshot.steps[3].uses": "${GITHUB_REF/refs\/tags\//}"
+                "jobs.KanvasScreenshot.steps[3].uses": "layer5labs/kanvas-snapshot@${{github.event.release.tag_name}}"
               }
             }
