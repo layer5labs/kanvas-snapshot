@@ -1,7 +1,7 @@
 const { test, expect } = require("@playwright/test");
 
 test("Login and logout test", async ({ page }) => {
-  await page.goto("https://meshery.layer5.io/login");
+  await page.goto("https://cloud.layer5.io/login");
   await page.locator('input[name="identifier"]').fill("test-admin@layer5.io");
   await page.locator('input[name="identifier"]').press("Tab");
   await page.locator('input[name="password"]').fill("test-admin");
