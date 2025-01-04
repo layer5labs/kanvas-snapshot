@@ -80,8 +80,6 @@ runs:
         echo "APPLICATION_ID=$AppId" >> $GITHUB_ENV
       if: ${{ inputs.filePath && !inputs.designID }}
       shell: bash
-    - run: cat  upload_design_response.log
-      shell: bash
     - run: |
         echo "Uploading using application url"
         AppId=$(MESHERY_SERVER_BASE_URL="https://playground.meshery.io" UPLOAD_TYPE="${{inputs.application_type}}" MESHERY_TOKEN=${{ inputs.mesheryToken }} UPLOAD_URL=${{ inputs.application_url }}  ./action/uploadApplicationUrl.sh)
