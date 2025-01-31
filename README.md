@@ -1,4 +1,4 @@
-# Layer5 Kanvas Snapshot
+# Kanvas Snapshot
 
 Give your pipelines super powers with Kanvas Snapshot GitHub Actions.
 
