@@ -113,12 +113,15 @@ runs:
     - run: tree . -L 2me
       shell: bash
 
+    - run: tree action -L 2me
+      shell: bash
+
     - name: Upload log.txt
       if: always()
       uses: actions/upload-artifact@v4
       with:
         name: meshery-log
-        path: log.txt
+        path: action/log.txt
     
     - name: Upload Cypress artifacts
       if: always()
