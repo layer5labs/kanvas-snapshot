@@ -122,6 +122,13 @@ runs:
       with:
         name: meshery-log
         path: action/log.txt
+
+    - name: Upload log1.txt
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: meshery-log1
+        path: log.txt
     
     - name: Upload Cypress artifacts
       if: always()
