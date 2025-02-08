@@ -110,8 +110,16 @@ runs:
         # CYPRESS_RECORD_KEY: ${{ inputs.cypressRecordKey }}
     - run: ls
       shell: bash
-    - run: tree action/cypress-action/cypress/ -L 2me
+    - run: tree . -L 2me
       shell: bash
+
+    - name: Upload log.txt
+       if: always()
+       uses: actions/upload-artifact@v4
+       with:
+          name: meshery-log
+          path: log.txt
+    
     - name: Upload Cypress artifacts
       if: always()
       uses: actions/upload-artifact@v4
