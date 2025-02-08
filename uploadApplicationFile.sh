@@ -10,7 +10,7 @@ MESHERY_PATTERN_FILE=$(pattern_file=$(cat __intermediate_file.yml) node ./action
 
 
 
-echo "Import design \n : Pattern_file_encoded: $MESHERY_PATTERN_FILE \n PROVIDER_TOKE: $MESHERY_TOKEN \n, SERVER_BASE_URL: $MESHERY_SERVER_BASE_URL " >> log.txt
+echo "Import design \n : Pattern_file_encoded: $MESHERY_PATTERN_FILE , SERVER_BASE_URL: $MESHERY_SERVER_BASE_URL " >> log.txt
 
 # Perform the curl request and store response in a variable
 RESPONSE=$(curl "$MESHERY_SERVER_BASE_URL/api/pattern/import" \
