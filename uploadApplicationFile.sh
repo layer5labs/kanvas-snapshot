@@ -5,7 +5,7 @@
 # PROVIDER_TOKEN: MESHERY provider token
 
 # Get Meshery pattern file as escaped YAML string
-MESHERY_PATTERN_FILE=$(pattern_file=$(cat __intermediate_file.yml) node ./normalize-configuration-file/index.js)
+MESHERY_PATTERN_FILE=$(pattern_file=$(cat __intermediate_file.yml) node ./action/normalize-configuration-file/index.js)
 
 
 
