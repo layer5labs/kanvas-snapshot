@@ -1,12 +1,12 @@
 name: 'URL Upload Build Test'
 on: # rebuild any PRs and main branch changes
   workflow_dispatch:
-  pull_request:
-  push:
-    branches:
-      - main
-      - master
-      - 'releases/*'
+  # pull_request:
+  # push:
+  #   branches:
+  #     - main
+  #     - master
+  #     - 'releases/*'
 
 jobs:
   test: # make sure the action works on a clean machine without building
