@@ -1,12 +1,11 @@
 name: 'URL Upload Build Test'
 on: # rebuild any PRs and main branch changes
-  workflow_dispatch:
-  # pull_request:
-  # push:
-  #   branches:
-  #     - main
-  #     - master
-  #     - 'releases/*'
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+      - 'releases/*'
 
 jobs:
   test: # make sure the action works on a clean machine without building
@@ -24,10 +23,6 @@ jobs:
         with:
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           mesheryToken: ${{ secrets.MESHERY_TOKEN }}
-          # prNumber: ${{ env.PULL_NO }}
-          application_type: "Design"
-          # application_url: "https://github.com/meshery/meshery.io/raw/master/charts/meshery-v0.6.86.tgz"
-          "designID": "d270654f-0255-4bf6-84c7-99c864a31717"
-          "skipComment": true
-          "assetLocation":   "https://raw.githubusercontent.com/layer5labs/meshery-extensions-packages/master/action-assets/helm-plugin-assets/d270654f-0255-4bf6-84c7-99c864a31717.png"
-          "email": "ijayeti@gmail.com"
+          prNumber: ${{ env.PULL_NO }}
+          application_type: "Helm Chart"
+          application_url: "https://github.com/meshery/meshery.io/raw/master/charts/meshery-v0.6.86.tgz"
