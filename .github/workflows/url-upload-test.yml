@@ -27,7 +27,7 @@ jobs:
           # prNumber: ${{ env.PULL_NO }}
           application_type: "Design"
           # application_url: "https://github.com/meshery/meshery.io/raw/master/charts/meshery-v0.6.86.tgz"
-          "designID":         "d270654f-0255-4bf6-84c7-99c864a31717",
+          "designID": "d270654f-0255-4bf6-84c7-99c864a31717"
           "skipComment": true
-          "assetLocation":    "https://raw.githubusercontent.com/layer5labs/meshery-extensions-packages/master/action-assets/helm-plugin-assets/d270654f-0255-4bf6-84c7-99c864a31717.png"
+          "assetLocation":   "https://raw.githubusercontent.com/layer5labs/meshery-extensions-packages/master/action-assets/helm-plugin-assets/d270654f-0255-4bf6-84c7-99c864a31717.png"
           "email": "ijayeti@gmail.com"
