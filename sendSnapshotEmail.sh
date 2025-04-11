@@ -6,7 +6,7 @@
 # IMAGE_URI: The URI of the snapshot image
 
 
-response=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$MESHERY_CLOUD_API_URL/api/snapshot/email" \
+response=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$MESHERY_CLOUD_API_URL/api/integrations/snapshot/email" \
   -H 'Accept: application/json' \
   -H 'Connection: close' \
   -H 'Content-Type: application/json' \

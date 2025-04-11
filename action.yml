@@ -166,9 +166,9 @@ runs:
       working-directory: action/
       shell: bash
     - name: Send Snapshot Email
-      if: ${{ inputs.email && env.RESOURCE_URL != false }}
+      if: ${{ inputs.email && inputs.assetLocation }}
       run: |
-        MESHERY_CLOUD_API_URL="https://cloud.layer5.io" MESHERY_TOKEN="${{ inputs.mesheryToken }}" EMAIL="${{ inputs.email }}" IMAGE_URI="${{ env.RESOURCE_URL }}" bash ./action/sendSnapshotEmail.sh
+        MESHERY_CLOUD_API_URL="https://cloud.layer5.io" MESHERY_TOKEN="${{ inputs.mesheryToken }}" EMAIL="${{ inputs.email }}" IMAGE_URI="${{ inputs.assetLocation }}" bash ./action/sendSnapshotEmail.sh
       shell: bash  
     - name: Comment Success Status
       if: ${{ success() && inputs.skipComment == 'false' && inputs.prNumber != '0' && env.RESOURCE_URL != false }}
