@@ -68,7 +68,6 @@ const removeWidgets = () => {
   const ids = [
     "action-toolbar",
     "kanvas-bottom-dock",
-    "design-drawer",
     "left-navigation-bar",
     "top-navigation-bar",
   ];
