@@ -28,7 +28,7 @@ const { designEndpoint } = require("./constants");
 
 Cypress.Commands.add("login", () => {
   const token = Cypress.env("token");
-  cy.setCookie("meshery-provider", "Meshery");
+  cy.setCookie("meshery-provider", "Layer5");
   cy.setCookie("token", token);
 });
 
