@@ -70,16 +70,21 @@ const removeWidgets = () => {
     "kanvas-bottom-dock",
     "left-navigation-bar",
     "top-navigation-bar",
+    "hide-from-design-snapshot",
   ];
 
-  ids.forEach((className) => {
-    try {
-      cy.get(`#${className}`).invoke("remove");
-    } catch (error) {
-      console.log(`Error removing ${className}`);
-    }
+  ids.forEach((id) => {
+    cy.get(`#${id}`, { timeout: 0 }).then(($el) => {
+      if ($el.length) {
+        $el.remove();
+      }
+    }).catch(() => {
+      // Element not found, do nothing
+      console.log(`Element #${id} not found`);
+    });
   });
 };
+
 
 ["light", "dark"].forEach((theme) => {
   InfraShot(theme);
