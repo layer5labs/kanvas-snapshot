@@ -59,7 +59,7 @@ const captureSnapshot = ({ window, designId, theme }) => {
     cy.get(canvasContainer.query, { timeout: 10 * 1000 })
         .should("exist")
         .screenshot(path, {
-            blackout: [".hide-from-snapshot"], // hides elements before screenshot
+            //blackout: [".hide-from-snapshot"], // hides elements before screenshot
             scale: true,
         });
     console.log(`Snapshot taken at ${path}`);
