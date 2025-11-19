@@ -96,7 +96,9 @@ runs:
     - run: echo $APPLICATION_ID && echo ${{env.APPLICATION_ID}}
       shell: bash
     - name: Install Playwright browsers
-      run: npx playwright install chromium
+      run: |
+        npx playwright install --with-deps chromium
+        mkdir -p cypress/screenshots
       working-directory: action/playwright-action
       shell: bash
     - name: Playwright run
