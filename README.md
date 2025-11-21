@@ -138,6 +138,21 @@ application_url:
 </code></pre>
 </details>
 
+## GitHub Copilot Coding Agent Instructions
+
+This repository includes comprehensive instructions for GitHub Copilot coding agents:
+
+- **[`.github/copilot-instructions.md`](.github/copilot-instructions.md)** - Instructions for working with the meshery-extensions-packages repository
+- **[`AGENTS.md`](AGENTS.md)** - Guidelines for the entire Layer5/Meshery ecosystem
+- **[`COPILOT_AGENT_SETUP.md`](COPILOT_AGENT_SETUP.md)** - Setup guide for implementing these instructions
+
+These documents provide best practices for:
+- Working with large repositories using sparse checkout
+- Cross-repository CI/CD workflows
+- Asset management and security
+- GitHub Actions development
+
+See [COPILOT_AGENT_SETUP.md](COPILOT_AGENT_SETUP.md) for implementation details.
 
 <div>&nbsp;</div>
 <h1>Join the Layer5 Community!</h1>
