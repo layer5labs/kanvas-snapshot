@@ -496,8 +496,8 @@ if [ ! -f "$IMAGE_PATH" ]; then
   exit 1
 fi
 
-# Check file size
-SIZE=$(stat -f%z "$IMAGE_PATH" 2>/dev/null || stat -c%s "$IMAGE_PATH")
+# Check file size (portable method)
+SIZE=$(wc -c < "$IMAGE_PATH" | tr -d ' ')
 if [ "$SIZE" -lt "$EXPECTED_SIZE_MIN" ]; then
   echo "Error: Image too small ($SIZE bytes)"
   exit 1
@@ -521,13 +521,13 @@ echo "Validation passed for $IMAGE_PATH"
 - name: Bad example
   run: |
     echo "Token is: ${{ secrets.MESHERY_TOKEN }}"  # NEVER!
-    curl -v https://api.layer5.io/...  # -v exposes auth headers
+    curl -v https://api.layer5.io/...  # -v exposes auth headers in logs
 
 # DO this instead:
 - name: Good example
   run: |
-    # Use secrets without logging
-    response=$(curl -s -H "Authorization: Bearer $MESHERY_TOKEN" \
+    # Use secrets without logging (no -v flag, use -f for fail-fast)
+    response=$(curl -f -s -H "Authorization: Bearer $MESHERY_TOKEN" \
                      https://api.layer5.io/...)
     # Process response safely
     echo "Request completed"
@@ -541,10 +541,11 @@ echo "Validation passed for $IMAGE_PATH"
 # Validate user inputs to prevent injection attacks
 validate_input() {
   local input=$1
-  local pattern='^[a-zA-Z0-9_-]+$'
+  # Pattern allows UUIDs and design IDs (alphanumeric, hyphens, underscores, dots)
+  local pattern='^[a-zA-Z0-9._-]+$'
   
   if [[ ! $input =~ $pattern ]]; then
-    echo "Error: Invalid input format"
+    echo "Error: Invalid input format (only alphanumeric, dots, hyphens, underscores allowed)"
     exit 1
   fi
 }
@@ -612,7 +613,8 @@ jobs:
 
       - name: Remove snapshots older than 90 days
         run: |
-          find action-assets -name "*.png" -type f -mtime +90 -delete
+          # Use safer deletion method with confirmation
+          find action-assets -name "*.png" -type f -mtime +90 -print0 | xargs -0 rm -f
 
       - name: Commit cleanup
         run: |

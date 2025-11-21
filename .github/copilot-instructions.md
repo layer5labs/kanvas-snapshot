@@ -115,8 +115,8 @@ The meshery-extensions-packages repository integrates with multiple related repo
 - Test responsive behavior for mobile devices
 
 ```html
-<!-- Good example -->
-<img src="https://raw.githubusercontent.com/layer5labs/meshery-extensions-packages/master/assets/badges/meshmap/meshmap.svg" 
+<!-- Good example - use main or specific tag for stability -->
+<img src="https://raw.githubusercontent.com/layer5labs/meshery-extensions-packages/main/assets/badges/meshmap/meshmap.svg" 
      alt="MeshMap Badge" 
      style="max-width: 100%; height: auto;" />
 ```
