@@ -179,5 +179,5 @@ runs:
         number: ${{ inputs.prNumber }}
         id: meshmap-snapshot
         message: '[<img src="${{env.RESOURCE_URL}}">](${{env.RESOURCE_URL}})
-          _[View in catalog](https://cloud.layer5.io/catalog/content/design/${{ env.APPLICATION_ID }}), [Edit in playground](https://playground.meshery.io/extension/meshmap?mode=design&design=${{ env.APPLICATION_ID }}) or learn how to [interpret Meshery Designs](https://cloud.layer5.io/academy/learning-paths/mastering-meshery/introduction-to-meshery?chapter=interpreting-meshery-designs)_'
+          _[View in catalog](https://cloud.layer5.io/catalog/content/design/${{ env.APPLICATION_ID }}), [Edit in playground](https://playground.meshery.io/extension/meshmap?mode=design&design=${{ env.APPLICATION_ID }}) or learn how to [interpret Meshery Designs](https://cloud.layer5.io/academy/learning-paths/d011fd20-a3f5-4480-883b-dfb34321d168/mastering-meshery/introduction-to-meshery/interpreting-meshery-designs/)_'
         append: false
