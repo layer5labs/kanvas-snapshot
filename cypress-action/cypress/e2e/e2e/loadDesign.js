@@ -21,7 +21,7 @@ const InfraShot = (theme) => {
             const designId = getDesignId();
             waitForDesignRender();
             cy.window().then((window) => {
-                cy.wait(TIME.XLARGE);
+                cy.wait(TIME.XLARGE *4);
                 captureSnapshot({
                     window,
                     designId: designId,
