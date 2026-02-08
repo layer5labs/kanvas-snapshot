@@ -54,7 +54,7 @@ const captureSnapshot = ({ window, designId, theme }) => {
             cytoscape.fit();
             cytoscape.center();
         } else {
-            cy.log('Cytoscape instance not found on window object');
+            cy.log('Cytoscape instance not available - skipping fit and center operations');
         }
     });
     const path = snapshotPath(designId, theme);
