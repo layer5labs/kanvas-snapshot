@@ -50,8 +50,12 @@ const captureSnapshot = ({ window, designId, theme }) => {
     //removeWidgets();
     cy.window().then((win) => {
         const cytoscape = win.cyto;
-        cytoscape.fit();
-        cytoscape.center();
+        if (cytoscape) {
+            cytoscape.fit();
+            cytoscape.center();
+        } else {
+            console.warn('Cytoscape instance not found on window object');
+        }
     });
     const path = snapshotPath(designId, theme);
     cy.wait(2000);
