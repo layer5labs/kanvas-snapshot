@@ -51,7 +51,7 @@ const captureSnapshot = ({ window, designId, theme }) => {
     
     // Wait for cytoscape instance to be available
     cy.window().should((win) => {
-        expect(win.cyto).to.exist;
+        return expect(win.cyto).to.exist;
     });
     
     cy.window().then((win) => {
