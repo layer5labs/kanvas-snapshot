@@ -49,11 +49,8 @@ const captureSnapshot = ({ window, designId, theme }) => {
     console.log("Taking snapshot", designId, theme);
     //removeWidgets();
     
-    // Wait for cytoscape instance to be available
-    cy.window().its('cyto').should('exist');
-    
-    cy.window().then((win) => {
-        const cytoscape = win.cyto;
+    // Wait for cytoscape instance to be available and then fit/center
+    cy.window().its('cyto').should('exist').then((cytoscape) => {
         cytoscape.fit();
         cytoscape.center();
     });
