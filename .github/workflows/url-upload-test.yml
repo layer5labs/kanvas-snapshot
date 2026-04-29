@@ -13,8 +13,7 @@ jobs:
     steps:
       - name: Set PR number
         run: |
-          export pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          echo "PULL_NO=$pull_number" >> $GITHUB_ENV
+          echo "PULL_NO=${{ github.event.pull_request.number || 0 }}" >> "$GITHUB_ENV"
       - uses: actions/checkout@v4
         with:
           path: action
