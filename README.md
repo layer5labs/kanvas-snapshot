@@ -49,8 +49,7 @@ jobs:
     steps:
       - name: Set PR number # To comment the final status on the Pull-request opened in any repository
         run: |
-          export pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          echo "PULL_NO=$pull_number" >> $GITHUB_ENV
+          echo "PULL_NO=${{ github.event.pull_request.number || 0 }}" >> "$GITHUB_ENV"
       - uses: actions/checkout@v3 # the repository where your infrastructure is located
       - uses: actions/checkout@v3 #this step would go and would be no longer needed to be written
         with:
@@ -87,8 +86,7 @@ jobs:
     steps:
       - name: Set PR number # To comment the final status on the Pull-request opened in any repository
         run: |
-          export pull_number=$(jq --raw-output .pull_request.number "$GITHUB_EVENT_PATH")
-          echo "PULL_NO=$pull_number" >> $GITHUB_ENV
+          echo "PULL_NO=${{ github.event.pull_request.number || 0 }}" >> "$GITHUB_ENV"
       - uses: actions/checkout@v3 #this step would go and would be no longer needed to be written
         with:
           path: action
